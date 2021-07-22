@@ -1,0 +1,322 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: CruelDrool's reCAPTCHA 1.0.0\n"
+"POT-Creation-Date: 2021-07-22 22:47+0200\n"
+"PO-Revision-Date: 2021-07-22 22:59+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"Last-Translator: \n"
+"Language: en_GB\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: src/Admin/Settings.php:107
+msgid "General"
+msgstr ""
+
+#: src/Admin/Settings.php:113
+msgid "Forms"
+msgstr ""
+
+#: src/Admin/Settings.php:116
+msgid "Actions"
+msgstr ""
+
+#: src/Admin/Settings.php:118
+msgid ""
+"Action names may only contain alphanumeric characters, underscores, and "
+"forward slashes."
+msgstr ""
+
+#: src/Admin/Settings.php:122
+msgid "Thresholds"
+msgstr ""
+
+#: src/Admin/Settings.php:124
+msgid ""
+"reCAPTCHA v3 returns a score (<samp>1.0</samp> is very likely a good "
+"interaction, <samp>0.0</samp> is very likely a bot)."
+msgstr ""
+
+#: src/Admin/Settings.php:128
+msgid "Other"
+msgstr ""
+
+#: src/Admin/Settings.php:156
+msgid "Version"
+msgstr ""
+
+#: src/Admin/Settings.php:162
+msgid "v2 \"I'm not a robot\""
+msgstr ""
+
+#: src/Admin/Settings.php:163
+msgid "v2 Invisible"
+msgstr ""
+
+#: src/Admin/Settings.php:164
+msgid "v3"
+msgstr ""
+
+#: src/Admin/Settings.php:166
+#, php-format
+msgid ""
+"Select your reCAPTCHA version. Make sure to use keys for your selected "
+"version. Read more about the versions on %s."
+msgstr ""
+
+#: src/Admin/Settings.php:169 src/Admin/Settings.php:181
+#: src/Admin/Settings.php:193
+msgid "Site Key"
+msgstr ""
+
+#: src/Admin/Settings.php:172 src/Admin/Settings.php:184
+#: src/Admin/Settings.php:196
+#, php-format
+msgid ""
+"Your public site key that is used to load the widget. Keys can be obtained "
+"on %s."
+msgstr ""
+
+#: src/Admin/Settings.php:175 src/Admin/Settings.php:187
+#: src/Admin/Settings.php:199
+msgid "Secret Key"
+msgstr ""
+
+#: src/Admin/Settings.php:178 src/Admin/Settings.php:190
+#: src/Admin/Settings.php:202
+#, php-format
+msgid ""
+"Your private secret key for communication between your site and the "
+"reCAPTCHA verification server. Keys can be obtained on %s."
+msgstr ""
+
+#: src/Admin/Settings.php:205 src/Admin/Settings.php:211
+#: src/Admin/Settings.php:217
+msgid "Error message"
+msgstr ""
+
+#: src/Admin/Settings.php:223
+msgid "Hide for logged in users"
+msgstr ""
+
+#: src/Admin/Settings.php:227
+msgid "Only load for guests users."
+msgstr ""
+
+#: src/Admin/Settings.php:230
+msgid "Request domain"
+msgstr ""
+
+#: src/Admin/Settings.php:236
+msgid ""
+"The domain to fetch the script from, and to use when verifying requests.<br /"
+">Use <samp>recaptcha.net</samp> when <samp>google.com</samp> is not "
+"accessible."
+msgstr ""
+
+#: src/Admin/Settings.php:239
+msgid "Verify origin of solutions"
+msgstr ""
+
+#: src/Admin/Settings.php:243
+msgid ""
+"<strong>NB!</strong> Only required if you have chosen not to have Google "
+"verify the origin of the solutions."
+msgstr ""
+
+#: src/Admin/Settings.php:246
+msgid "Load on..."
+msgstr ""
+
+#: src/Admin/Settings.php:252
+msgid "All pages"
+msgstr ""
+
+#: src/Admin/Settings.php:253
+msgid "Form pages"
+msgstr ""
+
+#: src/Admin/Settings.php:255
+msgid ""
+"For analytics purposes, it's recommended to load the widget in the "
+"background of all pages."
+msgstr ""
+
+#: src/Admin/Settings.php:259
+msgid "Enabled forms"
+msgstr ""
+
+#: src/Admin/Settings.php:264 src/Admin/Settings.php:274
+#: src/Admin/Settings.php:315
+msgid "Login"
+msgstr ""
+
+#: src/Admin/Settings.php:265 src/Admin/Settings.php:282
+#: src/Admin/Settings.php:323
+msgid "Registration"
+msgstr ""
+
+#: src/Admin/Settings.php:267 src/Admin/Settings.php:290
+#: src/Admin/Settings.php:332
+msgid "Lost Password"
+msgstr ""
+
+#: src/Admin/Settings.php:268 src/Admin/Settings.php:298
+#: src/Admin/Settings.php:340
+msgid "Reset Password"
+msgstr ""
+
+#: src/Admin/Settings.php:269 src/Admin/Settings.php:306
+#: src/Admin/Settings.php:348
+msgid "Comment"
+msgstr ""
+
+#: src/Admin/Settings.php:357
+msgid "Language code"
+msgstr ""
+
+#: src/Admin/Settings.php:360
+#, php-format
+msgid ""
+"Language of the widget. Leave it blank to auto-detect the language. Read "
+"more about language codes on %s."
+msgstr ""
+
+#: src/Admin/Settings.php:363
+msgid "Theme"
+msgstr ""
+
+#: src/Admin/Settings.php:369
+msgid "Light"
+msgstr ""
+
+#: src/Admin/Settings.php:370
+msgid "Dark"
+msgstr ""
+
+#: src/Admin/Settings.php:374
+msgid "Set theme based on a page's background color"
+msgstr ""
+
+#: src/Admin/Settings.php:378
+msgid ""
+"This overrides any selection of theme. The theme will instead be set based "
+"on the background color's brightness."
+msgstr ""
+"This overrides any selection of theme. The theme will instead be set based "
+"on the background colour's brightness."
+
+#: src/Admin/Settings.php:381
+msgid "Placement"
+msgstr ""
+
+#: src/Admin/Settings.php:387
+msgid "Bottom Right"
+msgstr ""
+
+#: src/Admin/Settings.php:388
+msgid "Bottom Left"
+msgstr ""
+
+#: src/Admin/Settings.php:389
+msgid "Inline"
+msgstr ""
+
+#: src/Admin/Settings.php:391
+msgid "Position of the widget."
+msgstr ""
+
+#: src/Admin/Settings.php:394
+msgid "Set placement based on a page's text direction"
+msgstr ""
+
+#: src/Admin/Settings.php:398
+msgid ""
+"This overrides any selection of placement. The widget will be placed based "
+"on text direction. For example on a page with \"right-to-left\", the widget "
+"will be placed on the left."
+msgstr ""
+
+#: src/Admin/Settings.php:401
+msgid "Size"
+msgstr ""
+
+#: src/Admin/Settings.php:407 src/Admin/Settings.php:420
+#: src/Admin/Settings.php:428
+msgid "Normal"
+msgstr ""
+
+#: src/Admin/Settings.php:408 src/Admin/Settings.php:419
+msgid "Compact"
+msgstr ""
+
+#: src/Admin/Settings.php:412
+msgid "Auto adjust size"
+msgstr ""
+
+#. translators: 1: Compact, 2: Normal
+#: src/Admin/Settings.php:418
+#, php-format
+msgid ""
+"Will automatically set the size to <i>%1$s</i> if the screen is too narrow "
+"for <i>%2$s</i>."
+msgstr ""
+
+#: src/Admin/Settings.php:423
+msgid "Remove stylesheet (CSS)"
+msgstr ""
+
+#: src/Admin/Settings.php:427
+msgid "Remove this plugin's stylesheet from login page."
+msgstr ""
+
+#: src/Admin/Settings.php:428
+#, php-format
+msgid ""
+"This stylesheet increases the width of the container element that holds the "
+"login form. This is to fit in the widget better. Only applicable if you have "
+"selected <i>%s</i> as size."
+msgstr ""
+
+#: src/Admin/Settings.php:433 src/Admin/Settings.php:436
+#: src/Admin/Settings.php:444
+msgid "Multisite User Signup"
+msgstr ""
+
+#: src/Admin/Settings.php:585
+#, php-format
+msgid ""
+"<strong>%s</strong>: <i>%s</i> is an undefined <strong>&lt;input&gt;</"
+"strong> type."
+msgstr ""
+
+#: src/Admin/Settings.php:585 src/Frontend.php:282
+msgid "Error"
+msgstr ""
+
+#: src/Admin/Settings.php:696 src/Admin/Settings.php:707
+#: src/Admin/Settings.php:761
+#, php-format
+msgid "%s Settings"
+msgstr ""
+
+#: src/Admin/Settings.php:803
+msgid "Settings"
+msgstr ""
+
+#: src/Config.php:97 src/Config.php:98
+msgid "The CAPTCHA solution you provided was incorrect."
+msgstr ""
+
+#: src/Config.php:99
+msgid ""
+"reCAPTCHA v3 returns a score based on your interaction with this site. Your "
+"score did not meet our threshold requirement set for this particular action."
+msgstr ""
