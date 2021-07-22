@@ -515,7 +515,7 @@ class Settings {
 			case 'hidden':
 			case 'submit':
 				printf(
-					'<input type="%1$s" id="%7$s_%2$s" class="%3$s" name="%7$s[%2$s]" placeholder="%4$s" value="%5$s" %6$s/>',
+					'<input type="%1$s" id="%7$s_%2$s" class="%3$s" name="%7$s[%2$s]" placeholder="%4$s" value="%5$s" %6$s autocomplete="off" />',
 					esc_attr( $field['type'] ),
 					esc_attr( $field['id'] ),
 					esc_attr( $field['class'] ),
