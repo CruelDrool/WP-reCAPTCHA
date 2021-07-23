@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CruelDrool's reCAPTCHA v2 & v3 1.0.0\n"
 "POT-Creation-Date: 2021-07-22 22:47+0200\n"
-"PO-Revision-Date: 2021-07-22 22:52+0200\n"
+"PO-Revision-Date: 2021-07-23 15:02+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nb_NO\n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #: src/Admin/Settings.php:107
 msgid "General"
-msgstr "Generelt"
+msgstr "Generelle"
 
 #: src/Admin/Settings.php:113
 msgid "Forms"
@@ -222,7 +222,7 @@ msgstr "Mørk"
 
 #: src/Admin/Settings.php:374
 msgid "Set theme based on a page's background color"
-msgstr "Set tema basert på sidens bakgrunnsfarge"
+msgstr "Sett tema basert på sidens bakgrunnsfarge"
 
 #: src/Admin/Settings.php:378
 msgid ""
@@ -338,7 +338,7 @@ msgstr "%s innstillinger"
 
 #: src/Admin/Settings.php:803
 msgid "Settings"
-msgstr "Innstilliger"
+msgstr "Innstillinger"
 
 #: src/Config.php:97 src/Config.php:98
 msgid "The CAPTCHA solution you provided was incorrect."
