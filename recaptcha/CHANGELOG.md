@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3] - 2021-07-24
+### Changed
+- Tweaked the function that checks for new updates.
+    - It now takes into account other plugins which are using the same hostname as Update URI.
+- v3 settings for thresholds were being ignored.
+    - A setting not displayed in the Admin page was being used.
+
 ## [1.0.2] - 2021-07-24
 ### Changed
 - Norwegian Bokmål translation updated.
