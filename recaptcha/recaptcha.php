@@ -2,7 +2,7 @@
 /*
 Plugin Name: reCAPTCHA
 Description: reCAPTCHA for Login, Register, Lost Password, Reset Password. Supports customisation of v2 and v3. Based on <a href="https://www.shamimsplugins.com">Shamim Hasan</a>'s <a href="https://wordpress.org/plugins/advanced-nocaptcha-recaptcha">Advanced noCaptcha & invisible Captcha</a>.
-Version: 1.0.1
+Version: 1.0.2
 Author: CruelDrool
 Author URI: https://github.com/CruelDrool
 Plugin URI: https://github.com/CruelDrool/WP-reCAPTCHA
