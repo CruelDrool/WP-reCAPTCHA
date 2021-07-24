@@ -242,9 +242,9 @@ class Frontend {
 			
 			if ($hostname_match == true) {
 				if ( $this->config->get_option( 'recaptcha_version' ) == 'v3' ) {
-					$threshold = $this->config->get_option( 'v3_threshold' );
-					$expected_action = $this->config->get_option($this->recaptcha_action);
-					
+					$threshold = $this->config->get_option( 'threshold_'.$this->recaptcha_action );
+					$expected_action = $this->config->get_option('action_'.$this->recaptcha_action);
+
 					$score = $result['score'] ?? 0.0;
 					$action = $result['action'] ?? '';
 					
@@ -258,7 +258,8 @@ class Frontend {
 		// print_r($_POST);
 		// print_r($result);
 		
-		// echo "\nexpected recaptcha_action: ".$this->config->get_option($this->recaptcha_action);
+		// echo "\nexpected recaptcha_action: ".$this->config->get_option('action_'.$this->recaptcha_action);
+		// echo "\nTreshold: " . $this->config->get_option( 'threshold_'.$this->recaptcha_action );
 		// echo "\nis_success: " . intval($is_success);
 		// echo "</pre>";
 		// return false;
@@ -307,9 +308,9 @@ class Frontend {
 		self::$captcha_count++;
 		$number   = $this->total_captcha();
 		$version = $this->config->get_option( 'recaptcha_version' );
-		$action = $this->config->get_option($this->recaptcha_action);
+		$action = $this->config->get_option('action_'.$this->recaptcha_action);
 
-		// Hidden field so that the v3's grecaptcha.execute() knows what action it is doing.
+		// Hidden field so that the v3's grecaptcha.execute() knows what action it is doing for this field.
 		$hidden = sprintf('<input type="hidden" name="recaptcha_action" value="%s" />', $action);
 
 		$field = sprintf('<div id="%4$s_recaptcha_field_%2$s">%1$s<div class="%3$s"></div></div>',
@@ -663,7 +664,7 @@ SCRIPT;
 	 * @return void
 	 */
 	function login_form_field() {
-		$this->recaptcha_action = 'action_login';
+		$this->recaptcha_action = 'login';
 		$this->form_field();
 	}
 
@@ -678,7 +679,7 @@ SCRIPT;
 	 * @return string
 	 */
 	function login_form_return( $field = '' ) {
-		$this->recaptcha_action = 'action_login';
+		$this->recaptcha_action = 'login';
 		$field = $this->form_field_return( $field );
 
 		return $field;
@@ -694,7 +695,7 @@ SCRIPT;
 	 * @return void
 	 */
 	function register_form_field() {
-		$this->recaptcha_action = 'action_registration';
+		$this->recaptcha_action = 'registration';
 		$this->form_field();
 	}
 	
@@ -714,7 +715,7 @@ SCRIPT;
 		if ( $errmsg = $errors->get_error_message( $this->error_code ) ) {
 			echo '<p class="error">' . $errmsg . '</p>';
 		}
-		$this->recaptcha_action = 'action_multisite_signup';
+		$this->recaptcha_action = 'multisite_signup';
 		$this->form_field();
 	}
 
@@ -728,7 +729,7 @@ SCRIPT;
 	 * @return void
 	 */
 	function lostpassword_form_field() {
-		$this->recaptcha_action = 'action_lost_password';
+		$this->recaptcha_action = 'lost_password';
 		$this->form_field();
 	}
 
@@ -742,7 +743,7 @@ SCRIPT;
 	 * @return void
 	 */
 	function resetpass_form_field() {
-		$this->recaptcha_action = 'action_reset_password';
+		$this->recaptcha_action = 'reset_password';
 		$this->form_field();
 	}
 
@@ -756,7 +757,7 @@ SCRIPT;
 	 * @return void
 	 */
 	function comment_form_field() {
-		$this->recaptcha_action = 'action_comment';
+		$this->recaptcha_action = 'comment';
 		$this->form_field();
 	}
 
@@ -771,7 +772,7 @@ SCRIPT;
 	 * @return string
 	 */
 	function comment_form_field_return($field = '') {
-		$this->recaptcha_action = 'action_comment';
+		$this->recaptcha_action = 'comment';
 		return $this->form_field_return($field);
 	}
 
@@ -806,7 +807,7 @@ SCRIPT;
 	function login_verify( $user, $username = '', $password = '' ) {
 		// Hmm, this filter gets applied just by loading wp-login.php, no submission needed.	
 		if ( count($_POST) ) {	
-			$this->recaptcha_action = 'action_login';
+			$this->recaptcha_action = 'login';
 			if ( ! $this->verify()) {
 				if ($user instanceof WP_Error) {
 					// There were errors before us, so let's just add to the pile.
@@ -834,7 +835,7 @@ SCRIPT;
 	 * @return WP_Error
 	 */
 	function registration_verify( $errors, $sanitized_user_login, $user_email ) {
-		$this->recaptcha_action = 'action_registration';
+		$this->recaptcha_action = 'registration';
 		if ( ! $this->verify() ) {
 			$errors->add( $this->error_code, $this->get_error_msg() );
 		}
@@ -855,7 +856,7 @@ SCRIPT;
 	function ms_form_field_verify( $result ) {
 		// Only verify guests during the "validate user signup" stage because we don't load a CAPTCHA during the "validate blog signup" stage.
 		if ( isset( $_POST['stage'] ) && $_POST['stage'] === 'validate-user-signup' ) {
-			$this->recaptcha_action = 'action_multisite_signup';
+			$this->recaptcha_action = 'multisite_signup';
 			if ( ! $this->verify() ) {
 				$result['errors']->add( $this->error_code, $this->get_error_msg(false) );
 			}
@@ -875,7 +876,7 @@ SCRIPT;
 	 * @return array
 	 */
 	function ms_blog_verify( $result ) {
-		$this->recaptcha_action = 'action_multisite_signup';
+		$this->recaptcha_action = 'multisite_signup';
 		if ( ! $this->verify() ) {
 			$result['errors']->add( $this->error_code, $this->get_error_msg(false) );
 		}
@@ -894,7 +895,7 @@ SCRIPT;
 	 * @return void
 	 */
 	function lostpassword_verify( $errors ) {
-		$this->recaptcha_action = 'action_lost_password';
+		$this->recaptcha_action = 'lost_password';
 		if ( ! $this->verify() ) {
 			$errors->add( $this->error_code, $this->get_error_msg() );
 		}
@@ -912,7 +913,7 @@ SCRIPT;
 	 * @return void
 	 */
 	function reset_password_verify( $errors, $user ) {
-		$this->recaptcha_action = 'action_reset_password';
+		$this->recaptcha_action = 'reset_password';
 		if ( ! $this->verify() ) {
 			$errors->add( $this->error_code, $this->get_error_msg() );
 		}
@@ -929,7 +930,7 @@ SCRIPT;
 	 * @return int|string|WP_Error
 	 */
 	function comment_verify( $approved ) {
-		$this->recaptcha_action = 'action_comment';
+		$this->recaptcha_action = 'comment';
 		if ( ! $this->verify() ) {
 			return new WP_Error( $this->error_code, $this->get_error_msg(), 403 );
 		}

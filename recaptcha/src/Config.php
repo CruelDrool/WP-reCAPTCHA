@@ -66,7 +66,6 @@ class Config {
 		'v2_checkbox_adjust_size'	=> true,
 		'v2_checkbox_remove_css'	=> false,
 		'v3_script_load'			=> 'all_pages',
-		'v3_threshold' 				=> 0.5,
 		'loggedin_hide'				=> true,
 		'verify_origin'				=> false,
 		'enabled_forms'				=> [],
