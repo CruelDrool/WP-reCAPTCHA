@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.4] - 2021-11-24
+### Changed
+- Wrong text-domain was being used in 3 places.
+
 ## [1.0.3] - 2021-07-24
 ### Changed
 - Tweaked the function that checks for new updates.
