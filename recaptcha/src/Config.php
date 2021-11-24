@@ -97,9 +97,9 @@ class Config {
 		$this->plugin_data = get_plugin_data($file);
 		$this->option_name = $this->prefix . "_options";
 
-		$this->defaults['v2_checkbox_error_message'] = __( 'The CAPTCHA solution you provided was incorrect.', 'advanced-nocaptcha-recaptcha');
-		$this->defaults['v2_invisible_error_message'] = __( 'The CAPTCHA solution you provided was incorrect.', 'advanced-nocaptcha-recaptcha');
-		$this->defaults['v3_error_message'] = __( 'reCAPTCHA v3 returns a score based on your interaction with this site. Your score did not meet our threshold requirement set for this particular action.', 'advanced-nocaptcha-recaptcha');
+		$this->defaults['v2_checkbox_error_message'] = __( 'The CAPTCHA solution you provided was incorrect.', 'cd-recaptcha');
+		$this->defaults['v2_invisible_error_message'] = __( 'The CAPTCHA solution you provided was incorrect.', 'cd-recaptcha');
+		$this->defaults['v3_error_message'] = __( 'reCAPTCHA v3 returns a score based on your interaction with this site. Your score did not meet our threshold requirement set for this particular action.', 'cd-recaptcha');
 	}
 
 	/**
