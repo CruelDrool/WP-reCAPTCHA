@@ -687,7 +687,7 @@ class Settings {
 	}
 
 	/**
-	 * 
+	 * Adds this plugin's options page as a submenu page to the Settings main menu.
 	 *
 	 * @since 1.0.0
 	 *
@@ -698,7 +698,7 @@ class Settings {
 	}
 
 	/**
-	 * 
+	 * [Multisite - Network Admin] Adds this plugin's options page as a submenu page to the Settings main menu.
 	 *
 	 * @since 1.0.0
 	 *
@@ -708,9 +708,8 @@ class Settings {
 		add_submenu_page( 'settings.php', sprintf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()), $this->config->get_plugin_name(), 'manage_network_options', $this->menu_slug, [ $this, 'admin_settings' ] );
 	}
 
-
 	/**
-	 * 
+	 * [Multisite - Network Admin] Save settings
 	 *
 	 * @since 1.0.0
 	 *
@@ -718,7 +717,11 @@ class Settings {
 	 */
 
 	function network_settings_save() {
-		if ( current_user_can( 'manage_options' ) && isset( $_POST[$this->config->get_option_name()] ) && isset( $_POST['action'] ) && $_POST['action'] === 'update' && isset( $_GET['page'] ) && $this->menu_slug === $_GET['page'] ) {
+		if ( current_user_can( 'manage_options' ) &&
+			isset( $_POST[$this->config->get_option_name()] ) &&
+			isset( $_POST['action'] ) && $_POST['action'] === 'update' &&
+			isset( $_GET['page'] ) && $this->menu_slug === $_GET['page'] ) {
+
 			check_admin_referer( $this->config->get_option_name().'-options' );
 
 			$value = wp_unslash( $_POST[$this->config->get_option_name()] );
@@ -727,13 +730,19 @@ class Settings {
 			}
 			$this->config->update_option( $value );
 			
-			wp_safe_redirect( add_query_arg( 'updated', true ) );
+			add_settings_error( 'general', 'settings_updated', __( 'Settings saved.' ), 'success' );
+
+			set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+			// Redirect back to the settings page that was submitted.
+			$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
+			wp_redirect( $goback );
 			exit;
 		}
 	}
 	
 	/**
-	 * 
+	 * Output the Admin page
 	 *
 	 * @since 1.0.0
 	 *
@@ -760,22 +769,13 @@ class Settings {
 		</script>
 		<div class="wrap">
 			<h1><?php printf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()) ?></h1>
-			<?php $this->settings_form(); ?>
-		</div>
-		<?php
-	}
-
-	/**
-	 * 
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	function settings_form(){
-		$page = $this->config->is_plugin_active_for_network() ? '' : 'options.php';
-		?>
-			<?php settings_errors( $this->config->get_option_name() ); ?>
+			<?php
+			$page = 'options.php';
+			if ($this->config->is_plugin_active_for_network()) {
+				$page = '';
+				settings_errors();
+			}
+			?>
 			<form method="post" action="<?php echo $page; ?>">
 				<?php
 				settings_fields( $this->config->get_option_name() );
@@ -783,6 +783,7 @@ class Settings {
 				submit_button();
 				?>
 			</form>
+		</div>
 		<?php
 	}
 
