@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.5] - 2022-01-30
+### Changed
+- "Settings saved." message was missing when Network Activated on a multisite installation.
+- Inputboxes with the `placeholder` attribute are now empty by default.
+    - Custom error messages and action names are still possible.
+- Misc. code tweaks and refactoring.
+- Translations updated.
+
 ## [1.0.4] - 2021-11-24
 ### Changed
 - Wrong text-domain was being used in 3 places.
