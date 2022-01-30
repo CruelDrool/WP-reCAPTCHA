@@ -56,12 +56,12 @@ class Config {
 		'language'					=> '',
 		'badge'						=> 'bottomright',
 		'badge_auto'				=> false,
-		'v2_checkbox_site_key'		=> '',
-		'v2_checkbox_secret_key'	=> '',
-		'v2_invisible_site_key'		=> '',
-		'v2_invisible_secret_key'	=> '',
-		'v3_site_key'				=> '',
-		'v3_secret_key'				=> '',
+		// 'v2_checkbox_site_key'		=> '',
+		// 'v2_checkbox_secret_key'	=> '',
+		// 'v2_invisible_site_key'		=> '',
+		// 'v2_invisible_secret_key'	=> '',
+		// 'v3_site_key'				=> '',
+		// 'v3_secret_key'				=> '',
 		'v2_checkbox_size'			=> 'normal',
 		'v2_checkbox_adjust_size'	=> true,
 		'v2_checkbox_remove_css'	=> false,
@@ -96,10 +96,6 @@ class Config {
 		}
 		$this->plugin_data = get_plugin_data($file);
 		$this->option_name = $this->prefix . "_options";
-
-		$this->defaults['v2_checkbox_error_message'] = __( 'The CAPTCHA solution you provided was incorrect.', 'cd-recaptcha');
-		$this->defaults['v2_invisible_error_message'] = __( 'The CAPTCHA solution you provided was incorrect.', 'cd-recaptcha');
-		$this->defaults['v3_error_message'] = __( 'reCAPTCHA v3 returns a score based on your interaction with this site. Your score did not meet our threshold requirement set for this particular action.', 'cd-recaptcha');
 	}
 
 	/**
@@ -154,9 +150,35 @@ class Config {
 		}
 		
 		$default = $this->defaults[$option] ?? $default;
-		$value = $options[ $option ] ?? $default;
+		$value = $options[ $option ] ?? '';
+
+		if (empty($value) && !empty($default)) {
+			$value = $default;
+		} 
 		
 		return $value;
+	}
+
+	/**
+	 * Get the default error message given the version.
+	 *
+	 * @since 1.0.5
+	 * @param mixed $version 
+	 *
+	 * @return string
+	 */
+	function get_default_error_msg($version) {
+		switch($version) {
+			case 'v2_checkbox':
+			case 'v2_invisible':
+				$string = __( 'The CAPTCHA solution you provided was incorrect.', 'cd-recaptcha');
+				break;
+			case 'v3':
+				$string = __( 'reCAPTCHA v3 returns a score based on your interaction with this site. Your score did not meet our threshold requirement set for this particular action.', 'cd-recaptcha');
+				break;
+			
+		}
+		return $string;
 	}
 	
 	/**

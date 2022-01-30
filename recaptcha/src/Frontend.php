@@ -254,15 +254,15 @@ class Frontend {
 				}
 			}
 		}
-		// echo "<pre>";
-		// print_r($_POST);
-		// print_r($result);
+		echo "<pre>";
+		print_r($_POST);
+		print_r($result);
 		
-		// echo "\nexpected recaptcha_action: ".$this->config->get_option('action_'.$this->recaptcha_action);
-		// echo "\nTreshold: " . $this->config->get_option( 'threshold_'.$this->recaptcha_action );
-		// echo "\nis_success: " . intval($is_success);
-		// echo "</pre>";
-		// return false;
+		echo "\nexpected recaptcha_action: ".$this->config->get_option('action_'.$this->recaptcha_action);
+		echo "\nTreshold: " . $this->config->get_option( 'threshold_'.$this->recaptcha_action );
+		echo "\nis_success: " . intval($is_success);
+		echo "</pre>";
+		return false;
 
 		return $is_success;
 	}
@@ -277,7 +277,8 @@ class Frontend {
 	 */
 	function get_error_msg($prepend = true) {
 		$version = $this->config->get_option( 'recaptcha_version' );
-		$m = $this->config->get_option( $version.'_error_message');
+		$default_msg = $this->config->get_default_error_msg($version);
+		$m = $this->config->get_option( $version.'_error_message', $default_msg);
 		
 		if (!$prepend) {return $m;}
 
@@ -368,13 +369,13 @@ class Frontend {
 				if ($this->config->get_option('theme_auto')) :
 					echo $this->javascript_calculate_lumen();
 				?>
-				
+
 				var theme = calculate_lumen(document.body) <= 127 ? "dark" : "light";
 				<?php else : ?>
 
 				var theme = '<?php echo esc_js( $this->config->get_option( 'theme' ) ); ?>';
 				<?php endif; ?>
-				
+
 				for ( var i = 0; i < document.forms.length; i++ ) {
 					var form = document.forms[i];
 					var captcha_div = form.querySelector( '.<?php echo $this->captcha_div_class ?>' );
@@ -383,12 +384,12 @@ class Frontend {
 					captcha_div.innerHTML = '';
 					var size = '<?php echo esc_js( $this->config->get_option( 'v2_checkbox_size' ) ); ?>';
 					<?php if ($this->config->get_option('v2_checkbox_adjust_size') && $this->config->get_option( 'v2_checkbox_size' ) != 'compact' ) : ?>
-					
+
 					if ( captcha_div.parentNode.offsetWidth < 302 && captcha_div.parentNode.offsetWidth != 0 || document.body.scrollWidth < 302 )  {
 						size = 'compact'
 					}
 					<?php endif; ?>
-					
+
 					( function( form ) {
 						var widget_id = grecaptcha.render( captcha_div,{
 							'sitekey' : '<?php echo esc_js( trim( $this->config->get_option( 'v2_checkbox_site_key' ) ) ); ?>',
@@ -418,7 +419,7 @@ class Frontend {
 				if ($this->config->get_option('theme_auto')) :
 					echo $this->javascript_calculate_lumen();
 				?>
-				
+
 				var theme = calculate_lumen(document.body) <= 127 ? "dark" : "light";
 				<?php else : ?>
 
@@ -450,13 +451,12 @@ class Frontend {
 								HTMLFormElement.prototype.submit.call( form );
 							},
 						});
-
+						<?php
+						// When an error happens, forms from wp-login.php will have a class named "shake" added to it.
+						// This class has an animation that shakes the form, but also moves the badge into the form.
+						// Going to let it do the shake animation, but then the class gets removed.
+						?>
 						if (form.classList.contains("shake")) {
-							<?php
-							// When an error happens, forms from wp-login.php will have a class named "shake" added to it.
-							// This class has an animation that shakes the form, but also moves the badge into the form.
-							// Going to let it do the shake animation, but then the class gets removed.
-							?>
 							setTimeout(function(form){ form.classList.remove("shake");}, 600, form);
 						}
 
@@ -464,7 +464,6 @@ class Frontend {
 							e.preventDefault();
 							grecaptcha.execute( widget_id );
 						};
-						
 					})(form);
 				}
 			};
@@ -488,7 +487,7 @@ class Frontend {
 				if ($this->config->get_option('theme_auto')) :
 					echo $this->javascript_calculate_lumen();
 				?>
-				
+
 				var theme = calculate_lumen(document.body) <= 127 ? "dark" : "light";
 				<?php else : ?>
 
@@ -520,13 +519,12 @@ class Frontend {
 								HTMLFormElement.prototype.submit.call( form );
 							},
 						});
-						
+						<?php
+						// When an error happens, forms from wp-login.php will have a class named "shake" added to it.
+						// This class has an animation that shakes the form, but also moves the badge into the form.
+						// Going to let it do the shake animation, but then the class gets removed.
+						?>						
 						if (form.classList.contains("shake")) {
-							<?php
-							// When an error happens, forms from wp-login.php will have a class named "shake" added to it.
-							// This class has an animation that shakes the form, but also moves the badge into the form.
-							// Going to let it do the shake animation, but then the class gets removed.
-							?>
 							setTimeout(function(form){ form.classList.remove("shake");}, 600, form);
 						}
 
@@ -562,7 +560,7 @@ class Frontend {
 				if ($this->config->get_option('theme_auto')) :
 					echo $this->javascript_calculate_lumen();
 				?>
-				
+
 				var theme = calculate_lumen(document.body) <= 127 ? "dark" : "light";
 				<?php else : ?>
 

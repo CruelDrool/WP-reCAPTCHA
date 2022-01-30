@@ -206,18 +206,24 @@ class Settings {
 				'label'      => __( 'Error message', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'type'		=> 'textarea',
+				'placeholder'	=> $this->config->get_default_error_msg('v2_checkbox'),
+				'desc'	=> __( 'In this textbox you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
 				'class'		=> 'hidden regular-text show-field-for-v2_checkbox',
 			],
 			'v2_invisible_error_message'=> [
 				'label'      => __( 'Error message', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'type'		=> 'textarea',
+				'placeholder' => $this->config->get_default_error_msg('v2_invisible'),
+				'desc'	=> __( 'In this textbox you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
 				'class'		=> 'hidden regular-text show-field-for-v2_invisible',
 			],
 			'v3_error_message'      => [
 				'label'      => __( 'Error message', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'type'		=> 'textarea',
+				'placeholder' => $this->config->get_default_error_msg('v3'),
+				'desc'	=> __( 'In this textbox you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
 				'class'		=> 'hidden regular-text show-field-for-v3',
 			],
 			'loggedin_hide'      => [
@@ -225,7 +231,7 @@ class Settings {
 				'section_id' => 'general',
 				'type'       => 'checkbox',
 				'class'      => 'checkbox',
-				'cb_label'		 => __( 'Only load for guests users.', 'cd-recaptcha'),
+				'cb_label'		 => __( 'Only load for guest users.', 'cd-recaptcha'),
 			],
 			'recaptcha_domain'      =>[
 				'label'      => __( 'Request domain', 'cd-recaptcha' ),
@@ -275,6 +281,7 @@ class Settings {
 				'label'      => __( 'Login', 'cd-recaptcha' ),
 				'section_id' => 'actions',
 				'class'      => 'regular hidden show-field-for-v3',
+				'placeholder' => $this->config->get_default('action_login'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_login'));
 				},
@@ -283,6 +290,7 @@ class Settings {
 				'label'      => __( 'Registration', 'cd-recaptcha' ),
 				'section_id' => 'actions',
 				'class'      => 'regular hidden show-field-for-v3',
+				'placeholder' => $this->config->get_default('action_registration'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_registration'));
 				},
@@ -291,6 +299,7 @@ class Settings {
 				'label'      => __( 'Lost Password', 'cd-recaptcha' ),
 				'section_id' => 'actions',
 				'class'      => 'regular hidden show-field-for-v3',
+				'placeholder' => $this->config->get_default('action_lost_password'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_lost_password'));
 				},
@@ -299,6 +308,7 @@ class Settings {
 				'label'      => __( 'Reset Password', 'cd-recaptcha' ),
 				'section_id' => 'actions',
 				'class'      => 'regular hidden show-field-for-v3',
+				'placeholder' => $this->config->get_default('action_reset_password'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_reset_password'));
 				},
@@ -307,6 +317,7 @@ class Settings {
 				'label'      => __( 'Comment', 'cd-recaptcha' ),
 				'section_id' => 'actions',
 				'class'      => 'regular hidden show-field-for-v3',
+				'placeholder' => $this->config->get_default('action_comment'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_comment'));
 				},
@@ -437,6 +448,7 @@ class Settings {
 				'label'      => __( 'Multisite User Signup', 'cd-recaptcha' ),
 				'section_id' => 'actions',
 				'class'      => 'regular hidden show-field-for-v3',
+				'placeholder' => $this->config->get_default('action_multisite_signup'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_multisite_signup'));
 				},
@@ -506,6 +518,7 @@ class Settings {
 
 		// $value = $this->config->get_option( $field['id'], $field['std'] );
 		$value = $this->config->get_option( $field['id'] );
+		$default = $this->config->get_default($field['id']);
 
 		switch ( $field['type'] ) {
 			case 'text':
@@ -520,7 +533,8 @@ class Settings {
 					esc_attr( $field['id'] ),
 					esc_attr( $field['class'] ),
 					isset( $field['placeholder'] ) ? esc_attr( $field['placeholder'] ) : '',
-					esc_attr( $value ),
+					// esc_attr( $value ),
+					isset( $field['placeholder'] ) && $value == $default  ? '' : esc_attr( $value ),
 					$attrib,
 					$this->config->get_option_name()
 				);
@@ -531,7 +545,8 @@ class Settings {
 					esc_attr( $field['class'] ),
 					isset( $field['placeholder'] ) ? esc_attr( $field['placeholder'] ) : '',
 					$attrib,
-					esc_textarea( $value ),
+					// esc_textarea( $value ),
+					isset( $field['placeholder'] ) && $value == $default  ? '' : esc_textarea( $value ),
 					$this->config->get_option_name()
 				);
 				break;
@@ -640,7 +655,7 @@ class Settings {
 			case 'textarea':
 			case 'wp_editor':
 			case 'teeny':
-				$sanitized = wp_kses_post( $value );
+				$sanitized = sanitize_textarea_field( $value );
 				break;
 			case 'checkbox':
 				$sanitized = absint( $value );
@@ -666,22 +681,17 @@ class Settings {
 	}
 
 	/**
-	 * Sanitizes a v3 action name. Allowed characters are alphanumeric, underscores, and forward slashes. Fallback to default name when blank/empty.
+	 * Sanitizes a v3 action name. Allowed characters are alphanumeric, underscores, and forward slashes.
 	 *
 	 * @since 1.0.0
-	 * @param string $name 
-	 * @param string $default 
+	 * @since 1.0.5 Removed $default (fallback value).
+	 * @param string $name The name of the action.
 	 *
 	 * @return string
 	 */
-	function sanitize_action_name($name, $default) {
-		// Remove any characters that aren't allowed.
+	function sanitize_action_name($name) {
+		// This regex matches any characters that aren't in the list.
 		$name = preg_replace('/[^a-zA-Z0-9_\/]+/', '', $name);
-
-		// Empty value, fallback to default.
-		if (empty($name)) {
-			$name = $default;
-		}
 
 		return $name;
 	}
@@ -802,7 +812,7 @@ class Settings {
 	 */
 	function add_settings_link( $actions ) {
 		$url = $this->config->is_plugin_active_for_network() ? network_admin_url( "settings.php?page={$this->menu_slug}" ) : admin_url( "options-general.php?page={$this->menu_slug}" );
-		$links = [ '<a href="' . $url . '">' . __( 'Settings', 'cd-recaptcha') . '</a>'
+		$links = [ '<a href="' . $url . '">' . __( 'Settings') . '</a>'
 		];
 		$actions = array_merge( $actions, $links );
 		return $actions;
