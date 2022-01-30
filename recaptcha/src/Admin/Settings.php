@@ -283,7 +283,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'placeholder' => $this->config->get_default('action_login'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value, $this->config->get_default('action_login'));
+					return $this->sanitize_action_name($value);
 				},
 			],
 			'action_registration'   => [
@@ -292,7 +292,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'placeholder' => $this->config->get_default('action_registration'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value, $this->config->get_default('action_registration'));
+					return $this->sanitize_action_name($value);
 				},
 			],
 			'action_lost_password'=> [
@@ -301,7 +301,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'placeholder' => $this->config->get_default('action_lost_password'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value, $this->config->get_default('action_lost_password'));
+					return $this->sanitize_action_name($value);
 				},
 			],
 			'action_reset_password'=> [
@@ -310,7 +310,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'placeholder' => $this->config->get_default('action_reset_password'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value, $this->config->get_default('action_reset_password'));
+					return $this->sanitize_action_name($value);
 				},
 			],
 			'action_comment'=> [
@@ -319,7 +319,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'placeholder' => $this->config->get_default('action_comment'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value, $this->config->get_default('action_comment'));
+					return $this->sanitize_action_name($value);
 				},
 			],
 			// Thresholds
@@ -450,7 +450,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'placeholder' => $this->config->get_default('action_multisite_signup'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value, $this->config->get_default('action_multisite_signup'));
+					return $this->sanitize_action_name($value);
 				},
 			];
 			$fields['threshold_multisite_signup'] = [
@@ -670,7 +670,7 @@ class Settings {
 				break;
 			case 'select':
 				if ( ! array_key_exists( $value, $field['options'] ) ) {
-					$sanitized = isset($field['std'])? $field['std'] : '';
+					$sanitized = $field['std']?? '';
 				}
 				break;
 			default:

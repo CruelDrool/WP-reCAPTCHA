@@ -50,15 +50,13 @@ add_filter('update_plugins_github.com', 'CD\recaptcha\update_plugin', 10, 4);
 require __DIR__ . '/autoloader.php';
 
 /**
- * Go head and load the actual plugin.
+ * Go ahead and load the actual plugin.
  */
 function load_plugin() {
 	static $instance;
 
 	if ( is_null( $instance ) ) {
-		// plugin_basename() is not playing nicely with Windows Junctions
-		$file = implode('/', [WP_PLUGIN_DIR,basename(dirname(__FILE__)),basename(__FILE__)]);
-		$instance = new Plugin($file);
+		$instance = new Plugin(__FILE__);
 	}
 
 	return $instance;

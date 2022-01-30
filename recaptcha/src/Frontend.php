@@ -254,15 +254,15 @@ class Frontend {
 				}
 			}
 		}
-		echo "<pre>";
-		print_r($_POST);
-		print_r($result);
+		// echo "<pre>";
+		// print_r($_POST);
+		// print_r($result);
 		
-		echo "\nexpected recaptcha_action: ".$this->config->get_option('action_'.$this->recaptcha_action);
-		echo "\nTreshold: " . $this->config->get_option( 'threshold_'.$this->recaptcha_action );
-		echo "\nis_success: " . intval($is_success);
-		echo "</pre>";
-		return false;
+		// echo "\nexpected recaptcha_action: ".$this->config->get_option('action_'.$this->recaptcha_action);
+		// echo "\nTreshold: " . $this->config->get_option( 'threshold_'.$this->recaptcha_action );
+		// echo "\nis_success: " . intval($is_success);
+		// echo "</pre>";
+		// return false;
 
 		return $is_success;
 	}

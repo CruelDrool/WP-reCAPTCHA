@@ -176,6 +176,9 @@ class Config {
 			case 'v3':
 				$string = __( 'reCAPTCHA v3 returns a score based on your interaction with this site. Your score did not meet our threshold requirement set for this particular action.', 'cd-recaptcha');
 				break;
+			default:
+				$string = '';
+				break;
 			
 		}
 		return $string;
