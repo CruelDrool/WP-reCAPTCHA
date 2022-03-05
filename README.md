@@ -15,7 +15,7 @@ PHP >= 7.1
 
 ## Features
 * Switch between reCAPTCHA versions easily.
-	* Each set of keys are tied the selected version.
+	* Each set of keys are tied to the selected version.
 	* Custom error message for each version.
 * Select the widget's colour theme: *Light* or *Dark*
 	* Automatically set theme based on the background colour's brightness.
@@ -27,18 +27,20 @@ PHP >= 7.1
 * Set which [language](https://developers.google.com/recaptcha/docs/language) to display the widget in.
 
 ### reCAPTCHA versions 
-* v2 "I'm not a robot" Checkbox.
-	* Select size: *Normal* or *Compact*
-		* Auto adjust size if screen is too narrow for *Normal*
-* v2 Invisible.
-	* Select placement of the widget: *Bottom Right*, *Bottom Left* or *Inline*
-		* Automatically set placement based on a page's text direction. (Left-to-Right: *Bottom Right*, Right-to-Left: *Bottom Left*)
-* v3.
-	* Select placement of the widget: *Bottom Right*, *Bottom Left* or *Inline*
-		* Set placement based on a page's text direction. (Left-to-Right: *Bottom Right*, Right-to-Left: *Bottom Left*)
-	* Load on all pages or just form pages.
-	* [Actions](https://developers.google.com/recaptcha/docs/v3#actions) and thresholds for all supported forms.
-		* Custom action names.
+#### v2 "I'm not a robot" Checkbox
+* Select size: *Normal* or *Compact*
+	* Auto adjust size if screen is too narrow for *Normal*
+
+#### v2 Invisible
+* Select placement of the widget: *Bottom Right*, *Bottom Left* or *Inline*
+	* Automatically set placement based on a page's text direction. (Left-to-Right: *Bottom Right*, Right-to-Left: *Bottom Left*)
+
+#### v3
+* Select placement of the widget: *Bottom Right*, *Bottom Left* or *Inline*
+	* Automatically set placement based on a page's text direction. (Left-to-Right: *Bottom Right*, Right-to-Left: *Bottom Left*)
+* Load on all pages or just form pages.
+* [Actions](https://developers.google.com/recaptcha/docs/v3#actions) and thresholds for all supported forms.
+	* Custom action names.
 
 ### Forms
 * Login.
