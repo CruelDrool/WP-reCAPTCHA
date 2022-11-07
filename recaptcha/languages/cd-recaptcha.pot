@@ -1,8 +1,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: CruelDrool's reCAPTCHA 1.0.5\n"
-"POT-Creation-Date: 2022-01-30 11:32+0100\n"
+"Project-Id-Version: CruelDrool's reCAPTCHA 1.06\n"
+"POT-Creation-Date: 2022-11-08 00:41+0100\n"
 "PO-Revision-Date: 2018-04-12 17:20+0600\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,9 +11,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.2\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;"
+"_n_noop:1,2;_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;"
+"esc_attr_x:1,2c;esc_html_x:1,2c\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-SearchPath-0: .\n"
 
@@ -40,9 +42,10 @@ msgid "Thresholds"
 msgstr ""
 
 #: src/Admin/Settings.php:125
+#, php-format
 msgid ""
-"reCAPTCHA v3 returns a score (<samp>1.0</samp> is very likely a good "
-"interaction, <samp>0.0</samp> is very likely a bot)."
+"reCAPTCHA v3 returns a score (<samp>%s</samp> is very likely a good "
+"interaction, <samp>%s</samp> is very likely a bot)."
 msgstr ""
 
 #: src/Admin/Settings.php:129
@@ -157,175 +160,182 @@ msgid ""
 "background of all pages."
 msgstr ""
 
-#: src/Admin/Settings.php:266
+#: src/Admin/Settings.php:265
+msgid "Enable logging"
+msgstr ""
+
+#: src/Admin/Settings.php:269
+#, php-format
+msgid ""
+"Log JSON response data (with the the user's IP address is added in).<br /"
+">The log file is located in the <code>wp-content</code> directory. It "
+"rotates every month. Text format used is %s. <br />Setting both "
+"<code>WP_DEBUG</code> and <code>WP_DEBUG_LOG</code> will have the same "
+"effect as enabling this setting."
+msgstr ""
+
+#: src/Admin/Settings.php:273
 msgid "Enabled forms"
 msgstr ""
 
-#: src/Admin/Settings.php:271 src/Admin/Settings.php:281
-#: src/Admin/Settings.php:327
+#: src/Admin/Settings.php:278 src/Admin/Settings.php:288
+#: src/Admin/Settings.php:334
 msgid "Login"
 msgstr ""
 
-#: src/Admin/Settings.php:272 src/Admin/Settings.php:290
-#: src/Admin/Settings.php:335
+#: src/Admin/Settings.php:279 src/Admin/Settings.php:297
+#: src/Admin/Settings.php:343
 msgid "Registration"
 msgstr ""
 
-#: src/Admin/Settings.php:274 src/Admin/Settings.php:299
-#: src/Admin/Settings.php:344
+#: src/Admin/Settings.php:281 src/Admin/Settings.php:306
+#: src/Admin/Settings.php:353
 msgid "Lost Password"
 msgstr ""
 
-#: src/Admin/Settings.php:275 src/Admin/Settings.php:308
-#: src/Admin/Settings.php:352
+#: src/Admin/Settings.php:282 src/Admin/Settings.php:315
+#: src/Admin/Settings.php:362
 msgid "Reset Password"
 msgstr ""
 
-#: src/Admin/Settings.php:276 src/Admin/Settings.php:317
-#: src/Admin/Settings.php:360
+#: src/Admin/Settings.php:283 src/Admin/Settings.php:324
+#: src/Admin/Settings.php:371
 msgid "Comment"
 msgstr ""
 
-#: src/Admin/Settings.php:369
+#: src/Admin/Settings.php:381
 msgid "Language code"
 msgstr ""
 
-#: src/Admin/Settings.php:372
+#: src/Admin/Settings.php:384
 #, php-format
 msgid ""
 "Language of the widget. Leave it blank to auto-detect the language. Read "
 "more about language codes on %s."
 msgstr ""
 
-#: src/Admin/Settings.php:375
+#: src/Admin/Settings.php:387
 msgid "Theme"
 msgstr ""
 
-#: src/Admin/Settings.php:381
+#: src/Admin/Settings.php:393
 msgid "Light"
 msgstr ""
 
-#: src/Admin/Settings.php:382
+#: src/Admin/Settings.php:394
 msgid "Dark"
 msgstr ""
 
-#: src/Admin/Settings.php:386
-msgid "Set theme based on a page's background color"
+#: src/Admin/Settings.php:395 src/Admin/Settings.php:397
+#: src/Admin/Settings.php:409 src/Admin/Settings.php:411
+#: src/Admin/Settings.php:422 src/Admin/Settings.php:427
+#: src/Admin/Settings.php:438
+msgid "Automatic"
 msgstr ""
 
-#: src/Admin/Settings.php:390
+#: src/Admin/Settings.php:397
+#, php-format
 msgid ""
-"This overrides any selection of theme. The theme will instead be set based "
-"on the background color's brightness."
-msgstr ""
-
-#: src/Admin/Settings.php:393
-msgid "Placement"
-msgstr ""
-
-#: src/Admin/Settings.php:399
-msgid "Bottom Right"
+"Color theme of the widget. Select <i>%s</i> to have the theme be set based "
+"on the brightness of the background color."
 msgstr ""
 
 #: src/Admin/Settings.php:400
-msgid "Bottom Left"
-msgstr ""
-
-#: src/Admin/Settings.php:401
-msgid "Inline"
-msgstr ""
-
-#: src/Admin/Settings.php:403
-msgid "Position of the widget."
+msgid "Placement"
 msgstr ""
 
 #: src/Admin/Settings.php:406
-msgid "Set placement based on a page's text direction"
+msgid "Bottom Right"
 msgstr ""
 
-#: src/Admin/Settings.php:410
+#: src/Admin/Settings.php:407
+msgid "Bottom Left"
+msgstr ""
+
+#: src/Admin/Settings.php:408
+msgid "Inline"
+msgstr ""
+
+#: src/Admin/Settings.php:411
+#, php-format
 msgid ""
-"This overrides any selection of placement. The widget will be placed based "
-"on text direction. For example on a page with \"right-to-left\", the "
-"widget will be placed on the left."
+"Position of the widget. Select <i>%s</i> to place the widget based on text "
+"direction (on a page with \"right-to-left\", the placement will be on the "
+"left)."
 msgstr ""
 
-#: src/Admin/Settings.php:413
+#: src/Admin/Settings.php:414
 msgid "Size"
 msgstr ""
 
-#: src/Admin/Settings.php:419 src/Admin/Settings.php:432
-#: src/Admin/Settings.php:440
+#: src/Admin/Settings.php:420 src/Admin/Settings.php:429
+#: src/Admin/Settings.php:438
 msgid "Normal"
 msgstr ""
 
-#: src/Admin/Settings.php:420 src/Admin/Settings.php:431
+#: src/Admin/Settings.php:421 src/Admin/Settings.php:428
 msgid "Compact"
 msgstr ""
 
-#: src/Admin/Settings.php:424
-msgid "Auto adjust size"
-msgstr ""
-
-#. translators: 1: Compact, 2: Normal
-#: src/Admin/Settings.php:430
+#. translators: 1: Automatic, 2: Compact, 3: Normal
+#: src/Admin/Settings.php:426
 #, php-format
 msgid ""
-"Will automatically set the size to <i>%1$s</i> if the screen is too narrow "
-"for <i>%2$s</i>."
+"Size of the widget. Select <i>%1$s</i> to automatically set the size to <i>"
+"%2$s</i> if the area is too narrow for <i>%3$s</i>."
 msgstr ""
 
-#: src/Admin/Settings.php:435
-msgid "Remove stylesheet (CSS)"
+#: src/Admin/Settings.php:433
+msgid "Add stylesheet (CSS)"
 msgstr ""
 
-#: src/Admin/Settings.php:439
-msgid "Remove this plugin's stylesheet from login page."
+#: src/Admin/Settings.php:437
+msgid "Add this plugin's stylesheet to the login page."
 msgstr ""
 
-#: src/Admin/Settings.php:440
+#: src/Admin/Settings.php:438
 #, php-format
 msgid ""
 "This stylesheet increases the width of the container element that holds "
 "the login form. This is to fit in the widget better. Only applicable if "
-"you have selected <i>%s</i> as size."
+"you have selected <i>%s</i> or <i>%s</i> as size."
 msgstr ""
 
-#: src/Admin/Settings.php:445 src/Admin/Settings.php:448
-#: src/Admin/Settings.php:457
+#: src/Admin/Settings.php:443 src/Admin/Settings.php:446
+#: src/Admin/Settings.php:455
 msgid "Multisite User Signup"
 msgstr ""
 
-#: src/Admin/Settings.php:601
+#: src/Admin/Settings.php:600
 #, php-format
 msgid ""
 "<strong>%s</strong>: <i>%s</i> is an undefined <strong>&lt;input&gt;</"
 "strong> type."
 msgstr ""
 
-#: src/Admin/Settings.php:601 src/Frontend.php:285
+#: src/Admin/Settings.php:600 src/Frontend.php:297
 msgid "Error"
 msgstr ""
 
-#: src/Admin/Settings.php:707 src/Admin/Settings.php:718
-#: src/Admin/Settings.php:781
+#: src/Admin/Settings.php:726 src/Admin/Settings.php:737
+#: src/Admin/Settings.php:800
 #, php-format
 msgid "%s Settings"
 msgstr ""
 
-#: src/Admin/Settings.php:743
+#: src/Admin/Settings.php:762
 msgid "Settings saved."
 msgstr ""
 
-#: src/Admin/Settings.php:815
+#: src/Admin/Settings.php:834
 msgid "Settings"
 msgstr ""
 
-#: src/Config.php:174
+#: src/Config.php:180
 msgid "The CAPTCHA solution you provided was incorrect."
 msgstr ""
 
-#: src/Config.php:177
+#: src/Config.php:183
 msgid ""
 "reCAPTCHA v3 returns a score based on your interaction with this site. "
 "Your score did not meet our threshold requirement set for this particular "
