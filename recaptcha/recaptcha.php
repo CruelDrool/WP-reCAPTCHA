@@ -34,7 +34,7 @@ function update_plugin( $update, $plugin_data, $plugin_file, $locales){
 	So, if there a several plugins using the same hostname as Update URI, our function will be run for each of those other plugins.
 	Better check if the loop has reached *our* plugin until we do anything.
 	*/
-	if ($plugin_file == 'recaptcha/recaptcha.php') {
+	if ($plugin_file == plugin_basename(__FILE__)) {
 		$request = wp_remote_get($plugin_data['UpdateURI']);
 		$request_body = wp_remote_retrieve_body( $request );
 		$update = json_decode( $request_body, true );

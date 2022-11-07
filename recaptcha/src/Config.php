@@ -107,7 +107,7 @@ class Config {
 		if ( ! function_exists( 'get_plugin_data' ) || ! function_exists( 'is_plugin_active_for_network' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/plugin.php';
 		}
-		$this->plugin_data = get_plugin_data($file);
+		$this->plugin_data = get_plugin_data($file, false, false);
 		$this->option_name = self::PREFIX . "_options";
 		$this->is_active_for_network = is_plugin_active_for_network( plugin_basename( $this->file ) );
 

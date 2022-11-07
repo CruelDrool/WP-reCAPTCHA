@@ -68,7 +68,7 @@ class Settings {
 		
 
 		if ( $this->config->get_is_active_for_network() ) {
-			add_action( 'admin_init', array( $this, 'network_settings_save' ), 99 );
+			add_action( 'admin_init', [ $this, 'network_settings_save' ], 99 );
 			add_action( 'network_admin_menu', [ $this, 'network_menu_page' ] );
 			add_filter( 'network_admin_plugin_action_links_' . plugin_basename( $this->config->get_file() ), [$this, 'add_settings_link' ] );
 		} else {

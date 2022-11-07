@@ -243,7 +243,7 @@ class Frontend {
 			$hostname_match = $this->config->get_option('verify_origin') ? ($result['hostname'] ?? '') === $_SERVER['SERVER_NAME'] : true;
 			
 			if ($hostname_match == true) {
-				if ( $this->config->get_option( 'recaptcha_version' ) == 'v3' ) {
+				if ( $version == 'v3' ) {
 					$threshold = $this->config->get_option( 'threshold_'.$this->recaptcha_action );
 					$expected_action = $this->config->get_option('action_'.$this->recaptcha_action);
 
