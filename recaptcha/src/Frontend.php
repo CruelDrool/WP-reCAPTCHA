@@ -149,7 +149,7 @@ class Frontend {
 			add_filter( 'authenticate', [ $this, 'login_verify' ], 999, 3 );
 			// add_action( 'wp_login', [ $this, 'clear_login_attempts' ], 10, 2 );
 
-			if ( ! $this->config->get_option( 'v2_checkbox_remove_css' ) && $this->config->get_option( 'v2_checkbox_size' ) === 'normal' && $this->config->get_option( 'recaptcha_version' )  === 'v2_checkbox' ) {
+			if ( $this->config->get_option( 'v2_checkbox_add_css' ) && $this->config->get_option( 'v2_checkbox_size' ) != 'compact' && $this->config->get_option( 'recaptcha_version' )  == 'v2_checkbox' ) {
 				wp_enqueue_style( $this->config->get_prefix().'-login-style', plugins_url( '/', $this->config->get_file() ) . 'assets/css/loginform.css', [], $this->config->get_current_version() );
 			}
 		}

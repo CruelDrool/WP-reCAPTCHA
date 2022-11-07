@@ -417,13 +417,13 @@ class Settings {
 							__( 'Normal', 'cd-recaptcha' )
 							),
 			],
-			'v2_checkbox_remove_css'  => [
-				'label'      => __( 'Remove stylesheet (CSS)', 'cd-recaptcha' ),
+			'v2_checkbox_add_css'  => [
+				'label'      => __( 'Add stylesheet (CSS)', 'cd-recaptcha' ),
 				'section_id' => 'other',
 				'type'       => 'checkbox',
 				'class'      => 'checkbox hidden show-field-for-v2_checkbox',
-				'cb_label'   => __( "Remove this plugin's stylesheet from login page.", 'cd-recaptcha' ),
-				'desc'       => sprintf(__( 'This stylesheet increases the width of the container element that holds the login form. This is to fit in the widget better. Only applicable if you have selected <i>%s</i> as size.', 'cd-recaptcha' ), __('Normal', 'cd-recaptcha')),
+				'cb_label'   => __( "Add this plugin's stylesheet to the login page.", 'cd-recaptcha' ),
+				'desc'       => sprintf(__( 'This stylesheet increases the width of the container element that holds the login form. This is to fit in the widget better. Only applicable if you have selected <i>%s</i> or <i>%s</i> as size.', 'cd-recaptcha' ), __('Normal', 'cd-recaptcha'), __('Automatic', 'cd-recaptcha')),
 			],
 		];
 

@@ -70,7 +70,7 @@ class Config {
 		// 'v3_site_key'                => '',
 		// 'v3_secret_key'              => '',
 		'v2_checkbox_size'           => 'normal',
-		'v2_checkbox_remove_css'     => false,
+		'v2_checkbox_add_css'        => true,
 		'v3_script_load'             => 'all_pages',
 		'loggedin_hide'              => true,
 		'verify_origin'              => false,

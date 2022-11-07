@@ -130,7 +130,10 @@ class Plugin {
 				if ( $this->config->get_option('v2_checkbox_adjust_size', true) )
 					$options['v2_checkbox_size'] = 'auto';
 
-				$this->config->delete_option(['theme_auto', 'badge_auto', 'v2_checkbox_adjust_size']);
+				if ( $this->config->get_option('v2_checkbox_remove_css', false) )
+					$options['v2_checkbox_add_css'] = false;
+
+				$this->config->delete_option(['theme_auto', 'badge_auto', 'v2_checkbox_adjust_size' , 'v2_checkbox_remove_css']);
 			}
 
 		}
