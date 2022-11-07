@@ -365,15 +365,16 @@ class Frontend {
 		?>
 		<script>
 			var <?php echo $this->onload_callback_name ?> = function() {
-				<?php 
-				if ($this->config->get_option('theme_auto')) :
+				<?php
+				$theme = $this->config->get_option('theme');
+				if ($theme == "auto") :
 					echo $this->javascript_calculate_lumen();
 				?>
 
 				var theme = calculate_lumen(document.body) <= 127 ? "dark" : "light";
 				<?php else : ?>
 
-				var theme = '<?php echo esc_js( $this->config->get_option( 'theme' ) ); ?>';
+				var theme = '<?php echo esc_js( $theme ); ?>';
 				<?php endif; ?>
 
 				for ( var i = 0; i < document.forms.length; i++ ) {
@@ -382,12 +383,14 @@ class Frontend {
 					if ( captcha_div === null )
 						continue;
 					captcha_div.innerHTML = '';
-					var size = '<?php echo esc_js( $this->config->get_option( 'v2_checkbox_size' ) ); ?>';
-					<?php if ($this->config->get_option('v2_checkbox_adjust_size') && $this->config->get_option( 'v2_checkbox_size' ) != 'compact' ) : ?>
+					<?php
+					$size = $this->config->get_option( 'v2_checkbox_size' );
+					if ($size == 'auto' ) : ?>
 
-					if ( captcha_div.parentNode.offsetWidth < 302 && captcha_div.parentNode.offsetWidth != 0 || document.body.scrollWidth < 302 )  {
-						size = 'compact'
-					}
+					var size = ( captcha_div.parentNode.offsetWidth < 302 && captcha_div.parentNode.offsetWidth != 0 || document.body.scrollWidth < 302 ) ? 'compact' : 'normal';
+					<?php else : ?>
+
+					var size = '<?php echo esc_js( $size ); ?>';
 					<?php endif; ?>
 
 					( function( form ) {
@@ -415,23 +418,27 @@ class Frontend {
 		?>
 		<script>
 			var <?php echo $this->onload_callback_name ?> = function() {
-				<?php 
-				if ($this->config->get_option('theme_auto')) :
+				<?php
+				$theme = $this->config->get_option('theme');
+				if ($theme == "auto") :
 					echo $this->javascript_calculate_lumen();
 				?>
 
 				var theme = calculate_lumen(document.body) <= 127 ? "dark" : "light";
 				<?php else : ?>
 
-				var theme = '<?php echo esc_js( $this->config->get_option( 'theme' ) ); ?>';
-				<?php endif; ?>
+				var theme = '<?php echo esc_js( $theme ); ?>';
+				<?php
+				endif; 
 
-				<?php if ($this->config->get_option('badge_auto')) : ?>
+				$badge = $this->config->get_option( 'badge' );
+				if ($badge == "auto") :
+				?>
 
 				var badge = document.dir == "rtl" ? 'bottomleft' : 'bottomright';
 				<?php else : ?>
 
-				var badge = '<?php echo esc_js( $this->config->get_option( 'badge' ) ); ?>';
+				var badge = '<?php echo esc_js( $badge ); ?>';
 				<?php endif; ?>
 
 				for ( var i = 0; i < document.forms.length; i++ ) {
@@ -483,23 +490,27 @@ class Frontend {
 		?>
 		<script>			
 			var <?php echo $this->onload_callback_name ?> = function() {
-				<?php 
-				if ($this->config->get_option('theme_auto')) :
+				<?php
+				$theme = $this->config->get_option('theme');
+				if ($theme == "auto") :
 					echo $this->javascript_calculate_lumen();
 				?>
 
 				var theme = calculate_lumen(document.body) <= 127 ? "dark" : "light";
 				<?php else : ?>
 
-				var theme = '<?php echo esc_js( $this->config->get_option( 'theme' ) ); ?>';
-				<?php endif; ?>
+				var theme = '<?php echo esc_js( $theme ); ?>';
+				<?php
+				endif;
 
-				<?php if ($this->config->get_option('badge_auto')) : ?>
+				$badge = $this->config->get_option( 'badge' );
+				if ($badge == "auto") :
+				?>
 
 				var badge = document.dir == "rtl" ? 'bottomleft' : 'bottomright';
 				<?php else : ?>
 
-				var badge = '<?php echo esc_js( $this->config->get_option( 'badge' ) ); ?>';
+				var badge = '<?php echo esc_js( $badge ); ?>';
 				<?php endif; ?>
 
 				for ( var i = 0; i < document.forms.length; i++ ) {
@@ -528,10 +539,10 @@ class Frontend {
 							setTimeout(function(form){ form.classList.remove("shake");}, 600, form);
 						}
 
-						form.onsubmit = function( e ){
-							<?php
+						form.onsubmit = function( e ){<?php
 							// Get value from the hidden field so we know what action we're doing for this particular form.
 							?>
+
 							var recaptcha_action = form.querySelector("input[name='recaptcha_action']").value;
 							e.preventDefault();
 							grecaptcha.execute( widget_id, { action: recaptcha_action } );
@@ -556,23 +567,27 @@ class Frontend {
 		<div id="<?php echo $this->captcha_div_class ?>"></div>
 		<script>
 			var <?php echo $this->onload_callback_name ?> = function() {
-				<?php 
-				if ($this->config->get_option('theme_auto')) :
+				<?php
+				$theme = $this->config->get_option('theme');
+				if ($theme == "auto") :
 					echo $this->javascript_calculate_lumen();
 				?>
 
 				var theme = calculate_lumen(document.body) <= 127 ? "dark" : "light";
 				<?php else : ?>
 
-				var theme = '<?php echo esc_js( $this->config->get_option( 'theme' ) ); ?>';
-				<?php endif; ?>
+				var theme = '<?php echo esc_js( $theme ); ?>';
+				<?php
+				endif;
 
-				<?php if ($this->config->get_option('badge_auto')) : ?>
+				$badge = $this->config->get_option( 'badge' );
+				if ($badge == "auto") :
+				?>
 
 				var badge = document.dir == "rtl" ? 'bottomleft' : 'bottomright';
 				<?php else : ?>
 
-				var badge = '<?php echo esc_js( $this->config->get_option( 'badge' ) ); ?>';
+				var badge = '<?php echo esc_js( $badge ); ?>';
 				<?php endif; ?>
 
 				var captcha_div = document.getElementById("<?php echo $this->captcha_div_class ?>");
@@ -900,7 +915,7 @@ SCRIPT;
 	}
 
 	/**
-	 * Filter hook.
+	 * Action hook.
 	 * 
 	 * https://developer.wordpress.org/reference/hooks/validate_password_reset/
 	 *

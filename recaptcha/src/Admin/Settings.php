@@ -380,14 +380,9 @@ class Settings {
 				'options'    => [
 					'light' => __( 'Light', 'cd-recaptcha' ),
 					'dark'  => __( 'Dark', 'cd-recaptcha' ),
+					'auto'  => __( 'Automatic', 'cd-recaptcha' ),
 				],
-			],
-			'theme_auto'  => [
-				'label'      => __( 'Set theme based on a page\'s background color', 'cd-recaptcha' ),
-				'section_id' => 'other',
-				'type'       => 'checkbox',
-				'class'      => 'checkbox',
-				'desc'       => __( 'This overrides any selection of theme. The theme will instead be set based on the background color\'s brightness.', 'cd-recaptcha' ),
+				'desc'       => sprintf(__( 'Color theme of the widget. Select <i>%s</i> to have the theme be set based on the brightness of the background color.', 'cd-recaptcha' ), __( 'Automatic', 'cd-recaptcha' )),
 			],
 			'badge'              => [
 				'label'      => __( 'Placement', 'cd-recaptcha' ),
@@ -399,15 +394,9 @@ class Settings {
 					'bottomright' => __( 'Bottom Right', 'cd-recaptcha' ),
 					'bottomleft'  => __( 'Bottom Left', 'cd-recaptcha' ),
 					'inline'      => __( 'Inline', 'cd-recaptcha' ),
+					'auto'        => __( 'Automatic', 'cd-recaptcha' ),
 				],
-				'desc'       => __( 'Position of the widget.', 'cd-recaptcha' ),
-			],
-			'badge_auto'  => [
-				'label'      => __( 'Set placement based on a page\'s text direction', 'cd-recaptcha' ),
-				'section_id' => 'other',
-				'type'       => 'checkbox',
-				'class'      => 'checkbox hidden show-field-for-v2_invisible show-field-for-v3',
-				'desc'       => __( 'This overrides any selection of placement. The widget will be placed based on text direction. For example on a page with "right-to-left", the widget will be placed on the left.', 'cd-recaptcha' ),
+				'desc'       => sprintf(__( 'Position of the widget. Select <i>%s</i> to place the widget based on text direction (on a page with "right-to-left", the placement will be on the left).', 'cd-recaptcha' ), __( 'Automatic', 'cd-recaptcha' ) ),
 			],
 			'v2_checkbox_size' => [
 				'label'      => __( 'Size', 'cd-recaptcha' ),
@@ -418,18 +407,15 @@ class Settings {
 				'options'    => [
 					'normal'    => __( 'Normal', 'cd-recaptcha' ),
 					'compact'   => __( 'Compact', 'cd-recaptcha' ),
+					'auto'      => __( 'Automatic', 'cd-recaptcha' ),
 				],
-			],
-			'v2_checkbox_adjust_size' => [
-				'label'      => __( 'Auto adjust size', 'cd-recaptcha' ),
-				'section_id' => 'other',
-				'type'       => 'checkbox',
-				'class'      => 'regular hidden show-field-for-v2_checkbox',
-				'desc'		 => sprintf(
-							/* translators: 1: Compact, 2: Normal */
-							__( 'Will automatically set the size to <i>%1$s</i> if the screen is too narrow for <i>%2$s</i>.', 'cd-recaptcha' ),
+				'desc'       => sprintf(
+							/* translators: 1: Automatic, 2: Compact, 3: Normal */
+							__( 'Size of the widget. Select <i>%1$s</i> to automatically set the size to <i>%2$s</i> if the area is too narrow for <i>%3$s</i>.', 'cd-recaptcha' ),
+							__( 'Automatic', 'cd-recaptcha' ),
 							__( 'Compact', 'cd-recaptcha' ),
-							__( 'Normal', 'cd-recaptcha' ) )
+							__( 'Normal', 'cd-recaptcha' )
+							),
 			],
 			'v2_checkbox_remove_css'  => [
 				'label'      => __( 'Remove stylesheet (CSS)', 'cd-recaptcha' ),

@@ -112,13 +112,35 @@ class Plugin {
 	 * @return bool
 	 */
 	private function update() {
-		$prev_version = $this->config->get_option('version');
 		$current_version = $this->config->get_current_version();
+		$prev_version = $this->config->get_option('version');
 		
 		// Plugin updates
-		
-		if ( version_compare( $prev_version, $current_version, '!=' ) ) {
-			$this->config->update_option( 'version', $current_version );
+		$options = [];
+		if ( !empty($prev_version) ) {
+
+			if (version_compare( $prev_version, "1.0.6", '<' )) {
+
+				if ( $this->config->get_option('theme_auto', false) )
+					$options['theme'] = 'auto';
+
+				if ( $this->config->get_option('badge_auto', false) )
+					$options['badge'] = 'auto';
+
+				if ( $this->config->get_option('v2_checkbox_adjust_size', true) )
+					$options['v2_checkbox_size'] = 'auto';
+
+				$this->config->delete_option(['theme_auto', 'badge_auto', 'v2_checkbox_adjust_size']);
+			}
+
+		}
+
+		if ( version_compare( $current_version, $prev_version, '!=' ) ) {
+			$options['version'] = $current_version;
+		}
+
+		if ( !empty($options) ) {
+			$this->config->update_option($options);
 		}
 
 		return true;
