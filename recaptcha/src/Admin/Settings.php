@@ -330,6 +330,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'std'        => $this->config->get_default('threshold_login'),
 				'options'    => $score_values,
+				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
 			'threshold_registration'=> [
 				'label'      => __( 'Registration', 'cd-recaptcha' ),
@@ -338,6 +339,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'std'        => $this->config->get_default('threshold_registration'),
 				'options'    => $score_values,
+				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
 
 			'threshold_lost_password'=> [
@@ -347,6 +349,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'std'        => $this->config->get_default('threshold_lost_password'),
 				'options'    => $score_values,
+				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
 			'threshold_reset_password'=> [
 				'label'      => __( 'Reset Password', 'cd-recaptcha' ),
@@ -355,6 +358,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'std'        => $this->config->get_default('threshold_reset_password'),
 				'options'    => $score_values,
+				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
 			'threshold_comment'=> [
 				'label'      => __( 'Comment', 'cd-recaptcha' ),
@@ -363,6 +367,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'std'        => $this->config->get_default('threshold_comment'),
 				'options'    => $score_values,
+				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
 			// Other
 			'language'           => [
@@ -446,6 +451,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'std'        => $this->config->get_default('threshold_multisite_signup'),
 				'options'    => $score_values,
+				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			];
 		}
 
@@ -688,6 +694,18 @@ class Settings {
 		}
 
 		return $name;
+	}
+
+	/**
+	 * Sanitizes a v3 threshold value to ensure it's a double.
+	 *
+	 * @since 1.0.6
+	 * @param string $value 
+	 *
+	 * @return double
+	 */
+	function sanitize_threshold_value($value) {
+		return floatval($value);
 	}
 
 	/**
