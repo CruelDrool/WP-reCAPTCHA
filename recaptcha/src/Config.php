@@ -60,6 +60,7 @@ class Config {
 	private const DEFAULTS = [
 		'recaptcha_version'          => 'v2_checkbox',
 		'recaptcha_domain'           => self::DOMAINS['GOOGLE'],
+		'recaptcha_log'              => false,
 		'theme'                      => 'light',
 		// 'language'                   => '',
 		'badge'                      => 'bottomright',

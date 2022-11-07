@@ -261,6 +261,13 @@ class Settings {
 				],
 				'desc'       => __( 'For analytics purposes, it\'s recommended to load the widget in the background of all pages.', 'cd-recaptcha' ),
 			],
+			'recaptcha_log'     => [
+				'label'      => __( 'Enable logging', 'cd-recaptcha' ),
+				'section_id' => 'general',
+				'type'       => 'checkbox',
+				'class'      => 'checkbox',
+				'desc'       => sprintf(__( 'Log JSON response data (with the the user\'s IP address is added in).<br />The log file is located in the <code>wp-content</code> directory. It rotates every month. Text format used is %s. <br />Setting both <code>WP_DEBUG</code> and <code>WP_DEBUG_LOG</code> will have the same effect as enabling this setting.', 'cd-recaptcha' ), '<a href="//jsonlines.org" target="_blank">JSON Lines</a>' ),
+			],
 			// Forms
 			'enabled_forms'      => [
 				'label'      => __( 'Enabled forms', 'cd-recaptcha' ),
