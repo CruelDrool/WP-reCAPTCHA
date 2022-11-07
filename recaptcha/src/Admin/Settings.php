@@ -122,7 +122,7 @@ class Settings {
 			'thresholds'       => [
 				'section_title' => sprintf('<span class="hidden show-field-for-v3">%s</span>',__( 'Thresholds', 'cd-recaptcha' ) ),
 				'section_callback' => function() {
-					printf('<p class="hidden show-field-for-v3">%s</p>', __( 'reCAPTCHA v3 returns a score (<samp>1.0</samp> is very likely a good interaction, <samp>0.0</samp> is very likely a bot).', 'cd-recaptcha' ));
+					printf('<p class="hidden show-field-for-v3">%s</p>', sprintf(__( 'reCAPTCHA v3 returns a score (<samp>%s</samp> is very likely a good interaction, <samp>%s</samp> is very likely a bot).', 'cd-recaptcha' ), number_format_i18n(1.0, 1) , number_format_i18n(0.0, 1)));
 				},
 			],
 			'other'       => [
