@@ -25,15 +25,22 @@ class Config {
 	
 	/**
 	 * @since 1.0.0
+	 * @since 1.0.6 Changed to a constant
 	 * @var string
 	 */
-	private $prefix = 'cdr';
+	private const PREFIX = 'cdr';
 
 	/**
 	 * @since 1.0.0
-	 * @var string
+	 * @var string Option name used in wp_options
 	 */
 	private $option_name;
+
+	/**
+	 * @since 1.0.6
+	 * @var bool
+	 */
+	private $is_active_for_network;
 	
 	/** 
 	 * @since 1.0.0
@@ -46,43 +53,51 @@ class Config {
 
 	/**
 	 * @since 1.0.0
+	 * @since 1.0.6 Changed to a constant.
+	 * 
 	 * @var array Default options.
 	 */
-	private $defaults = [
-		'recaptcha_version'			=> 'v2_checkbox',
-		'recaptcha_domain'			=> self::DOMAINS['GOOGLE'],
-		'theme'						=> 'light',
-		'theme_auto'				=> false,
-		'language'					=> '',
-		'badge'						=> 'bottomright',
-		'badge_auto'				=> false,
-		// 'v2_checkbox_site_key'		=> '',
-		// 'v2_checkbox_secret_key'	=> '',
-		// 'v2_invisible_site_key'		=> '',
-		// 'v2_invisible_secret_key'	=> '',
-		// 'v3_site_key'				=> '',
-		// 'v3_secret_key'				=> '',
-		'v2_checkbox_size'			=> 'normal',
-		'v2_checkbox_adjust_size'	=> true,
-		'v2_checkbox_remove_css'	=> false,
-		'v3_script_load'			=> 'all_pages',
-		'loggedin_hide'				=> true,
-		'verify_origin'				=> false,
-		'enabled_forms'				=> [],
-		'action_login'				=> 'login',
-		'action_registration'		=> 'register',
-		'action_multisite_signup'	=> 'multisite_signup',
-		'action_lost_password'		=> 'lost_password',
-		'action_reset_password'		=> 'reset_password',
-		'action_comment'			=> 'comment',
-		'threshold_login'			=> 0.5,
-		'threshold_registration'	=> 0.5,
-		'threshold_multisite_signup'=> 0.5,
-		'threshold_lost_password'	=> 0.5,
-		'threshold_reset_password'	=> 0.5,
-		'threshold_comment'			=> 0.5,
+	private const DEFAULTS = [
+		'recaptcha_version'          => 'v2_checkbox',
+		'recaptcha_domain'           => self::DOMAINS['GOOGLE'],
+		'theme'                      => 'light',
+		'theme_auto'                 => false,
+		// 'language'                   => '',
+		'badge'                      => 'bottomright',
+		'badge_auto'                 => false,
+		// 'v2_checkbox_site_key'       => '',
+		// 'v2_checkbox_secret_key'     => '',
+		// 'v2_invisible_site_key'      => '',
+		// 'v2_invisible_secret_key'    => '',
+		// 'v3_site_key'                => '',
+		// 'v3_secret_key'              => '',
+		'v2_checkbox_size'           => 'normal',
+		'v2_checkbox_adjust_size'    => true,
+		'v2_checkbox_remove_css'     => false,
+		'v3_script_load'             => 'all_pages',
+		'loggedin_hide'              => true,
+		'verify_origin'              => false,
+		'enabled_forms'              => [],
+		'action_login'               => 'login',
+		'action_registration'        => 'register',
+		'action_multisite_signup'    => 'multisite_signup',
+		'action_lost_password'       => 'lost_password',
+		'action_reset_password'      => 'reset_password',
+		'action_comment'             => 'comment',
+		'threshold_login'            => 0.5,
+		'threshold_registration'     => 0.5,
+		'threshold_multisite_signup' => 0.5,
+		'threshold_lost_password'    => 0.5,
+		'threshold_reset_password'   => 0.5,
+		'threshold_comment'          => 0.5,
 	];
-	
+
+	/** 
+	 * @since 1.0.6
+	 * @var array Options loaded from the database.
+	 */
+	private $options;
+
 	/**
 	 * Constructor
 	 * 
@@ -91,11 +106,16 @@ class Config {
 	 */
 	function __construct(string $file) {
 		$this->file = $file;
-		if ( ! function_exists( 'get_plugin_data' ) ) {
+		if ( ! function_exists( 'get_plugin_data' ) || ! function_exists( 'is_plugin_active_for_network' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/plugin.php';
 		}
 		$this->plugin_data = get_plugin_data($file);
-		$this->option_name = $this->prefix . "_options";
+		$this->option_name = self::PREFIX . "_options";
+		$this->is_active_for_network = is_plugin_active_for_network( plugin_basename( $this->file ) );
+
+		// Retrieve options from the database.
+		$get_options_func = $this->is_active_for_network ? 'get_site_option' : 'get_option';
+		$this->options = call_user_func($get_options_func, $this->option_name, []);
 	}
 
 	/**
@@ -120,7 +140,6 @@ class Config {
 		return $this->plugin_data['Name'];
 	}
 
-	
 	/**
 	 * Returns the plugin's Text Domain.
 	 *
@@ -131,39 +150,28 @@ class Config {
 	function get_text_domain() {
 		return $this->plugin_data['TextDomain'];
 	}
-	
-	
-	 /**
-	  * Returns value of an option. If no value can be found, return a default value.
-	  *
-	  * @since 1.0.0
-	  * @param string $option name of option
-	  * @param mixed $default provide a fallback default value
-	  *
-	  * @return mixed
-	  */
-	function get_option($option, $default = '') {
-		if ( $this->is_plugin_active_for_network() ) {
-			$options = get_site_option( $this->get_option_name() );
-		} else {
-			$options = get_option( $this->get_option_name() );
-		}
-		
-		$default = $this->defaults[$option] ?? $default;
-		$value = $options[ $option ] ?? '';
-
-		if (empty($value) && !empty($default)) {
-			$value = $default;
-		} 
-		
-		return $value;
-	}
 
 	/**
-	 * Get the default error message given the version.
+	 * Returns value of an option. If no value can be found, return a default value.
+	 *
+	 * @since 1.0.0
+	 * @param string $option Name of option
+	 * @param mixed $default Optional. Provide a fallback default value
+	 *
+	 * @return mixed
+	 */
+	function get_option($option, $default = '') {
+		$default = self::DEFAULTS[$option] ?? $default;
+		$value = $this->options[$option] ?? $default;
+
+		return $value;
+	}
+	
+	/**
+	 * Get the default error message given the reCAPTCHA version.
 	 *
 	 * @since 1.0.5
-	 * @param mixed $version 
+	 * @param string $version 
 	 *
 	 * @return string
 	 */
@@ -188,16 +196,16 @@ class Config {
 	 * Get default value for an option.
 	 * 
 	 * @since 1.0.0
-	 * @param mixed $option
+	 * @param string $option Name of option
 	 * 
 	 * @return mixed
 	 */
 	function get_default($option) {
-		return $this->defaults[$option] ?? '';
+		return self::DEFAULTS[$option] ?? '';
 	}
 	
 	/**
-	 * Retrieves the selected reCAPTCHA domain. Also verifies that's a valid domains.
+	 * Retrieves the selected reCAPTCHA domain. Also verifies that the domain is a valid one.
 	 * 
 	 * @since 1.0.0
 	 * 
@@ -205,7 +213,7 @@ class Config {
 	 */
 	function get_domain() {
 		$domain = $this->get_option('recaptcha_domain');
-		$domain = in_array($domain, self::DOMAINS) ? $domain : $this->defaults['recaptcha_domain'];
+		$domain = in_array($domain, self::DOMAINS) ? $domain : self::DEFAULTS['recaptcha_domain'];
 		
 		return $domain;
 	}
@@ -220,33 +228,72 @@ class Config {
 	function get_domains() {
 		return self::DOMAINS;
 	}
-	
+
 	/**
 	 * Update the value of an option.
 	 *
 	 * @since 1.0.0
-	 * @param string $options name of option
-	 * @param mixed $value Option value to set. Default is empty value.
+	 * @since 1.0.6 Discarding options with values that are the same as default. Renamed parameter `$options` to `$option`.
+	 * 
+	 * @param string|array $option Name of an option or an associative array with multiple option names and corresponding values set.
+	 * @param mixed $value Optional. Value to set for the given option. Default is an empty string. Ignored if parameter `$option` is an array.
 	 *
-	 * @return void
+	 * @return bool True if a successful update, false otherwise.
 	 */
-	function update_option( $options, $value = '') {
+	function update_option($option, $value = '') {
+		if ( !isset($option) ) { return false; }
+		if ( empty($option) ) { return false; }
 
-		if ( $options && ! is_array( $options ) ) {
-			$options = [
-				$options => $value,
-			];
-		}
-		if ( ! is_array( $options ) ) {
-			return false;
-		}
-		if ( $this->is_plugin_active_for_network() ) {
-			update_site_option( $this->get_option_name(), wp_parse_args( $options, get_site_option( $this->get_option_name() ) ) );
-		} else {
-			update_option( $this->get_option_name(), wp_parse_args( $options, get_option( $this->get_option_name() ) ) );
+		$options = is_array( $option ) ? $option : [$option => $value];
+
+		$options = array_merge( $this->options, $options );
+
+		foreach( $options as $key => $value) {
+			$default = $this->get_default($key);
+			if ( $default == $value) {
+				unset( $options[$key] );
+			}
 		}
 
-		return true;
+		$this->options = $options;
+
+		return $this->save_options();
+	}
+
+	/**
+	 * Delete an option.
+	 *
+	 * @since 1.0.6
+	 * @param string|array $option Name of option or an array with options to delete.
+	 *
+	 * @return bool True if a successful update, false otherwise.
+	 */
+	function delete_option($option) {
+		if ( !isset($option) ) { return false; }
+		if ( empty($option) ) { return false; }
+
+		$options = is_array( $option ) ? $option : [$option];
+
+		foreach( $options as $o) {
+			if (isset( $this->options[$o] )) {
+				unset( $this->options[$o] );
+			}
+		}
+
+		return $this->save_options();
+	}
+
+	/**
+	 * Save the options
+	 *
+	 * @since 1.0.6
+	 *
+	 * @return bool True if a successful update, false otherwise.
+	 */
+	private function save_options() {
+		$update_options_func = $this->is_active_for_network ? 'update_site_option' : 'update_option';
+
+		return call_user_func($update_options_func, $this->option_name, $this->options);
 	}
 
 	/**
@@ -268,7 +315,6 @@ class Config {
 	 * @return string
 	 */
 	function get_option_name() {
-		// return self::OPTION_NAME;
 		return $this->option_name;
 	}
 
@@ -280,22 +326,18 @@ class Config {
 	 * @return string
 	 */
 	function get_prefix() {
-		return $this->prefix;
+		return self::PREFIX;
 	}
 	
 	/**
-	 * Determines whether the plugin is active for the entire network.
+	 * Returns whether the plugin is active for the entire network or not.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.6 Replaces `is_plugin_active_for_network()`
 	 *
 	 * @return bool True if active for the network, otherwise false.
 	 */
-	function is_plugin_active_for_network() {
-		// Makes sure the plugin is defined before trying to use it
-		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once ABSPATH . '/wp-admin/includes/plugin.php';
-		}
-		return is_plugin_active_for_network( plugin_basename( $this->file ) );
+	function get_is_active_for_network() {
+		return $this->is_active_for_network;
 	}
 }
 ?>

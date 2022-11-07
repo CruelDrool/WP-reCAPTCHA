@@ -67,7 +67,7 @@ class Settings {
 		add_action( 'admin_init', [ $this, 'admin_init' ] );
 		
 
-		if ( $this->config->is_plugin_active_for_network() ) {
+		if ( $this->config->get_is_active_for_network() ) {
 			add_action( 'admin_init', array( $this, 'network_settings_save' ), 99 );
 			add_action( 'network_admin_menu', [ $this, 'network_menu_page' ] );
 			add_filter( 'network_admin_plugin_action_links_' . plugin_basename( $this->config->get_file() ), [$this, 'add_settings_link' ] );
@@ -283,7 +283,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'placeholder' => $this->config->get_default('action_login'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value);
+					return $this->sanitize_action_name($value, $this->config->get_default('action_login'));
 				},
 			],
 			'action_registration'   => [
@@ -292,7 +292,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'placeholder' => $this->config->get_default('action_registration'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value);
+					return $this->sanitize_action_name($value, $this->config->get_default('action_registration'));
 				},
 			],
 			'action_lost_password'=> [
@@ -301,7 +301,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'placeholder' => $this->config->get_default('action_lost_password'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value);
+					return $this->sanitize_action_name($value, $this->config->get_default('action_lost_password'));
 				},
 			],
 			'action_reset_password'=> [
@@ -310,7 +310,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'placeholder' => $this->config->get_default('action_reset_password'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value);
+					return $this->sanitize_action_name($value, $this->config->get_default('action_reset_password'));
 				},
 			],
 			'action_comment'=> [
@@ -319,7 +319,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'placeholder' => $this->config->get_default('action_comment'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value);
+					return $this->sanitize_action_name($value, $this->config->get_default('action_comment'));
 				},
 			],
 			// Thresholds
@@ -450,7 +450,7 @@ class Settings {
 				'class'      => 'regular hidden show-field-for-v3',
 				'placeholder' => $this->config->get_default('action_multisite_signup'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value);
+					return $this->sanitize_action_name($value, $this->config->get_default('action_multisite_signup'));
 				},
 			];
 			$fields['threshold_multisite_signup'] = [
@@ -518,7 +518,7 @@ class Settings {
 
 		// $value = $this->config->get_option( $field['id'], $field['std'] );
 		$value = $this->config->get_option( $field['id'] );
-		$default = $this->config->get_default($field['id']);
+		// $default = $this->config->get_default($field['id']);
 
 		switch ( $field['type'] ) {
 			case 'text':
@@ -533,8 +533,8 @@ class Settings {
 					esc_attr( $field['id'] ),
 					esc_attr( $field['class'] ),
 					isset( $field['placeholder'] ) ? esc_attr( $field['placeholder'] ) : '',
-					// esc_attr( $value ),
-					isset( $field['placeholder'] ) && $value == $default  ? '' : esc_attr( $value ),
+					esc_attr( $value ),
+					// isset( $field['placeholder'] ) && $value == $default  ? '' : esc_attr( $value ),
 					$attrib,
 					$this->config->get_option_name()
 				);
@@ -545,19 +545,19 @@ class Settings {
 					esc_attr( $field['class'] ),
 					isset( $field['placeholder'] ) ? esc_attr( $field['placeholder'] ) : '',
 					$attrib,
-					// esc_textarea( $value ),
-					isset( $field['placeholder'] ) && $value == $default  ? '' : esc_textarea( $value ),
+					esc_textarea( $value ),
+					// isset( $field['placeholder'] ) && $value == $default  ? '' : esc_textarea( $value ),
 					$this->config->get_option_name()
 				);
 				break;
 			case 'checkbox':
 				// printf( '<input type="hidden" name="%s[%s]" value="" />', $this->config->get_option_name(), esc_attr( $field['id'] ) );
 				printf(
-					'<input type="hidden" name="%5$s[%1$s]" value="" />
+					'<input type="hidden" name="%5$s[%1$s]" value="0" />
 					<label><input type="checkbox" id="%5$s_%1$s" class="%2$s" name="%5$s[%1$s]" value="1" %3$s/> %4$s</label>',
 					esc_attr( $field['id'] ),
 					esc_attr( $field['class'] ),
-					checked( $value, '1', false ),
+					checked( $value, true, false ),
 					esc_attr( $field['cb_label'] ),
 					$this->config->get_option_name()
 				);
@@ -658,7 +658,7 @@ class Settings {
 				$sanitized = sanitize_textarea_field( $value );
 				break;
 			case 'checkbox':
-				$sanitized = absint( $value );
+				$sanitized = boolval( $value );
 				break;
 			case 'multicheck':
 				$sanitized = is_array( $value ) ? array_filter( $value ) : [];
@@ -685,13 +685,21 @@ class Settings {
 	 *
 	 * @since 1.0.0
 	 * @since 1.0.5 Removed $default (fallback value).
+	 * @since 1.0.6 Added back $default (fallback value).
+	 * 
 	 * @param string $name The name of the action.
+	 * @param string $default
 	 *
 	 * @return string
 	 */
-	function sanitize_action_name($name) {
+	function sanitize_action_name($name, $default) {
 		// This regex matches any characters that aren't in the list.
 		$name = preg_replace('/[^a-zA-Z0-9_\/]+/', '', $name);
+
+		// Empty value, fallback to default.
+		if (empty($name)) {
+			$name = $default;
+		}
 
 		return $name;
 	}
@@ -781,7 +789,7 @@ class Settings {
 			<h1><?php printf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()) ?></h1>
 			<?php
 			$page = 'options.php';
-			if ($this->config->is_plugin_active_for_network()) {
+			if ($this->config->get_is_active_for_network()) {
 				$page = '';
 				settings_errors();
 			}
@@ -811,7 +819,7 @@ class Settings {
 	 * @return array
 	 */
 	function add_settings_link( $actions ) {
-		$url = $this->config->is_plugin_active_for_network() ? network_admin_url( "settings.php?page={$this->menu_slug}" ) : admin_url( "options-general.php?page={$this->menu_slug}" );
+		$url = $this->config->get_is_active_for_network() ? network_admin_url( "settings.php?page={$this->menu_slug}" ) : admin_url( "options-general.php?page={$this->menu_slug}" );
 		$links = [ '<a href="' . $url . '">' . __( 'Settings') . '</a>'
 		];
 		$actions = array_merge( $actions, $links );
