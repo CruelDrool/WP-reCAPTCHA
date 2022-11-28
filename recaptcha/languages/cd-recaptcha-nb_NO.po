@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: CruelDrool's reCAPTCHA 1.0.6\n"
-"POT-Creation-Date: 2022-11-08 00:41+0100\n"
-"PO-Revision-Date: 2022-11-08 00:41+0100\n"
+"Project-Id-Version: CruelDrool's reCAPTCHA 1.0.7\n"
+"POT-Creation-Date: 2022-11-28 19:24+0100\n"
+"PO-Revision-Date: 2022-11-28 19:24+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nb_NO\n"
@@ -202,35 +202,40 @@ msgid "Enabled forms"
 msgstr "Aktiverte skjemaer"
 
 #: src/Admin/Settings.php:278 src/Admin/Settings.php:288
-#: src/Admin/Settings.php:334
+#: src/Admin/Settings.php:343
 msgid "Login"
 msgstr "Innlogging"
 
 #: src/Admin/Settings.php:279 src/Admin/Settings.php:297
-#: src/Admin/Settings.php:343
+#: src/Admin/Settings.php:352
 msgid "Registration"
 msgstr "Registrering"
 
-#: src/Admin/Settings.php:281 src/Admin/Settings.php:306
-#: src/Admin/Settings.php:353
+#: src/Admin/Settings.php:280 src/Admin/Settings.php:306
+#: src/Admin/Settings.php:361
+msgid "Multisite User Signup"
+msgstr "Flernettsted brukerregistering"
+
+#: src/Admin/Settings.php:281 src/Admin/Settings.php:315
+#: src/Admin/Settings.php:370
 msgid "Lost Password"
 msgstr "Tapt passord"
 
-#: src/Admin/Settings.php:282 src/Admin/Settings.php:315
-#: src/Admin/Settings.php:362
+#: src/Admin/Settings.php:282 src/Admin/Settings.php:324
+#: src/Admin/Settings.php:379
 msgid "Reset Password"
 msgstr "Sett nytt passord"
 
-#: src/Admin/Settings.php:283 src/Admin/Settings.php:324
-#: src/Admin/Settings.php:371
+#: src/Admin/Settings.php:283 src/Admin/Settings.php:333
+#: src/Admin/Settings.php:388
 msgid "Comment"
 msgstr "Kommentar"
 
-#: src/Admin/Settings.php:381
+#: src/Admin/Settings.php:398
 msgid "Language code"
 msgstr "Språkkode"
 
-#: src/Admin/Settings.php:384
+#: src/Admin/Settings.php:401
 #, php-format
 msgid ""
 "Language of the widget. Leave it blank to auto-detect the language. Read "
@@ -239,26 +244,26 @@ msgstr ""
 "Modulens språk. La stå blank for å automatisk oppdage språk. Les mer om "
 "språkkoder på %s."
 
-#: src/Admin/Settings.php:387
+#: src/Admin/Settings.php:404
 msgid "Theme"
 msgstr "Tema"
 
-#: src/Admin/Settings.php:393
+#: src/Admin/Settings.php:410
 msgid "Light"
 msgstr "Lys"
 
-#: src/Admin/Settings.php:394
+#: src/Admin/Settings.php:411
 msgid "Dark"
 msgstr "Mørk"
 
-#: src/Admin/Settings.php:395 src/Admin/Settings.php:397
-#: src/Admin/Settings.php:409 src/Admin/Settings.php:411
-#: src/Admin/Settings.php:422 src/Admin/Settings.php:427
-#: src/Admin/Settings.php:438
+#: src/Admin/Settings.php:412 src/Admin/Settings.php:414
+#: src/Admin/Settings.php:426 src/Admin/Settings.php:428
+#: src/Admin/Settings.php:439 src/Admin/Settings.php:444
+#: src/Admin/Settings.php:455
 msgid "Automatic"
 msgstr "Automatisk"
 
-#: src/Admin/Settings.php:397
+#: src/Admin/Settings.php:414
 #, php-format
 msgid ""
 "Color theme of the widget. Select <i>%s</i> to have the theme be set based "
@@ -267,23 +272,23 @@ msgstr ""
 "Modulens fargetema. Velg <i>%s</i> for å sette fargetema basert på "
 "bakgrunnsfargens lysstyrke."
 
-#: src/Admin/Settings.php:400
+#: src/Admin/Settings.php:417
 msgid "Placement"
 msgstr "Plassering"
 
-#: src/Admin/Settings.php:406
+#: src/Admin/Settings.php:423
 msgid "Bottom Right"
 msgstr "Nede til høyre"
 
-#: src/Admin/Settings.php:407
+#: src/Admin/Settings.php:424
 msgid "Bottom Left"
 msgstr "Nede til venstre"
 
-#: src/Admin/Settings.php:408
+#: src/Admin/Settings.php:425
 msgid "Inline"
 msgstr "På linje"
 
-#: src/Admin/Settings.php:411
+#: src/Admin/Settings.php:428
 #, php-format
 msgid ""
 "Position of the widget. Select <i>%s</i> to place the widget based on text "
@@ -294,21 +299,21 @@ msgstr ""
 "tekstretningen (på en side med \"høyre-til-venstre\", så vil modulen bli "
 "plassert til venstre)."
 
-#: src/Admin/Settings.php:414
+#: src/Admin/Settings.php:431
 msgid "Size"
 msgstr "Størrelse"
 
-#: src/Admin/Settings.php:420 src/Admin/Settings.php:429
-#: src/Admin/Settings.php:438
+#: src/Admin/Settings.php:437 src/Admin/Settings.php:446
+#: src/Admin/Settings.php:455
 msgid "Normal"
 msgstr "Normal"
 
-#: src/Admin/Settings.php:421 src/Admin/Settings.php:428
+#: src/Admin/Settings.php:438 src/Admin/Settings.php:445
 msgid "Compact"
 msgstr "Kompakt"
 
 #. translators: 1: Automatic, 2: Compact, 3: Normal
-#: src/Admin/Settings.php:426
+#: src/Admin/Settings.php:443
 #, php-format
 msgid ""
 "Size of the widget. Select <i>%1$s</i> to automatically set the size to <i>"
@@ -317,15 +322,15 @@ msgstr ""
 "Modulens størrelse. Velg <i>%1$s</i> for å automatisk sette størrelsen til "
 "<i>%2$s</i> hvis området er for smalt for <i>%3$s</i>."
 
-#: src/Admin/Settings.php:433
+#: src/Admin/Settings.php:450
 msgid "Add stylesheet (CSS)"
 msgstr "Legg til stilsett (CSS)"
 
-#: src/Admin/Settings.php:437
+#: src/Admin/Settings.php:454
 msgid "Add this plugin's stylesheet to the login page."
 msgstr "Legg til denne utvidelsen sitt stilsett på innloggingssiden."
 
-#: src/Admin/Settings.php:438
+#: src/Admin/Settings.php:455
 #, php-format
 msgid ""
 "This stylesheet increases the width of the container element that holds the "
@@ -336,12 +341,7 @@ msgstr ""
 "innloggingsskjemaet. Dette er for at modulen skal få bedre plass. Gjelder "
 "bare hvis du har valgt <i>%s</i> eller <i>%s</i> som størrelse."
 
-#: src/Admin/Settings.php:443 src/Admin/Settings.php:446
-#: src/Admin/Settings.php:455
-msgid "Multisite User Signup"
-msgstr "Flernettsted brukerregistering"
-
-#: src/Admin/Settings.php:600
+#: src/Admin/Settings.php:606
 #, php-format
 msgid ""
 "<strong>%s</strong>: <i>%s</i> is an undefined <strong>&lt;input&gt;</"
@@ -350,21 +350,21 @@ msgstr ""
 "<strong>%s</strong>: <i>%s</i> er en udefinert <strong>&lt;input&gt;</"
 "strong>-type."
 
-#: src/Admin/Settings.php:600 src/Frontend.php:297
+#: src/Admin/Settings.php:606 src/Frontend.php:297
 msgid "Error"
 msgstr "Feil"
 
-#: src/Admin/Settings.php:726 src/Admin/Settings.php:737
-#: src/Admin/Settings.php:800
+#: src/Admin/Settings.php:738 src/Admin/Settings.php:749
+#: src/Admin/Settings.php:812
 #, php-format
 msgid "%s Settings"
 msgstr "%s-innstillinger"
 
-#: src/Admin/Settings.php:762
+#: src/Admin/Settings.php:774
 msgid "Settings saved."
 msgstr ""
 
-#: src/Admin/Settings.php:834
+#: src/Admin/Settings.php:846
 msgid "Settings"
 msgstr ""
 
