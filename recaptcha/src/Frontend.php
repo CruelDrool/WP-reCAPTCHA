@@ -235,7 +235,7 @@ class Frontend {
 
 		$result = json_decode( $request_body, true );
 		
-		$this->recaptcha_log($result, $version, $remoteip);
+		$this->recaptcha_log($result, $remoteip);
 
 		$is_success = false;
 		if ( isset( $result['success'] ) && $result['success'] == true ) {
@@ -264,17 +264,17 @@ class Frontend {
 	 * Outputs a log in the "JSON Lines" format.
 	 *
 	 * @since 1.0.6
+	 * @since 1.0.7 Removed parameter $version
 	 * @param array $result 
-	 * @param string $version 
 	 * @param string $remoteip 
 	 *
 	 * @return void
 	 */
-	function recaptcha_log($result, $version, $remoteip){
+	private function recaptcha_log($result, $remoteip){
 		if ( !( ( WP_DEBUG && WP_DEBUG_LOG ) || $this->config->get_option('recaptcha_log')) )
 			return;
 
-		$file = sprintf('%s/recaptcha_%s_log_%s.jsonl', WP_CONTENT_DIR, $version, date("Y-m"));
+		$file = sprintf('%s/recaptcha_%s_log_%s.jsonl', WP_CONTENT_DIR, $this->config->get_option('recaptcha_version'), date("Y-m"));
 		$result['remoteip'] = $remoteip;
 		file_put_contents($file, json_encode($result)."\n", FILE_APPEND);
 	}
