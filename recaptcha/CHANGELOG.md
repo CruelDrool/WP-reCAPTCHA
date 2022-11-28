@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.7] - 2022-11-28
+### Changed
+- Consolidated the JavaScript code that sets the theme.
+- Ensure that v3 threshold values are between 0.0 and 1.0.
+- Hide settings for "Registration" form when in a multisite setup
+- Fixed a bug with "Reset password" form.
+- Removed unneeded parameter $version from function `recaptcha_log`.
+- Translations updated.
+
 ## [1.0.6] - 2022-11-08
 ### Changed
 - Update to Config class.
