@@ -154,7 +154,7 @@ class Frontend {
 			}
 		}
 
-		if ( $this->is_form_enabled( 'registration' ) ) {
+		if ( $this->is_form_enabled( 'registration' ) && !is_multisite() ) {
 			add_action( 'register_form', [ $this, 'register_form_field' ], 99 );
 			add_filter( 'registration_errors', [ $this, 'registration_verify' ], 10, 3 );
 		}

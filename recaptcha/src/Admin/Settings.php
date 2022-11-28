@@ -277,7 +277,7 @@ class Settings {
 				'options'    => [
 					'login'          => __( 'Login', 'cd-recaptcha' ),
 					'registration'   => __( 'Registration', 'cd-recaptcha' ),
-					// 'ms_user_signup' => __( 'Multisite User Signup', 'cd-recaptcha' ),
+					'ms_user_signup' => __( 'Multisite User Signup', 'cd-recaptcha' ),
 					'lost_password'  => __( 'Lost Password', 'cd-recaptcha' ),
 					'reset_password' => __( 'Reset Password', 'cd-recaptcha' ),
 					'comment'        => __( 'Comment', 'cd-recaptcha' ),
@@ -300,6 +300,15 @@ class Settings {
 				'placeholder' => $this->config->get_default('action_registration'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_registration'));
+				},
+			],
+			'action_multisite_signup' => [
+				'label'      => __( 'Multisite User Signup', 'cd-recaptcha' ),
+				'section_id' => 'actions',
+				'class'      => 'regular hidden show-field-for-v3',
+				'placeholder' => $this->config->get_default('action_multisite_signup'),
+				'sanitize_callback' => function($value) {
+					return $this->sanitize_action_name($value, $this->config->get_default('action_multisite_signup'));
 				},
 			],
 			'action_lost_password'=> [
@@ -348,7 +357,15 @@ class Settings {
 				'options'    => $score_values,
 				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
-
+			'threshold_multisite_signup' => [
+				'label'      => __( 'Multisite User Signup', 'cd-recaptcha' ),
+				'section_id' => 'thresholds',
+				'type'       => 'select',
+				'class'      => 'regular hidden show-field-for-v3',
+				'std'        => $this->config->get_default('threshold_multisite_signup'),
+				'options'    => $score_values,
+				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
+			],
 			'threshold_lost_password'=> [
 				'label'      => __( 'Lost Password', 'cd-recaptcha' ),
 				'section_id' => 'thresholds',
@@ -439,27 +456,16 @@ class Settings {
 			],
 		];
 
-		if ( is_main_site() && is_multisite() ) {
-			$fields['enabled_forms']['options']['ms_user_signup'] = __( 'Multisite User Signup', 'cd-recaptcha' );
-			
-			$fields['action_multisite_signup'] = [
-				'label'      => __( 'Multisite User Signup', 'cd-recaptcha' ),
-				'section_id' => 'actions',
-				'class'      => 'regular hidden show-field-for-v3',
-				'placeholder' => $this->config->get_default('action_multisite_signup'),
-				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value, $this->config->get_default('action_multisite_signup'));
-				},
-			];
-			$fields['threshold_multisite_signup'] = [
-				'label'      => __( 'Multisite User Signup', 'cd-recaptcha' ),
-				'section_id' => 'thresholds',
-				'type'       => 'select',
-				'class'      => 'regular hidden show-field-for-v3',
-				'std'        => $this->config->get_default('threshold_multisite_signup'),
-				'options'    => $score_values,
-				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
-			];
+		if ( is_multisite() ) {
+			unset($fields['enabled_forms']['options']['registration']);
+			unset($fields['action_registration']);
+			unset($fields['threshold_registration']);
+		}
+
+		if ( !(is_main_site() && is_multisite()) ) {
+			unset($fields['enabled_forms']['options']['ms_user_signup']);
+			unset($fields['action_multisite_signup']);
+			unset($fields['threshold_multisite_signup']);
 		}
 
 		foreach ( $fields as $field_id => $field ) {
