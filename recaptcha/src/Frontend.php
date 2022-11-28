@@ -376,32 +376,21 @@ class Frontend {
 	function v2_checkbox_script() {
 		?>
 		<script>
-			var <?php echo $this->onload_callback_name ?> = function() {
-				<?php
-				$theme = $this->config->get_option('theme');
-				if ($theme == "auto") :
-					echo $this->javascript_calculate_lumen();
-				?>
-
-				var theme = calculate_lumen(document.body) <= 127 ? "dark" : "light";
-				<?php else : ?>
-
-				var theme = '<?php echo esc_js( $theme ); ?>';
-				<?php endif; ?>
+			var <?php echo $this->onload_callback_name ?> = function() {<?php
+				echo $this->javascript_set_theme(); ?> 
 
 				for ( var i = 0; i < document.forms.length; i++ ) {
 					var form = document.forms[i];
 					var captcha_div = form.querySelector( '.<?php echo $this->captcha_div_class ?>' );
+
 					if ( captcha_div === null )
 						continue;
-					captcha_div.innerHTML = '';
-					<?php
+
+					captcha_div.innerHTML = '';<?php
 					$size = $this->config->get_option( 'v2_checkbox_size' );
-					if ($size == 'auto' ) : ?>
-
+					if ($size == 'auto' ) : ?> 
 					var size = ( captcha_div.parentNode.offsetWidth < 302 && captcha_div.parentNode.offsetWidth != 0 || document.body.scrollWidth < 302 ) ? 'compact' : 'normal';
-					<?php else : ?>
-
+					<?php else : ?> 
 					var size = '<?php echo esc_js( $size ); ?>';
 					<?php endif; ?>
 
@@ -429,27 +418,13 @@ class Frontend {
 	function v2_invisible_script() {
 		?>
 		<script>
-			var <?php echo $this->onload_callback_name ?> = function() {
-				<?php
-				$theme = $this->config->get_option('theme');
-				if ($theme == "auto") :
-					echo $this->javascript_calculate_lumen();
-				?>
-
-				var theme = calculate_lumen(document.body) <= 127 ? "dark" : "light";
-				<?php else : ?>
-
-				var theme = '<?php echo esc_js( $theme ); ?>';
-				<?php
-				endif; 
+			var <?php echo $this->onload_callback_name ?> = function() {<?php
+				echo $this->javascript_set_theme();
 
 				$badge = $this->config->get_option( 'badge' );
-				if ($badge == "auto") :
-				?>
-
-				var badge = document.dir == "rtl" ? 'bottomleft' : 'bottomright';
-				<?php else : ?>
-
+				if ($badge == 'auto') : ?> 
+				var badge = document.dir == 'rtl' ? 'bottomleft' : 'bottomright';
+				<?php else : ?> 
 				var badge = '<?php echo esc_js( $badge ); ?>';
 				<?php endif; ?>
 
@@ -459,7 +434,9 @@ class Frontend {
 
 					if ( captcha_div === null )
 						continue;
+
 					captcha_div.innerHTML = '';
+
 					( function( form ) {
 						var widget_id = grecaptcha.render( captcha_div,{
 							'sitekey' : '<?php echo esc_js( trim( $this->config->get_option( 'v2_invisible_site_key' ) ) ); ?>',
@@ -474,9 +451,9 @@ class Frontend {
 						// When an error happens, forms from wp-login.php will have a class named "shake" added to it.
 						// This class has an animation that shakes the form, but also moves the badge into the form.
 						// Going to let it do the shake animation, but then the class gets removed.
-						?>
-						if (form.classList.contains("shake")) {
-							setTimeout(function(form){ form.classList.remove("shake");}, 600, form);
+						?> 
+						if (form.classList.contains('shake')) {
+							setTimeout(function(form){ form.classList.remove('shake');}, 600, form);
 						}
 
 						form.onsubmit = function( e ){
@@ -500,28 +477,14 @@ class Frontend {
 	 */
 	function v3_script_form_pages() {
 		?>
-		<script>			
-			var <?php echo $this->onload_callback_name ?> = function() {
-				<?php
-				$theme = $this->config->get_option('theme');
-				if ($theme == "auto") :
-					echo $this->javascript_calculate_lumen();
-				?>
-
-				var theme = calculate_lumen(document.body) <= 127 ? "dark" : "light";
-				<?php else : ?>
-
-				var theme = '<?php echo esc_js( $theme ); ?>';
-				<?php
-				endif;
+		<script>
+			var <?php echo $this->onload_callback_name ?> = function() {<?php
+				echo $this->javascript_set_theme();
 
 				$badge = $this->config->get_option( 'badge' );
-				if ($badge == "auto") :
-				?>
-
-				var badge = document.dir == "rtl" ? 'bottomleft' : 'bottomright';
-				<?php else : ?>
-
+				if ($badge == 'auto') : ?> 
+				var badge = document.dir == 'rtl' ? 'bottomleft' : 'bottomright';
+				<?php else : ?> 
 				var badge = '<?php echo esc_js( $badge ); ?>';
 				<?php endif; ?>
 
@@ -531,7 +494,9 @@ class Frontend {
 
 					if ( captcha_div === null )
 						continue;
+
 					captcha_div.innerHTML = '';
+
 					( function( form ) {
 						var widget_id = grecaptcha.render( captcha_div,{
 							'sitekey' : '<?php echo esc_js( trim( $this->config->get_option( 'v3_site_key' ) ) ); ?>',
@@ -546,15 +511,13 @@ class Frontend {
 						// When an error happens, forms from wp-login.php will have a class named "shake" added to it.
 						// This class has an animation that shakes the form, but also moves the badge into the form.
 						// Going to let it do the shake animation, but then the class gets removed.
-						?>						
-						if (form.classList.contains("shake")) {
-							setTimeout(function(form){ form.classList.remove("shake");}, 600, form);
+						?> 
+						if (form.classList.contains('shake')) {
+							setTimeout(function(form){ form.classList.remove('shake');}, 600, form);
 						}
 
 						form.onsubmit = function( e ){<?php
-							// Get value from the hidden field so we know what action we're doing for this particular form.
-							?>
-
+							// Get value from the hidden field so we know what action we're doing for this particular form.?> 
 							var recaptcha_action = form.querySelector("input[name='recaptcha_action']").value;
 							e.preventDefault();
 							grecaptcha.execute( widget_id, { action: recaptcha_action } );
@@ -578,27 +541,13 @@ class Frontend {
 		?>
 		<div id="<?php echo $this->captcha_div_class ?>"></div>
 		<script>
-			var <?php echo $this->onload_callback_name ?> = function() {
-				<?php
-				$theme = $this->config->get_option('theme');
-				if ($theme == "auto") :
-					echo $this->javascript_calculate_lumen();
-				?>
-
-				var theme = calculate_lumen(document.body) <= 127 ? "dark" : "light";
-				<?php else : ?>
-
-				var theme = '<?php echo esc_js( $theme ); ?>';
-				<?php
-				endif;
+			var <?php echo $this->onload_callback_name ?> = function() {<?php
+				echo $this->javascript_set_theme();
 
 				$badge = $this->config->get_option( 'badge' );
-				if ($badge == "auto") :
-				?>
-
-				var badge = document.dir == "rtl" ? 'bottomleft' : 'bottomright';
-				<?php else : ?>
-
+				if ($badge == 'auto') : ?> 
+				var badge = document.dir == 'rtl' ? 'bottomleft' : 'bottomright';
+				<?php else : ?> 
 				var badge = '<?php echo esc_js( $badge ); ?>';
 				<?php endif; ?>
 
@@ -615,17 +564,33 @@ class Frontend {
 		<?php
 	}
 
-	private function javascript_calculate_lumen() {
-		return <<<SCRIPT
+	/**
+	 * Javascript to set theme for the widget.
+	 *
+	 * @since 1.0.7 Replaces javascript_calculate_lumen()
+	 *
+	 * @return string Heredoc
+	 */
+	private function javascript_set_theme() {
+		$theme = $this->config->get_option('theme');
+		if ($theme == "auto") {
+		$output = <<<SCRIPT
 
-				var calculate_lumen = function(element) {
-					var bgcolor = window.getComputedStyle(element).backgroundColor;
-					var rgb = bgcolor.match(new RegExp('[+-]?([0-9]*[.])?[0-9]+','g'));
-					var r = rgb[0]; var g = rgb[1]; var b = rgb[2]; var a = rgb[3] ? rgb[3] : 1;
-					return Math.round( ( 0.2126 * r ) + ( 0.7152 * g ) + ( 0.0722 * b ) );
-				}
+				var bgcolor = window.getComputedStyle(document.body).backgroundColor;
+				var rgb = bgcolor.match(new RegExp('[+-]?([0-9]*[.])?[0-9]+','g'));
+				var r = rgb[0] ? rgb[0] : 255; var g = rgb[1] ? rgb[1] : 255; var b = rgb[2] ? rgb[2] : 255;
+				var lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
+				var theme = lum < 127.5 ? 'dark' : 'light';
 SCRIPT;
+		} else {
+			$theme = esc_js( $theme );
+			$output = <<<SCRIPT
+
+				var theme = '$theme';
+SCRIPT;
+		}
+		return $output;
 	}
 
 	/**
