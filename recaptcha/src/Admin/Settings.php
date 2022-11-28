@@ -704,7 +704,7 @@ class Settings {
 	}
 
 	/**
-	 * Sanitizes a v3 threshold value to ensure it's a double.
+	 * Sanitizes a v3 threshold value to ensure it's a double value between 0.0 and 1.0.
 	 *
 	 * @since 1.0.6
 	 * @param string $value 
@@ -712,7 +712,13 @@ class Settings {
 	 * @return double
 	 */
 	function sanitize_threshold_value($value) {
-		return floatval($value);
+		$value = floatval($value);
+		if ( $value < 0 ) {
+			$value = 0.0;
+		} elseif ( $value > 1 ) {
+			$value = 1.0;
+		}
+		return $value;
 	}
 
 	/**
