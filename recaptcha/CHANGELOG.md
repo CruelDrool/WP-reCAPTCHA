@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.8] - 2022-11-28
+### Changed
+- Logging update.
+	- Only show the setting for logging on the main site. (On single-site installation this is always true.)
+	- Don't log sub-domains' response data in a multisite installation unless the plugin is Network Activated.
+
 ## [1.0.7] - 2022-11-28
 ### Changed
 - Consolidated the JavaScript code that sets the theme.

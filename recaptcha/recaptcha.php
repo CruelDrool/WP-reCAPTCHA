@@ -2,7 +2,7 @@
 /*
 Plugin Name: reCAPTCHA
 Description: Allows you to place Google's reCAPTCHA widget on your WordPress forms. Supports customisation of all reCAPTCHA versions.
-Version: 1.0.7
+Version: 1.0.8
 Author: CruelDrool
 Author URI: https://github.com/CruelDrool
 Plugin URI: https://github.com/CruelDrool/WP-reCAPTCHA
