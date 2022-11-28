@@ -271,6 +271,9 @@ class Frontend {
 	 * @return void
 	 */
 	private function recaptcha_log($result, $remoteip){
+		if ( !( $this->config->get_is_active_for_network() || is_main_site() ) )
+			return;
+
 		if ( !( ( WP_DEBUG && WP_DEBUG_LOG ) || $this->config->get_option('recaptcha_log')) )
 			return;
 

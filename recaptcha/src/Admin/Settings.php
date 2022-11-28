@@ -468,6 +468,10 @@ class Settings {
 			unset($fields['threshold_multisite_signup']);
 		}
 
+		if ( !is_main_site() ) {
+			unset($fields['recaptcha_log']);
+		}
+
 		foreach ( $fields as $field_id => $field ) {
 			$fields[ $field_id ] = wp_parse_args(
 				$field, [
