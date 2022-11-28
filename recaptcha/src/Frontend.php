@@ -902,10 +902,12 @@ SCRIPT;
 	 *
 	 * @return void
 	 */
-	function reset_password_verify( $errors, $user ) {
-		$this->recaptcha_action = 'reset_password';
-		if ( ! $this->verify() ) {
-			$errors->add( $this->error_code, $this->get_error_msg() );
+	function reset_password_verify( $errors, $user ) {	
+		if ( count($_POST) ) {
+			$this->recaptcha_action = 'reset_password';
+			if ( ! $this->verify() ) {
+				$errors->add( $this->error_code, $this->get_error_msg() );
+			}
 		}
 	}
 
