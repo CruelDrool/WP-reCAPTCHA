@@ -277,7 +277,7 @@ class Frontend {
 		if ( !( ( WP_DEBUG && WP_DEBUG_LOG ) || $this->config->get_option('recaptcha_log')) )
 			return;
 
-		$file = sprintf('%s/recaptcha_%s_log_%s.jsonl', WP_CONTENT_DIR, $this->config->get_option('recaptcha_version'), date("Y-m"));
+		$file = sprintf('%s/recaptcha_%s_log_%s.jsonl', WP_CONTENT_DIR, $this->config->get_option('recaptcha_version'), gmdate("Y-m"));
 		$result['remoteip'] = $remoteip;
 		file_put_contents($file, json_encode($result)."\n", FILE_APPEND);
 	}
