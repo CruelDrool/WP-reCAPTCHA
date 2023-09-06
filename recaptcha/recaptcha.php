@@ -17,6 +17,13 @@ namespace CD\recaptcha;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Emgergeny stop: in the unlikely event that the need should arise, stop the execution of this plugin's code.
+ */
+if (file_exists(__DIR__ . '/disable')) {
+	return;
+}
+
+/**
  * Bail early if PHP version dependency is not met.
  * Using visibility on class constants introduced in 7.1.
  * Also using the null coalescing operator introduced in 7.0.
