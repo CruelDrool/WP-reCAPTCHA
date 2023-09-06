@@ -59,8 +59,11 @@ class Plugin {
 	 */
 	private function actions_filters() {
 		add_action( 'init', [$this, 'load_plugin_textdomain']);
-		add_action( 'wp_loaded', [$this, 'load_frontend']);
-		add_action( 'wp_loaded', [$this, 'load_admin']);
+		if ( is_admin() ) {
+			add_action( 'wp_loaded', [$this, 'load_admin']);
+		} else {
+			add_action( 'wp_loaded', [$this, 'load_frontend']);
+		}
 	}
 	
 	/**
@@ -72,7 +75,7 @@ class Plugin {
 	 */
 	function load_frontend() {
 		static $instance;
-		if (!is_admin() && is_null( $instance )) {
+		if ( is_null( $instance )) {
 			$instance = new Frontend($this->config);
 		}
 		return $instance;
@@ -87,7 +90,7 @@ class Plugin {
 	 */
 	function load_admin() {
 		static $instance;
-		if (is_admin() && is_null( $instance )) {
+		if ( is_null( $instance )) {
 			$instance = new Admin\Settings($this->config);
 		}
 		return $instance;
