@@ -129,6 +129,11 @@ class Settings {
 				'section_title' => __( 'Other', 'cd-recaptcha' ),
 			],
 		];
+
+		if ( is_main_site() ) {
+			$sections['logging'] = ['section_title' => __( 'Logging', 'cd-recaptcha' )];
+		}
+
 		return $sections;
 	}
 
@@ -261,12 +266,12 @@ class Settings {
 				],
 				'desc'       => __( 'For analytics purposes, it\'s recommended to load the widget in the background of all pages.', 'cd-recaptcha' ),
 			],
-			'recaptcha_log'     => [
-				'label'      => __( 'Enable logging', 'cd-recaptcha' ),
+			'require_remote_ip'     => [
+				'label'      => __( 'Require client IP', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'type'       => 'checkbox',
 				'class'      => 'checkbox',
-				'desc'       => sprintf(__( 'Log JSON response data (with the the user\'s IP address is added in).<br />The log file is located in the <code>wp-content</code> directory. It rotates every month. Text format used is %s. <br />Setting both <code>WP_DEBUG</code> and <code>WP_DEBUG_LOG</code> will have the same effect as enabling this setting.', 'cd-recaptcha' ), '<a href="//jsonlines.org" target="_blank">JSON Lines</a>' ),
+				'desc'       => __( 'Require that a client\'s IP address has been determined before submitting data to the reCAPTCHA server. An undetermined IP address will be treated as a failed CAPTCHA attempt.', 'cd-recaptcha' ),
 			],
 			// Forms
 			'enabled_forms'      => [
@@ -468,8 +473,108 @@ class Settings {
 			unset($fields['threshold_multisite_signup']);
 		}
 
-		if ( !is_main_site() ) {
-			unset($fields['recaptcha_log']);
+		if ( is_main_site()  ) {
+			$log_fields = [
+				'recaptcha_log'  => [ 
+					'label'      => __( 'Enable logging of reCAPTCHA\'s JSON response data', 'cd-recaptcha' ),
+					'section_id' => 'logging',
+					'type'       => 'checkbox',
+					'class'      => 'checkbox',
+					'desc'       => sprintf(__( '%s<br/>The log file is by default located in the <code>/wp-content</code> directory, but that can be changed. Text format used is %s.', 'cd-recaptcha' ),
+										__('Enabling this will have the same effect as setting both <code>WP_DEBUG</code> and <code>WP_DEBUG_LOG</code> to <code>true</code>.'),
+										'<a href="https://jsonlines.org" target="_blank">JSON Lines</a>'
+										),
+				],
+				'recaptcha_log_ip'  => [ 
+					'label'      => __( 'Add client IP address to the JSON response data', 'cd-recaptcha' ),
+					'section_id' => 'logging',
+					'type'       => 'checkbox',
+					'class'      => 'checkbox',
+				],
+				'recaptcha_log_rotate_interval'  => [ 
+					'label'      => __( 'reCAPTCHA log rotate interval', 'cd-recaptcha' ),
+					'section_id' => 'logging',
+					'type'       => 'select',
+					'class'      => 'regular',
+					'std'        => $this->config->get_default('recaptcha_log_rotate_interval'),
+					'options'    => [
+						'never'   => __( 'Never', 'cd-recaptcha' ),
+						'daily'   => __( 'Daily', 'cd-recaptcha' ),
+						'weekly'  => __( 'Weekly', 'cd-recaptcha' ),
+						'monthly' => __( 'Monthly', 'cd-recaptcha' ),
+						'yearly'  => __( 'Yearly', 'cd-recaptcha' ),
+					],
+					'desc'       => sprintf(__('Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ), '<a href="https://www.iso.org/standard/40874.html" target="_blank">ISO 8601</a>'),
+				],
+				'debug_log'  => [ 
+					'label'      => __( 'Enable debug logging', 'cd-recaptcha' ),
+					'section_id' => 'logging',
+					'type'       => 'checkbox',
+					'class'      => 'checkbox',
+					'desc'       => __('Enabling this will have the same effect as setting both <code>WP_DEBUG</code> and <code>WP_DEBUG_LOG</code> to <code>true</code>.'),
+				],
+				'debug_log_seperate'  => [ 
+					'label'      => __( 'Seperate debug log', 'cd-recaptcha' ),
+					'section_id' => 'logging',
+					'type'       => 'checkbox',
+					'class'      => 'checkbox',
+					'desc'       => sprintf(__( 'When you enable debugging logging in WordPress with <code>WP_DEBUG_LOG</code>, the default the output is in <code>/wp-content/debug.log</code><br/>This location can be changed by either setting <code>WP_DEBUG_LOG</code> to different file (example: /path/to/debug.log) or enabling the option to have a separate debug log, and set a log directory. Read more about %s.', 'cd-recaptcha' ),
+										sprintf('<a href="https://wordpress.org/documentation/article/debugging-in-wordpress/" target="_blank">%s</a>',__('Debugging in WordPress'), 'cd-recaptcha')
+										),
+				],
+				'debug_log_rotate_interval'  => [ 
+					'label'      => __( 'Debug log rotate interval', 'cd-recaptcha' ),
+					'section_id' => 'logging',
+					'type'       => 'select',
+					'class'      => 'regular',
+					'std'        => $this->config->get_default('debug_log_rotate_interval'),
+					'options'    => [
+						'never'   => __( 'Never', 'cd-recaptcha' ),
+						'daily'   => __( 'Daily', 'cd-recaptcha' ),
+						'weekly'  => __( 'Weekly', 'cd-recaptcha' ),
+						'monthly' => __( 'Monthly', 'cd-recaptcha' ),
+						'yearly'  => __( 'Yearly', 'cd-recaptcha' ),
+					],
+					'desc'       => sprintf(__('%s<br/>Only applicable if you have enabled option <strong>%s<strong>.', 'cd-recaptcha' ),
+										sprintf(__('Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ), '<a href="https://www.iso.org/standard/40874.html" target="_blank">ISO 8601</a>'),
+										__( 'Seperate debug log', 'cd-recaptcha' )
+										),
+				],
+				'debug_log_min_level'  => [ 
+					'label'      => __( 'Debug log minimum level', 'cd-recaptcha' ),
+					'section_id' => 'logging',
+					'type'       => 'select',
+					'class'      => 'regular',
+					'std'        => $this->config->get_default('debug_log_min_level'),
+					'options'    => [
+						__( 'Disabled/No output', 'cd-recaptcha' ),
+						__( 'Error', 'cd-recaptcha' ),
+						__( 'Warning', 'cd-recaptcha' ),
+						__( 'Notice', 'cd-recaptcha' ),
+						__( 'Info', 'cd-recaptcha' ),
+						__( 'Debug', 'cd-recaptcha' ),
+					],
+					'desc'       => __('Determines the verbosity of the debug log.', 'cd-recaptcha' ),
+				],
+				'log_directory'  => [ 
+					'label'      => __( 'Log directory path', 'cd-recaptcha' ),
+					'section_id' => 'logging',
+					'type'       => 'text',
+					'desc'       => sprintf(__('If you want to some other directory than <code>/wp-content</code> or the one set in <code>WP_DEBUG_LOG</code>.<br/><br/>If you are logging to an area that is web accessible, you may add this to a <code>.htaccess</code> file in that directory:<br/>%s Or alternatively, you can also use:<br/>%s', 'cd-recaptcha' ),
+										'<pre class="code" style="background: rgba(0, 0, 0, 0.07); width: fit-content;padding: 5px;color: #646970;margin-top: 5px;">RedirectMatch 404 ".*\.(log|jsonl)"</pre>',
+										'<pre class="code" style="background: rgba(0, 0, 0, 0.07); width: fit-content;padding: 5px;color: #646970;margin-top: 5px;">
+&lt;Files ~ ".*\.(log|jsonl)$"&gt;
+	Redirect 404
+&lt;/Files&gt;
+</pre>'
+								),
+					'sanitize_callback' => function($value) {
+						return $this->sanitize_directory_path($value, $this->config->get_default('log_directory'));
+					},
+				],
+			];
+
+			$fields = array_merge($fields, $log_fields);
 		}
 
 		foreach ( $fields as $field_id => $field ) {
@@ -732,6 +837,73 @@ class Settings {
 	}
 
 	/**
+	 * Sanitize a directory path.
+	 *
+	 * @since x.y.z
+	 * @param string $value 
+	 * @param string $default 
+	 *
+	 * @return void
+	 */
+	function sanitize_directory_path($value, $default) {
+		if ( empty($value) ) {
+			return $default;
+		}
+
+		// "Copy as path" function on Windows has the path in quotation marks.
+		preg_match('/^"*(.+?)"*$/', $value, $matches);
+
+		if ( !empty($matches) ) {
+			$value = $matches[1];
+		}
+
+		$path = $value;
+		$is_relative_path = false;
+		// Relative directory path, try to resolve it.
+		$is_relative_path = false;
+		if ( boolval(preg_match('/^\.+?\.?|[\x2f\x5c]?\.\.[\x2f\x5c]|[\x2f\x5c]\.[\x2f\x5c]|[\x2f\x5c]\.+?\.?$/', $path)) ) {		
+			$path = realpath($path);
+			$is_relative_path = true;
+		}
+
+		$warning = false;
+		$warning_msg = '';
+
+		if ( $is_relative_path && $path !== false ) {
+			$warning = true;
+			$warning_msg = sprintf(__( 'Relative path "%s" was resolved to "%s". %s', 'cd-recaptcha' ), $value, $path, __('It is recommended to use absolute paths instead.'));
+		}
+
+		$error = false;
+		$error_msg = '';
+
+		if ($path === false) {
+			$error = true;
+			$error_msg = sprintf(__( 'Was unable to resolve the relative path "%s". %s', 'cd-recaptcha' ), $value, __('It is recommended to use absolute paths instead.'));
+		} elseif ( !file_exists($path) ) {
+			$error = true;
+			$error_msg = sprintf(__( 'Path "%s" does not exist.', 'cd-recaptcha' ), $path);
+		} elseif ( !is_dir($path )) {
+			$error = true;
+			$error_msg = sprintf(__( 'Path "%s" is not a directory.', 'cd-recaptcha' ), $path);
+		} elseif ( !is_writable($path) ) {
+			$error = true;
+			$error_msg = sprintf(__( 'Path "%s" is not writable.', 'cd-recaptcha' ), $path);
+		}
+
+		$code = 'directory_path_sanitization';
+		if ( $warning) {
+			add_settings_error($this->menu_slug, $code, $warning_msg, 'warning' );
+		}
+
+		if ( $error ) {
+			add_settings_error($this->menu_slug, $code, $error_msg, 'error' );
+		}
+		
+		return $error ? $default : rtrim($path, DIRECTORY_SEPARATOR);
+	}
+
+	/**
 	 * Adds this plugin's options page as a submenu page to the Settings main menu.
 	 *
 	 * @since 1.0.0
@@ -775,9 +947,9 @@ class Settings {
 			}
 			$this->config->update_option( $value );
 			
-			add_settings_error( 'general', 'settings_updated', __( 'Settings saved.' ), 'success' );
+			add_settings_error( $this->menu_slug, 'settings_updated', __( 'Settings saved.' ), 'success' );
 
-			set_transient( 'settings_errors', get_settings_errors(), 30 );
+			set_transient( 'settings_errors', get_settings_errors($this->menu_slug), 30 );
 
 			// Redirect back to the settings page that was submitted.
 			$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );

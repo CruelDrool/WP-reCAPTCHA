@@ -42,6 +42,17 @@ class Config {
 	 */
 	private $is_active_for_network;
 	
+	/**
+	 * @since x.y.z
+	 * @var array List of ISO-8601 date formats
+	 */
+	private const DATE_FORMATS = [
+		'daily'   => 'Y-m-d',
+		'weekly'  => 'o-\WW',
+		'monthly' => 'Y-m',
+		'yearly'  => 'Y',
+	];
+
 	/** 
 	 * @since 1.0.0
 	 * @var array Possible domain names to load the script and verify the token.
@@ -58,36 +69,44 @@ class Config {
 	 * @var array Default options.
 	 */
 	private const DEFAULTS = [
-		'recaptcha_version'          => 'v2_checkbox',
-		'recaptcha_domain'           => self::DOMAINS['GOOGLE'],
-		'recaptcha_log'              => false,
-		'theme'                      => 'light',
-		// 'language'                   => '',
-		'badge'                      => 'bottomright',
-		// 'v2_checkbox_site_key'       => '',
-		// 'v2_checkbox_secret_key'     => '',
-		// 'v2_invisible_site_key'      => '',
-		// 'v2_invisible_secret_key'    => '',
-		// 'v3_site_key'                => '',
-		// 'v3_secret_key'              => '',
-		'v2_checkbox_size'           => 'normal',
-		'v2_checkbox_add_css'        => true,
-		'v3_script_load'             => 'all_pages',
-		'loggedin_hide'              => true,
-		'verify_origin'              => false,
-		'enabled_forms'              => [],
-		'action_login'               => 'login',
-		'action_registration'        => 'register',
-		'action_multisite_signup'    => 'multisite_signup',
-		'action_lost_password'       => 'lost_password',
-		'action_reset_password'      => 'reset_password',
-		'action_comment'             => 'comment',
-		'threshold_login'            => 0.5,
-		'threshold_registration'     => 0.5,
-		'threshold_multisite_signup' => 0.5,
-		'threshold_lost_password'    => 0.5,
-		'threshold_reset_password'   => 0.5,
-		'threshold_comment'          => 0.5,
+		'recaptcha_version'             => 'v2_checkbox',
+		'recaptcha_domain'              => self::DOMAINS['GOOGLE'],
+		'recaptcha_log'                 => false,
+		'recaptcha_log_rotate_interval' => 'monthly',
+		'recaptcha_log_ip'              => true,
+		'debug_log'                     => false,
+		'debug_log_rotate_interval'     => 'monthly',
+		'debug_log_seperate'            => false,
+		'debug_log_min_level'           => 2,
+		'log_directory'                 => '',
+		'theme'                         => 'light',
+		// 'language'                      => '',
+		'badge'                         => 'bottomright',
+		// 'v2_checkbox_site_key'          => '',
+		// 'v2_checkbox_secret_key'        => '',
+		// 'v2_invisible_site_key'         => '',
+		// 'v2_invisible_secret_key'       => '',
+		// 'v3_site_key'                   => '',
+		// 'v3_secret_key'                 => '',
+		'v2_checkbox_size'              => 'normal',
+		'v2_checkbox_add_css'           => true,
+		'v3_script_load'                => 'all_pages',
+		'loggedin_hide'                 => true,
+		'verify_origin'                 => false,
+		'require_remote_ip'             => true,
+		'enabled_forms'                 => [],
+		'action_login'                  => 'login',
+		'action_registration'           => 'register',
+		'action_multisite_signup'       => 'multisite_signup',
+		'action_lost_password'          => 'lost_password',
+		'action_reset_password'         => 'reset_password',
+		'action_comment'                => 'comment',
+		'threshold_login'               => 0.5,
+		'threshold_registration'        => 0.5,
+		'threshold_multisite_signup'    => 0.5,
+		'threshold_lost_password'       => 0.5,
+		'threshold_reset_password'      => 0.5,
+		'threshold_comment'             => 0.5,
 	];
 
 	/** 
@@ -336,6 +355,18 @@ class Config {
 	 */
 	function get_is_active_for_network() {
 		return $this->is_active_for_network;
+	}
+
+	/**
+	 * Get date a format.
+	 *
+	 * @since x.y.z
+	 * @param string $type 
+	 *
+	 * @return string ISO 8601 date format
+	 */
+	function get_date_format($type = 'monthly') {
+		return self::DATE_FORMATS[$type] ?? self::DATE_FORMATS['monthly'];
 	}
 }
 ?>

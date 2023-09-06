@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.x.x] - xxxx-xx-xx
+### Changed
+	- The reCAPTCHA log will now use GMT/UTC time for the log rotation.
+	- Only hook the Settings when in the admin interface.
+		- It wasn't being loaded while on the frontend, but it's bit cleaner this way.
+	- Added an emergency stop.
+		- Adding a file named "disable" in the plugin's directory will stop the execution of its code.
+	- Determining the client's IP address should be a lot accurate now.
+### Added
+	- New options and functionality:
+		- "Require client IP": Require that a client's IP address has been determined before submitting data to the reCAPTCHA server. An undetermined IP address will be treated as a failed CAPTCHA attempt.
+		- "Add client IP address to the JSON response data"
+		- "reCAPTCHA log rotate interval": Never, Daily, Weekly, Monthly or Yearly. Uses UTC/GMT time with a ISO 8601 date format.
+		- "Enable debug logging": Enabling this will have the same effects as setting both `WP_DEBUG` and `WP_DEBUG_LOG` to `true`
+		- "Seperate debug log": Output the plugin's debug log to a seperate file.
+		- "Debug log rotate interval": Never, Daily, Weekly, Monthly or Yearly. Uses UTC/GMT time with a ISO 8601 date format.
+		- "Debug log minimum level": Determines the verbosity of the debug log.
+		- "Log directory path"
 ## [1.0.8] - 2022-11-28
 ### Changed
 - Logging update.
