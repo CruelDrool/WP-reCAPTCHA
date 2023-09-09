@@ -152,4 +152,3 @@ class Plugin {
 		return true;
 	}
 }
-?>
