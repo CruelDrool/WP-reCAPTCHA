@@ -234,10 +234,7 @@ class Frontend {
 			add_filter( 'login_form_middle', [ $this, 'login_form_return' ], 99 );
 			add_filter( 'authenticate', [ $this, 'login_verify' ], 999, 3 );
 			// add_action( 'wp_login', [ $this, 'clear_login_attempts' ], 10, 2 );
-
-			if ( $this->config->get_option( 'v2_checkbox_add_css' ) && $this->config->get_option( 'v2_checkbox_size' ) != 'compact' && $this->config->get_option( 'recaptcha_version' )  == 'v2_checkbox' ) {
-				wp_enqueue_style( $this->config->get_prefix().'-login-style', plugins_url( '/', $this->config->get_file() ) . 'assets/css/loginform.css', [], $this->config->get_current_version() );
-			}
+			add_action( 'login_enqueue_scripts', [$this, 'login_enqueue_scripts'] );
 		}
 
 		if ( $this->is_form_enabled( 'registration' ) && !is_multisite() ) {
@@ -278,6 +275,19 @@ class Frontend {
 		add_action( 'wp_footer', [$this, 'footer_script'], 99999 );
 		add_action( 'login_footer', [$this, 'footer_script'], 99999 );
 		add_filter( 'shake_error_codes', [$this, 'shake_error_codes']);
+	}
+
+	/**
+	 * Enqueue scripts and styles for the login page.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return void
+	 */
+	function login_enqueue_scripts() {
+		if ( $this->config->get_option( 'recaptcha_version' )  == 'v2_checkbox' && $this->config->get_option( 'v2_checkbox_add_css' ) && $this->config->get_option( 'v2_checkbox_size' ) != 'compact' ) {
+			wp_enqueue_style( $this->config->get_prefix().'-login', plugins_url( '/', $this->config->get_file() ) . 'assets/css/loginform.css', [], $this->config->get_current_version() );
+		}
 	}
 
 	/**

@@ -10,6 +10,7 @@
 	- Added an emergency stop.
 		- Adding a file named "disable" in the plugin's directory will stop the execution of its code.
 	- Determining the client's IP address should be a lot accurate now.
+	- Enqueue the login form's CSS stylesheet (v2 checkbox) at the proper place.
 ### Added
 	- New options and functionality:
 		- "Require client IP": Require that a client's IP address has been determined before submitting data to the reCAPTCHA server. An undetermined IP address will be treated as a failed CAPTCHA attempt.
