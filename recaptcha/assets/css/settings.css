@@ -1,0 +1,7 @@
+code.code-pre {
+	display: block;
+	white-space: pre;
+	width: fit-content;
+	margin-top: 4px;
+	padding: 3px;
+}

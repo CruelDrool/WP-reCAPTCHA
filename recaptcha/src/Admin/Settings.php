@@ -65,7 +65,7 @@ class Settings {
 	function actions_filters() {
 		
 		add_action( 'admin_init', [ $this, 'admin_init' ] );
-		
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
 		if ( $this->config->get_is_active_for_network() ) {
 			add_action( 'admin_init', [ $this, 'network_settings_save' ], 99 );
@@ -75,7 +75,6 @@ class Settings {
 			add_action( 'admin_menu', [ $this, 'menu_page' ] );
 			add_filter( 'plugin_action_links_' . plugin_basename( $this->config->get_file() ), [ $this, 'add_settings_link' ] );
 		}
-
 	}
 
 	/**
@@ -86,12 +85,28 @@ class Settings {
 	 * @return void
 	 */
 	function admin_init() {
+
 		register_setting( $this->config->get_option_name(), $this->config->get_option_name(), ['sanitize_callback' => [$this, 'options_sanitize']] );
 		foreach ( $this->get_sections() as $section_id => $section ) {
 			add_settings_section( $section_id, $section['section_title'], $section['section_callback'] ?? null, $this->config->get_option_name() );
 		}
 		foreach ( $this->fields as $field_id => $field ) {
 			add_settings_field( $field['id'], $field['label'], $field['callback'] ?? [$this, 'callback'], $this->config->get_option_name(), $field['section_id'], $field );
+		}
+	}
+
+	/**
+	 * Enqueues admin scripts and styles.
+	 *
+	 * @since x.y.z
+	 * @param string $hook_suffix 
+	 *
+	 * @return void
+	 */
+	function enqueue_scripts($hook_suffix) {
+		// Ensure it only outputs on our own settings page.
+		if ( $hook_suffix == "settings_page_{$this->menu_slug}" ) {
+			wp_enqueue_style( $this->menu_slug, plugins_url( '/', $this->config->get_file() ) . 'assets/css/settings.css', [], $this->config->get_current_version() );
 		}
 	}
 
@@ -560,13 +575,12 @@ class Settings {
 					'label'      => __( 'Log directory path', 'cd-recaptcha' ),
 					'section_id' => 'logging',
 					'type'       => 'text',
-					'desc'       => sprintf(__('If you want to some other directory than <code>/wp-content</code> or the one set in <code>WP_DEBUG_LOG</code>.<br/><br/>If you are logging to an area that is web accessible, you may add this to a <code>.htaccess</code> file in that directory:<br/>%s Or alternatively, you can also use:<br/>%s', 'cd-recaptcha' ),
-										'<pre class="code" style="background: rgba(0, 0, 0, 0.07); width: fit-content;padding: 5px;color: #646970;margin-top: 5px;">RedirectMatch 404 ".*\.(log|jsonl)"</pre>',
-										'<pre class="code" style="background: rgba(0, 0, 0, 0.07); width: fit-content;padding: 5px;color: #646970;margin-top: 5px;">
-&lt;Files ~ ".*\.(log|jsonl)$"&gt;
+					'desc'       => sprintf(__('Set another directory than <code>/wp-content</code> or the one set in <code>WP_DEBUG_LOG</code>.<br/><br/>If you are logging to an area that is web accessible, you may add want to prevent people from accessing the logs. Make a <code>.htaccess</code> file in that directory add something like this: %s Or this: %s', 'cd-recaptcha' ),
+										'<code class="code-pre">RedirectMatch 404 ".*\.(log|jsonl)$"</code>',
+'<code class="code-pre">&lt;Files ~ ".*\.(log|jsonl)$"&gt;
 	Redirect 404
 &lt;/Files&gt;
-</pre>'
+</code>'
 								),
 					'sanitize_callback' => function($value) {
 						return $this->sanitize_directory_path($value, $this->config->get_default('log_directory'));
