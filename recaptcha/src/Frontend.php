@@ -137,11 +137,12 @@ class Frontend {
 			}
 
 			if ( file_exists($dir) && is_writable($dir) ) {
-				
+
+				$date = $this->config->get_log_rotate_interval('debug');
 				$file = sprintf('%s%srecaptcha_debug%s.log',
 					$dir,
 					DIRECTORY_SEPARATOR,
-					sprintf('_%s', $this->config->get_log_rotate_interval('debug'))
+					!empty($date) ? sprintf('_%s', $date) : ''
 				);
 
 				$output = sprintf('%s %s%s', gmdate('[d-M-Y H:i:s \U\T\C]'), $output, PHP_EOL);
@@ -462,11 +463,12 @@ class Frontend {
 				$result['remoteip'] = $remote_ip !== false ? $remote_ip : '0.0.0.0';
 			}
 
+			$date = $this->config->get_log_rotate_interval('recaptcha');
 			$file = sprintf('%s%srecaptcha_%s_log%s.jsonl',
 				$dir,
 				DIRECTORY_SEPARATOR,
 				$this->config->get_option('recaptcha_version'),
-				sprintf('_%s', $this->config->get_log_rotate_interval('recaptcha'))
+				!empty($date) ? sprintf('_%s', $date) : ''
 			);
 			
 			$output = sprintf('%s%s',json_encode($result), PHP_EOL);
