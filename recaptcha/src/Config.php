@@ -78,7 +78,7 @@ class Config {
 		'debug_log_rotate_interval'     => 'monthly',
 		'debug_log_seperate'            => false,
 		'debug_log_min_level'           => 2,
-		'log_directory'                 => '',
+		// 'log_directory'                 => '',
 		'theme'                         => 'light',
 		// 'language'                      => '',
 		'badge'                         => 'bottomright',
@@ -363,10 +363,27 @@ class Config {
 	 * @since x.y.z
 	 * @param string $type 
 	 *
-	 * @return string ISO 8601 date format
+	 * @return string ISO 8601 date format.
 	 */
 	function get_date_format($type = 'monthly') {
 		return self::DATE_FORMATS[$type] ?? self::DATE_FORMATS['monthly'];
 	}
+
+	/**
+	 * Return a log's rotation interval - a date stamp.
+	 *
+	 * @since x.y.z
+	 * @param string $log 
+	 *
+	 * @return string Date stamp in the ISO 8601 date format.
+	 */
+	function get_log_rotate_interval($log) {
+		$type = $this->get_option($log.'_log_rotate_interval');
+
+		$date = $type !== 'never' ? gmdate($this->get_date_format($type)) : '';
+
+		return $date;
+	}
+
 }
 ?>

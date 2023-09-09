@@ -2,7 +2,9 @@
 
 ## [1.x.x] - xxxx-xx-xx
 ### Changed
-	- The reCAPTCHA log will now use GMT/UTC time for the log rotation.
+	- The reCAPTCHA log
+		- Using GMT/UTC time for the log rotation.
+		- Using operating system specific end-of-line.
 	- Only hook the Settings when in the admin interface.
 		- It wasn't being loaded while on the frontend, but it's bit cleaner this way.
 	- Added an emergency stop.

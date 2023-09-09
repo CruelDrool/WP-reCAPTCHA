@@ -79,22 +79,6 @@ class Frontend {
 	}
 
 	/**
-	 * 
-	 *
-	 * @since x.y.z
-	 * @param string $type 
-	 *
-	 * @return void
-	 */
-	function get_log_rotate_interval($log) {
-		$type = $this->config->get_option($log.'_log_rotate_interval');
-
-		$date = $type !== 'never' ? gmdate($this->config->get_date_format($type)) : '';
-
-		return $date;
-	}
-
-	/**
 	 * Output debug logging to the error log.
 	 *
 	 * @since x.y.z
@@ -154,22 +138,22 @@ class Frontend {
 
 			if ( file_exists($dir) && is_writable($dir) ) {
 				
-				$file = sprintf('%s/recaptcha_debug%s.log',
+				$file = sprintf('%s%srecaptcha_debug%s.log',
 					$dir,
-					sprintf('_%s', $this->get_log_rotate_interval('debug'))
+					DIRECTORY_SEPARATOR,
+					sprintf('_%s', $this->config->get_log_rotate_interval('debug'))
 				);
 
 				$output = sprintf('%s %s%s', gmdate('[d-M-Y H:i:s \U\T\C]'), $output, PHP_EOL);
-	
-				if ( is_writable($file) ) {
-					if ( file_put_contents($file, $output, FILE_APPEND) === false) {
-						$this->debug_log(1, "Failed to writing to: {$file}", null, true);
-						$this->debug_log($level, $message, null, true);
-					}
-				} else {
-					$this->debug_log(1, "File is not writable: {$file}", null, true);
+
+				if ( @file_put_contents($file, $output, FILE_APPEND) === false) {
+					$this->debug_log(1, sprintf('Failed to writing to: %s%s',
+						$file,
+						!is_writable($file) ? '. File is not writable' : ''
+					), null, true);
 					$this->debug_log($level, $message, null, true);
 				}
+
 			} else {
 				$this->debug_log(1, "Directory doesn't exist or isn't writable: {$dir}", null, true);
 				$this->debug_log($level, $message, null, true);
@@ -468,18 +452,21 @@ class Frontend {
 				$result['remoteip'] = $remote_ip !== false ? $remote_ip : '0.0.0.0';
 			}
 
-			$file = sprintf('%s/recaptcha_%s_log%s.jsonl',
+			$file = sprintf('%s%srecaptcha_%s_log%s.jsonl',
 				$dir,
+				DIRECTORY_SEPARATOR,
 				$this->config->get_option('recaptcha_version'),
-				sprintf('_%s', $this->get_log_rotate_interval('recaptcha'))
+				sprintf('_%s', $this->config->get_log_rotate_interval('recaptcha'))
 			);
-			if ( is_writable($file) ) {
-				if ( file_put_contents($file, json_encode($result)."\n", FILE_APPEND) === false) {
-					$this->debug_log(1, "Failed to writing to: {$file}");
-				}
-			} else {
-				$this->debug_log(1, "File is not writable: {$file}");
+			
+			$output = sprintf('%s%s',json_encode($result), PHP_EOL);
+			if ( @file_put_contents($file, $output, FILE_APPEND) === false) {
+				$this->debug_log(1, sprintf('Failed to writing to: %s%s',
+					$file,
+					!is_writable($file) ? '. File is not writable' : ''
+				));
 			}
+
 		} else {
 			$this->debug_log(1, "Directory doesn't exist or isn't writable: {$dir}");
 		}
