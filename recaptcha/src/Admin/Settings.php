@@ -870,22 +870,45 @@ class Settings {
 		if ( !empty($matches) ) {
 			$value = $matches[1];
 		}
+		unset($matches);
 
+		$setting_code = 'sanitize_directory_path';
+		$setting_slug = $this->menu_slug;
 		$path = $value;
-		$is_relative_path = false;
+
 		// Relative directory path, try to resolve it.
-		$is_relative_path = false;
-		if ( boolval(preg_match('/^\.+?\.?|[\x2f\x5c]?\.\.[\x2f\x5c]|[\x2f\x5c]\.[\x2f\x5c]|[\x2f\x5c]\.+?\.?$/', $path)) ) {		
+		if ( boolval(preg_match('/^[^\x2f\x5c]|[\x2f\x5c]?\.\.[\x2f\x5c]|[\x2f\x5c]\.[\x2f\x5c]|[\x2f\x5c]\.+?\.?$/', $path)) && !boolval(preg_match('/^[A-Za-z]:/', $path)) ) {
 			$path = realpath($path);
-			$is_relative_path = true;
+
+			if ( $path !== false ) {
+				add_settings_error($setting_slug, $setting_code, sprintf(__( 'Relative path "%s" was resolved to "%s". %s', 'cd-recaptcha' ), $value, $path, __('It is recommended to use absolute paths instead.')), 'info' );
+			}
 		}
 
-		$warning = false;
-		$warning_msg = '';
+		if ( $path !== false && strtolower(substr(php_uname('s'),0,3)) == 'win' ) {
+			// Replace forward slashes with backslashes.
+			$path = str_replace('/','\\', $path);
 
-		if ( $is_relative_path && $path !== false ) {
-			$warning = true;
-			$warning_msg = sprintf(__( 'Relative path "%s" was resolved to "%s". %s', 'cd-recaptcha' ), $value, $path, __('It is recommended to use absolute paths instead.'));
+			// c:directory -> c:\directory
+			preg_match('/^([A-Za-z]:)([^\x5c].*)/', $path, $matches);
+			if ( !empty($matches) ) {
+				$path = sprintf('%s\%s', $matches[1], $matches[2]);
+			}
+
+			unset($matches);
+
+			/**
+			 * \ -> C:
+			 * \directory -> C:\directory
+			 * This will not match double backslash (as in \\server\share)
+			 */
+			if ( boolval(preg_match('/^\x5c$|^\x5c[^\x5c].*/', $path)) ) {
+				// Use the drive letter of this file.
+				$path = substr(__FILE__, 0,2) . $path;
+			}
+
+			// Uppercase drive letter
+			$path = substr_replace($path, strtoupper(substr($path, 0,1)), 0 , 1);
 		}
 
 		$error = false;
@@ -905,16 +928,11 @@ class Settings {
 			$error_msg = sprintf(__( 'Path "%s" is not writable.', 'cd-recaptcha' ), $path);
 		}
 
-		$code = 'directory_path_sanitization';
-		if ( $warning) {
-			add_settings_error($this->menu_slug, $code, $warning_msg, 'warning' );
+		if ( $error ) {
+			add_settings_error($setting_slug, $setting_code, $error_msg, 'error' );
 		}
 
-		if ( $error ) {
-			add_settings_error($this->menu_slug, $code, $error_msg, 'error' );
-		}
-		
-		return $error ? $default : rtrim($path, DIRECTORY_SEPARATOR);
+		return $error ? $default : rtrim($path, '\/');
 	}
 
 	/**
