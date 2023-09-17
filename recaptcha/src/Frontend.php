@@ -351,7 +351,7 @@ class Frontend {
 			$this->debug_log(1, 'Required by settings to determine the remote IP, but was unable to do so');
 			return false;
 		}
-				
+
 		$verify_url = sprintf(self::API_URL_FORMAT, $this->config->get_domain(), '/siteverify');
 
 		$post_params = [
@@ -372,7 +372,7 @@ class Frontend {
 		}
 
 		if ( !isset($response['body']) ) {
-			$this->debug_log(1, 'Array key "body" missing from the response data');
+			$this->debug_log(1, 'Expected array key "body" missing in the response data');
 			return false;
 		}
 
@@ -383,18 +383,25 @@ class Frontend {
 			return false;
 		}
 
-		if ( !empty($result['error-codes']) ) {
-			$this->debug_log(1, sprintf('The returned JSON data contained error codes: %s', implode(', ', $result['error-codes'])));
-		}
-		
 		$this->recaptcha_log($result, $remote_ip);
 
+		if ( !empty($result['error-codes']) ) {
+			$this->debug_log(1, sprintf('The returned JSON data contained error codes: %s', implode(', ', $result['error-codes'])));
+			return false;
+		}
+
+		if ( !isset( $result['success'] ) ) {
+			$this->debug_log(1, 'Expected array key "success" missing in the JSON data');
+			return false;
+		}
+
 		$is_success = false;
-		if ( isset( $result['success'] ) && $result['success'] == true ) {
-							
-			$hostname_match = $this->config->get_option('verify_origin') ? ($result['hostname'] ?? '') === $_SERVER['SERVER_NAME'] : true;
-			
-			if ( $hostname_match ) {
+		$debug_message = '';
+		$debug_level = 4;
+		$hostname_match = $this->config->get_option('verify_origin') ? ($result['hostname'] ?? '') === $_SERVER['SERVER_NAME'] : true;
+
+		if ( $hostname_match )  {		
+			if ( $result['success'] == true ) {
 				if ( $version == 'v3' ) {
 					$threshold = $this->config->get_option( 'threshold_'.$this->recaptcha_action );
 					$expected_action = $this->config->get_option('action_'.$this->recaptcha_action);
@@ -411,21 +418,36 @@ class Frontend {
 					if ( $action !== $expected_action ) {
 						$errors[] = 'action was not the expected action';
 					}
-					$errors = implode(', ', $errors);
-					$this->debug_log(5,
-						sprintf('v3 verification result: %s. Action: "%s"; expected action: "%s". Score: %s; threshold: %s',
-							$is_success ? 'success' : "no success ({$errors})",
+					$errors = ucfirst(implode(', ', $errors));
+					$debug_message =
+						sprintf('%sAction: "%s"; expected action: "%s". Score: %s; threshold: %.1f',
+							!empty($errors) ? "{$errors}. " : '',
 							$action,
 							$expected_action,
 							$score,
 							$threshold
-							)
-					);
+						);
 				} else { // v2
 					$is_success = true;
 				}
+			} else {
+				// Not so interested in this when it's v2
+				$debug_message = $version == 'v3' ? 'Array key "success" was not equal to true' : '';
 			}
+		} else {
+			// This message can only occur if 'verify_origin' is set to true.
+			$debug_level = 3; // Notice. Bump to Warning?
+			$debug_message = sprintf('Hostname mismatch. Origin hostname: "%s". Expected: "%s"', $result['hostname'] ?? '', $_SERVER['SERVER_NAME']);
 		}
+
+		$this->debug_log($debug_level,
+			sprintf('%s verification result: %s%s%s',
+				$version,
+				$is_success ? 'success' : 'no success',
+				!empty($debug_message) ? ". {$debug_message}" : '',
+				$remote_ip !== false ? ". IP address: {$remote_ip}" : ''
+			)
+		);
 
 		return $is_success;
 	}
