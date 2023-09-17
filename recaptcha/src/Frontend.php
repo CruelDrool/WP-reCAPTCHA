@@ -127,7 +127,7 @@ class Frontend {
 
 		$output = sprintf('[%s] %s.', $levels[$level], $message);
 
-		if ( $this->config->get_option('debug_log_seperate') && !$force ) {
+		if ( $this->config->get_option('debug_log_separate') && !$force ) {
 
 			$dir = WP_CONTENT_DIR;
 			if ( !empty($this->config->get_option('log_directory')) ) {

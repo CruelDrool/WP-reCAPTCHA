@@ -137,7 +137,13 @@ class Settings {
 			'thresholds'       => [
 				'section_title' => sprintf('<span class="hidden show-field-for-v3">%s</span>',__( 'Thresholds', 'cd-recaptcha' ) ),
 				'section_callback' => function() {
-					printf('<p class="hidden show-field-for-v3">%s</p>', sprintf(__( 'reCAPTCHA v3 returns a score (<samp>%s</samp> is very likely a good interaction, <samp>%s</samp> is very likely a bot).', 'cd-recaptcha' ), number_format_i18n(1.0, 1) , number_format_i18n(0.0, 1)));
+					printf('<p class="hidden show-field-for-v3">%s</p>',
+						/* translators: 1: 1.0, 2: 0.0 */
+						sprintf(__( 'reCAPTCHA v3 returns a score (%1$s is very likely a good interaction, %1$s is very likely a bot).', 'cd-recaptcha' ), 
+							sprintf( '<samp>%s</samp>', number_format_i18n(1.0, 1) ),
+							sprintf( '<samp>%s</samp>', number_format_i18n(0.0, 1) )
+						)
+					);
 				},
 			],
 			'other'       => [
@@ -190,44 +196,44 @@ class Settings {
 				'label'      => __( 'Site Key', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'class'		=> 'hidden regular-text show-field-for-v2_checkbox',
-				'desc'		=> sprintf( __('Your public site key that is used to load the widget. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
+				'desc'		=> sprintf( __('The public site key is used to load the widget. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
 			],
 			'v2_checkbox_secret_key'         => [
 				'label'      => __( 'Secret Key', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'class'		=> 'hidden regular-text show-field-for-v2_checkbox',
-				'desc'		=> sprintf( __('Your private secret key for communication between your site and the reCAPTCHA verification server. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
+				'desc'		=> sprintf( __('The private secret key is for communication between your site and the reCAPTCHA verification server. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
 			],
 			'v2_invisible_site_key'           => [
 				'label'      => __( 'Site Key', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'class'		=> 'hidden regular-text show-field-for-v2_invisible',
-				'desc'		=> sprintf( __('Your public site key that is used to load the widget. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
+				'desc'		=> sprintf( __('The public site key is used to load the widget. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
 			],
 			'v2_invisible_secret_key'         => [
 				'label'      => __( 'Secret Key', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'class'		=> 'hidden regular-text show-field-for-v2_invisible',
-				'desc'		=> sprintf( __('Your private secret key for communication between your site and the reCAPTCHA verification server. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
+				'desc'		=> sprintf( __('The private secret key is for communication between your site and the reCAPTCHA verification server. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
 			],
 			'v3_site_key'           => [
 				'label'      => __( 'Site Key', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'class'		=> 'hidden regular-text show-field-for-v3',
-				'desc'		=> sprintf( __('Your public site key that is used to load the widget. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
+				'desc'		=> sprintf( __('The public site key is used to load the widget. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
 			],
 			'v3_secret_key'         => [
 				'label'      => __( 'Secret Key', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'class'		=> 'hidden regular-text show-field-for-v3',
-				'desc'		=> sprintf( __('Your private secret key for communication between your site and the reCAPTCHA verification server. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
+				'desc'		=> sprintf( __('The private secret key is for communication between your site and the reCAPTCHA verification server. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
 			],
 			'v2_checkbox_error_message'=> [
 				'label'      => __( 'Error message', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'type'		=> 'textarea',
 				'placeholder'	=> $this->config->get_default_error_msg('v2_checkbox'),
-				'desc'	=> __( 'In this textbox you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
+				'desc'	=> __( 'In this textbox, you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
 				'class'		=> 'hidden regular-text show-field-for-v2_checkbox',
 			],
 			'v2_invisible_error_message'=> [
@@ -235,7 +241,7 @@ class Settings {
 				'section_id' => 'general',
 				'type'		=> 'textarea',
 				'placeholder' => $this->config->get_default_error_msg('v2_invisible'),
-				'desc'	=> __( 'In this textbox you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
+				'desc'	=> __( 'In this textbox, you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
 				'class'		=> 'hidden regular-text show-field-for-v2_invisible',
 			],
 			'v3_error_message'      => [
@@ -243,11 +249,11 @@ class Settings {
 				'section_id' => 'general',
 				'type'		=> 'textarea',
 				'placeholder' => $this->config->get_default_error_msg('v3'),
-				'desc'	=> __( 'In this textbox you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
+				'desc'	=> __( 'In this textbox, you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
 				'class'		=> 'hidden regular-text show-field-for-v3',
 			],
 			'loggedin_hide'      => [
-				'label'      => __( 'Hide for logged in users', 'cd-recaptcha' ),
+				'label'      => __( 'Hide for logged-in users', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'type'       => 'checkbox',
 				'class'      => 'checkbox',
@@ -260,14 +266,20 @@ class Settings {
 				'class'      => 'regular',
 				'std'        => $this->config->get_default('recaptcha_domain'),
 				'options'    => $domains,
-				'desc'        => __( 'The domain to fetch the script from, and to use when verifying requests.<br />Use <samp>recaptcha.net</samp> when <samp>google.com</samp> is not accessible.', 'cd-recaptcha' ),
+								/* translators: 1: recaptcha.net 2: google.com */
+				'desc'        => sprintf( __( 'The domain to fetch the script from, and to use when verifying requests. Use %1$s when %2$s is not accessible.', 'cd-recaptcha' ),
+									'<samp>recaptcha.net</samp>',
+									'<samp>google.com</samp>'
+								),
 			],
 			'verify_origin'  => [
-				'label'      => __( 'Verify origin of solutions', 'cd-recaptcha' ),
+				'label'      => __( 'Verify origin of the solutions', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'type'       => 'checkbox',
 				'class'      => 'checkbox',
-				'desc'		 => __( '<strong>NB!</strong> Only required if you have chosen not to have Google verify the origin of the solutions.', 'cd-recaptcha' ),
+				'desc'		 => sprintf( __( '%s This is only required if you have chosen not to have Google do this verification.', 'cd-recaptcha' ), 
+									sprintf( '<strong>%s</strong>', __( 'NB!' ) ), 
+								),
 			],
 			'v3_script_load'     => [
 				'label'      => __( 'Load on...', 'cd-recaptcha' ),
@@ -282,11 +294,11 @@ class Settings {
 				'desc'       => __( 'For analytics purposes, it\'s recommended to load the widget in the background of all pages.', 'cd-recaptcha' ),
 			],
 			'require_remote_ip'     => [
-				'label'      => __( 'Require client IP', 'cd-recaptcha' ),
+				'label'      => __( 'Require the client\'s IP address', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'type'       => 'checkbox',
 				'class'      => 'checkbox',
-				'desc'       => __( 'Require that a client\'s IP address has been determined before submitting data to the reCAPTCHA server. An undetermined IP address will be treated as a failed CAPTCHA attempt.', 'cd-recaptcha' ),
+				'desc'       => __( 'Require that the client\'s IP address has been determined before submitting data to the reCAPTCHA server. An undetermined IP address will be treated as a failed CAPTCHA attempt.', 'cd-recaptcha' ),
 			],
 			// Forms
 			'enabled_forms'      => [
@@ -431,7 +443,9 @@ class Settings {
 					'dark'  => __( 'Dark', 'cd-recaptcha' ),
 					'auto'  => __( 'Automatic', 'cd-recaptcha' ),
 				],
-				'desc'       => sprintf(__( 'Color theme of the widget. Select <i>%s</i> to have the theme be set based on the brightness of the background color.', 'cd-recaptcha' ), __( 'Automatic', 'cd-recaptcha' )),
+				'desc'       => sprintf(__( 'Color theme of the widget. Select %s to have the theme be set based on the brightness of the background color.', 'cd-recaptcha' ),
+									sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
+								),
 			],
 			'badge'              => [
 				'label'      => __( 'Placement', 'cd-recaptcha' ),
@@ -445,7 +459,9 @@ class Settings {
 					'inline'      => __( 'Inline', 'cd-recaptcha' ),
 					'auto'        => __( 'Automatic', 'cd-recaptcha' ),
 				],
-				'desc'       => sprintf(__( 'Position of the widget. Select <i>%s</i> to place the widget based on text direction (on a page with "right-to-left", the placement will be on the left).', 'cd-recaptcha' ), __( 'Automatic', 'cd-recaptcha' ) ),
+				'desc'       => sprintf( __( 'Position of the widget. Select %s to place the widget based on text direction (on a page with "right-to-left", the placement will be on the left).', 'cd-recaptcha' ),
+									sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
+								),
 			],
 			'v2_checkbox_size' => [
 				'label'      => __( 'Size', 'cd-recaptcha' ),
@@ -458,12 +474,11 @@ class Settings {
 					'compact'   => __( 'Compact', 'cd-recaptcha' ),
 					'auto'      => __( 'Automatic', 'cd-recaptcha' ),
 				],
-				'desc'       => sprintf(
-							/* translators: 1: Automatic, 2: Compact, 3: Normal */
-							__( 'Size of the widget. Select <i>%1$s</i> to automatically set the size to <i>%2$s</i> if the area is too narrow for <i>%3$s</i>.', 'cd-recaptcha' ),
-							__( 'Automatic', 'cd-recaptcha' ),
-							__( 'Compact', 'cd-recaptcha' ),
-							__( 'Normal', 'cd-recaptcha' )
+								/* translators: 1: Automatic, 2: Compact, 3: Normal */
+				'desc'       => sprintf( __( 'Size of the widget. Select %1$s to automatically set the size to %2$s if the area is too narrow for %3$s.', 'cd-recaptcha' ),
+									sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) ),
+									sprintf( '<i>%s</i>', __( 'Compact', 'cd-recaptcha' ) ),
+									sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) )
 							),
 			],
 			'v2_checkbox_add_css'  => [
@@ -472,7 +487,11 @@ class Settings {
 				'type'       => 'checkbox',
 				'class'      => 'checkbox hidden show-field-for-v2_checkbox',
 				'cb_label'   => __( "Add this plugin's stylesheet to the login page.", 'cd-recaptcha' ),
-				'desc'       => sprintf(__( 'This stylesheet increases the width of the container element that holds the login form. This is to fit in the widget better. Only applicable if you have selected <i>%s</i> or <i>%s</i> as size.', 'cd-recaptcha' ), __('Normal', 'cd-recaptcha'), __('Automatic', 'cd-recaptcha')),
+								/* translators: 1: Normal, 2: Automatic */
+				'desc'       => sprintf(__( 'This stylesheet increases the width of the container element that holds the login form. This is to fit in the widget better. Only applicable if you have selected %1$s or %2$s as size.', 'cd-recaptcha' ),
+									sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) ),
+									sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
+								),
 			],
 		];
 
@@ -495,19 +514,27 @@ class Settings {
 					'section_id' => 'logging',
 					'type'       => 'checkbox',
 					'class'      => 'checkbox',
-					'desc'       => sprintf(__( '%s<br/>The log file is by default located in the <code>/wp-content</code> directory, but that can be changed. Text format used is %s.', 'cd-recaptcha' ),
-										__('Enabling this will have the same effect as setting both <code>WP_DEBUG</code> and <code>WP_DEBUG_LOG</code> to <code>true</code>.'),
-										'<a href="https://jsonlines.org" target="_blank">JSON Lines</a>'
+					'desc'       => sprintf('%s</p><p class="description">%s</p><p class="description">%s',
+										/* translators: 1: WP_DEBUG, 2: WP_DEBUG_LOG, 3: true */
+										sprintf( __( 'Setting both %1$s and %2$s to %3$s will automatically enable this.', 'cd-recaptcha' ), '<code>WP_DEBUG</code>', '<code>WP_DEBUG_LOG</code>', '<code>true</code>' ),
+										/* translators: 1: /wp-content, 2: Path to log directory */
+										sprintf( __( 'The log files are by default written to the %1$s directory, but that can be changed using the setting "%2$s".', 'cd-recaptcha' ),
+											'<code>/wp-content</code>',
+											sprintf( '<strong>%s</strong>', __( 'Path to log directory', 'cd-recaptcha' ) )
 										),
+										sprintf( __( 'The text format used is %s.', 'cd-recaptcha' ), 
+											sprintf('<a href="https://jsonlines.org" target="_blank">%s</a>', __( 'JSON Lines' , 'cd-recaptcha' ) )
+										)
+									),
 				],
 				'recaptcha_log_ip'  => [ 
-					'label'      => __( 'Add client IP address to the JSON response data', 'cd-recaptcha' ),
+					'label'      => __( 'Add the client\'s IP address to the JSON response data', 'cd-recaptcha' ),
 					'section_id' => 'logging',
 					'type'       => 'checkbox',
 					'class'      => 'checkbox',
 				],
 				'recaptcha_log_rotate_interval'  => [ 
-					'label'      => __( 'reCAPTCHA log rotate interval', 'cd-recaptcha' ),
+					'label'      => __( 'reCAPTCHA log\'s rotate interval', 'cd-recaptcha' ),
 					'section_id' => 'logging',
 					'type'       => 'select',
 					'class'      => 'regular',
@@ -519,26 +546,56 @@ class Settings {
 						'monthly' => __( 'Monthly', 'cd-recaptcha' ),
 						'yearly'  => __( 'Yearly', 'cd-recaptcha' ),
 					],
-					'desc'       => sprintf(__('Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ), '<a href="https://www.iso.org/standard/40874.html" target="_blank">ISO 8601</a>'),
+					'desc'       => sprintf( __( 'Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ),
+										sprintf( '<a href="https://www.iso.org/standard/40874.html" target="_blank">%s</a>',
+											__( 'ISO 8601' , 'cd-recaptcha')
+										)
+								),
 				],
 				'debug_log'  => [ 
 					'label'      => __( 'Enable debug logging', 'cd-recaptcha' ),
 					'section_id' => 'logging',
 					'type'       => 'checkbox',
 					'class'      => 'checkbox',
-					'desc'       => __('Enabling this will have the same effect as setting both <code>WP_DEBUG</code> and <code>WP_DEBUG_LOG</code> to <code>true</code>.'),
+					'desc'       => sprintf('%s %s </p><p class="description">%s',
+										__( 'This only applies to this plugin.', 'cd-recaptcha' ),
+										/* translators: 1: WP_DEBUG, 2: WP_DEBUG_LOG, 3: true */
+										sprintf( __( 'Setting both %1$s and %2$s to %3$s will automatically enable this.', 'cd-recaptcha' ),
+											'<code>WP_DEBUG</code>',
+											'<code>WP_DEBUG_LOG</code>',
+											'<code>true</code>'
+										),
+										/* translators: 1: Separate debug log, 2: PHP has been set up to do it */
+										sprintf( __( 'Important to note that if debug logging in WordPress is off, you should enable the setting "%1$s". If not, the the messages will be logged where %2$s.', 'cd-recaptcha' ),
+											sprintf( '<strong>%s</strong>',
+												__( 'Separate debug log', 'cd-recaptcha' )
+									),
+											sprintf( '<a href="https://www.php.net/manual/en/errorfunc.configuration.php#ini.error-log" target="_blank">%s</a>',
+												__( 'PHP has been set up to do it', 'cd-recaptcha' )
+											)
+										)
+									),
 				],
-				'debug_log_seperate'  => [ 
-					'label'      => __( 'Seperate debug log', 'cd-recaptcha' ),
+				'debug_log_separate'  => [ 
+					'label'      => __( 'Separate debug log', 'cd-recaptcha' ),
 					'section_id' => 'logging',
 					'type'       => 'checkbox',
 					'class'      => 'checkbox',
-					'desc'       => sprintf(__( 'When you enable debugging logging in WordPress with <code>WP_DEBUG_LOG</code>, the default the output is in <code>/wp-content/debug.log</code><br/>This location can be changed by either setting <code>WP_DEBUG_LOG</code> to different file (example: /path/to/debug.log) or enabling the option to have a separate debug log, and set a log directory. Read more about %s.', 'cd-recaptcha' ),
-										sprintf('<a href="https://wordpress.org/documentation/article/debugging-in-wordpress/" target="_blank">%s</a>',__('Debugging in WordPress'), 'cd-recaptcha')
+					'desc'       => sprintf('%s</p><p class="description">%s</p><p class="description">%s</p><p class="description">%s.',
+										sprintf( __( 'When debug logging in WordPress is enabled, the log is by default written to %s.' , 'cd-recaptcha' ), '<code>/wp-content/debug.log</code>' ),
+										__( 'By enabling this option, this plugin\'s debug log will be written to a separate file in the same directory.' , 'cd-recaptcha' ),
+										sprintf( __( 'However, this directory can be changed either by specifying a different file with %s (example: "%s") or by specifying your own directory using the setting "%s".' , 'cd-recaptcha' ),
+											'<code>WP_DEBUG_LOG</code>',
+											sprintf('<samp>%s</samp>',
+												strtolower(substr(php_uname('s'),0,3)) == 'win' ? __( 'c:\path\to\debug.log', 'cd-recaptcha' ) : __( '/path/to/debug.log', 'cd-recaptcha' )
+											),
+											sprintf( '<strong>%s</strong>', __( 'Path to log directory', 'cd-recaptcha' ) ) 
 										),
+										sprintf('<a href="https://wordpress.org/documentation/article/debugging-in-wordpress/" target="_blank">%s</a>',__('Read more about debugging in WordPress', 'cd-recaptcha'))
+									),
 				],
 				'debug_log_rotate_interval'  => [ 
-					'label'      => __( 'Debug log rotate interval', 'cd-recaptcha' ),
+					'label'      => __( 'Debug log\'s rotate interval', 'cd-recaptcha' ),
 					'section_id' => 'logging',
 					'type'       => 'select',
 					'class'      => 'regular',
@@ -550,13 +607,16 @@ class Settings {
 						'monthly' => __( 'Monthly', 'cd-recaptcha' ),
 						'yearly'  => __( 'Yearly', 'cd-recaptcha' ),
 					],
-					'desc'       => sprintf(__('%s<br/>Only applicable if you have enabled option <strong>%s<strong>.', 'cd-recaptcha' ),
-										sprintf(__('Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ), '<a href="https://www.iso.org/standard/40874.html" target="_blank">ISO 8601</a>'),
-										__( 'Seperate debug log', 'cd-recaptcha' )
+					'desc'       => sprintf('%s %s',
+										__( 'Only applicable if you have chosen to have a separate debug log.', 'cd-recaptcha' ),
+										sprintf(__( 'Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ),
+											sprintf('<a href="https://www.iso.org/standard/40874.html" target="_blank">%s</a>',
+											__( 'ISO 8601' , 'cd-recaptcha'))
 										),
+									),
 				],
 				'debug_log_min_level'  => [ 
-					'label'      => __( 'Debug log minimum level', 'cd-recaptcha' ),
+					'label'      => __( 'Debug log\'s minimum level', 'cd-recaptcha' ),
 					'section_id' => 'logging',
 					'type'       => 'select',
 					'class'      => 'regular',
@@ -572,15 +632,19 @@ class Settings {
 					'desc'       => __('Determines the verbosity of the debug log.', 'cd-recaptcha' ),
 				],
 				'log_directory'  => [ 
-					'label'      => __( 'Log directory path', 'cd-recaptcha' ),
+					'label'      => __( 'Path to log directory', 'cd-recaptcha' ),
 					'section_id' => 'logging',
 					'type'       => 'text',
-					'desc'       => sprintf(__('Set another directory than <code>/wp-content</code> or the one set in <code>WP_DEBUG_LOG</code>.<br/><br/>If you are logging to an area that is web accessible, you may add want to prevent people from accessing the logs. Make a <code>.htaccess</code> file in that directory add something like this: %s Or this: %s', 'cd-recaptcha' ),
+					'desc'       => sprintf('%s %s</p><p class="description">%s</p><p class="description">%s',
+									__( 'Specify your own directory where the log files will be stored.', 'cd-recaptcha' ),
+									__( 'Using an absolute path is recommended.', 'cd-recaptcha'),
+									__( 'If you are logging to a directory that is web accessible, then you take measures to prevent people from accessing the logs.', 'cd-recaptcha' ),
+									/* translators: 1: .htaccess , 2: Code example #1, 3: Code example #2  */
+									sprintf( __( 'One way of doing that is to create a %1$s file in that directory you are logging to and add something like this: %2$s Or this: %3$s', 'cd-recaptcha' ),
+										'<code>.htaccess</code>',
 										'<code class="code-pre">RedirectMatch 404 ".*\.(log|jsonl)$"</code>',
-'<code class="code-pre">&lt;Files ~ ".*\.(log|jsonl)$"&gt;
-	Redirect 404
-&lt;/Files&gt;
-</code>'
+										"<code class=\"code-pre\">&lt;Files ~ \".*\.(log|jsonl)$\"&gt;\n\tRedirect 404\n&lt;/Files&gt;</code>"
+									)
 								),
 					'sanitize_callback' => function($value) {
 						return $this->sanitize_directory_path($value, $this->config->get_default('log_directory'));
@@ -726,7 +790,7 @@ class Settings {
 				break;
 
 			default:
-				printf( __( '<strong>%s</strong>: <i>%s</i> is an undefined <strong>&lt;input&gt;</strong> type.', 'cd-recaptcha' ), __( 'Error', 'cd-recaptcha' ), esc_html( $field['type'] ) );
+				printf(  '<strong>Error</strong>: <i>%s</i> is an undefined <strong>&lt;input&gt;</strong> type.', esc_html( $field['type'] ) );
 				break;
 		}
 		if ( ! empty( $field['desc'] ) ) {
@@ -881,7 +945,17 @@ class Settings {
 			$path = realpath($path);
 
 			if ( $path !== false ) {
-				add_settings_error($setting_slug, $setting_code, sprintf(__( 'Relative path "%s" was resolved to "%s". %s', 'cd-recaptcha' ), $value, $path, __('It is recommended to use absolute paths instead.')), 'info' );
+				add_settings_error( $setting_slug, $setting_code,
+					sprintf('%s %s',
+						/* translators: 1: Input path from user, 2: Resolved absolute path */
+						sprintf(__( 'The relative path, "%1$s", was resolved to "%2$s".', 'cd-recaptcha' ),
+							$value,
+							$path
+						),
+						__( 'Using an absolute path is recommended.', 'cd-recaptcha' )
+					),
+					'info'
+				);
 			}
 		}
 
@@ -916,16 +990,21 @@ class Settings {
 
 		if ($path === false) {
 			$error = true;
-			$error_msg = sprintf(__( 'Was unable to resolve the relative path "%s". %s', 'cd-recaptcha' ), $value, __('It is recommended to use absolute paths instead.'));
+			$error_msg = sprintf('%s %s',
+							sprintf( __( 'Was unable to find the absolute path for "%s".', 'cd-recaptcha' ),
+								$value
+							),
+							__( 'Using an absolute path is recommended.', 'cd-recaptcha' )
+						);
 		} elseif ( !file_exists($path) ) {
 			$error = true;
-			$error_msg = sprintf(__( 'Path "%s" does not exist.', 'cd-recaptcha' ), $path);
+			$error_msg = sprintf(__( 'The path, "%s", does not exist.', 'cd-recaptcha' ), $path);
 		} elseif ( !is_dir($path )) {
 			$error = true;
-			$error_msg = sprintf(__( 'Path "%s" is not a directory.', 'cd-recaptcha' ), $path);
+			$error_msg = sprintf(__( 'The path, "%s", is not a directory.', 'cd-recaptcha' ), $path);
 		} elseif ( !is_writable($path) ) {
 			$error = true;
-			$error_msg = sprintf(__( 'Path "%s" is not writable.', 'cd-recaptcha' ), $path);
+			$error_msg = sprintf(__( 'The path, "%s", is not writable.', 'cd-recaptcha' ), $path);
 		}
 
 		if ( $error ) {
@@ -979,7 +1058,7 @@ class Settings {
 			}
 			$this->config->update_option( $value );
 			
-			add_settings_error( $this->menu_slug, 'settings_updated', __( 'Settings saved.' ), 'success' );
+			add_settings_error( $this->menu_slug, 'settings_updated', __( 'Settings saved.', 'cd-recaptcha' ), 'success' );
 
 			set_transient( 'settings_errors', get_settings_errors($this->menu_slug), 30 );
 
@@ -1051,7 +1130,7 @@ class Settings {
 	 */
 	function add_settings_link( $actions ) {
 		$url = $this->config->get_is_active_for_network() ? network_admin_url( "settings.php?page={$this->menu_slug}" ) : admin_url( "options-general.php?page={$this->menu_slug}" );
-		$links = [ '<a href="' . $url . '">' . __( 'Settings') . '</a>'
+		$links = [ '<a href="' . $url . '">' . __( 'Settings', 'cd-recaptcha') . '</a>'
 		];
 		$actions = array_merge( $actions, $links );
 		return $actions;

@@ -76,7 +76,7 @@ class Config {
 		'recaptcha_log_ip'              => true,
 		'debug_log'                     => false,
 		'debug_log_rotate_interval'     => 'monthly',
-		'debug_log_seperate'            => false,
+		'debug_log_separate'            => false,
 		'debug_log_min_level'           => 2,
 		// 'log_directory'                 => '',
 		'theme'                         => 'light',
