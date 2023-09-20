@@ -495,6 +495,23 @@ class Settings {
 			],
 		];
 
+		if ( file_exists(WP_PLUGIN_DIR . '/sidebar-login') ) {
+			$fields['disable_sidebar_login_js'] = [
+				'label'      => sprintf(__( 'Disable the AJAX JavaScript from the plugin %s', 'cd-recaptcha' ),
+									'<a href="https://wordpress.org/plugins/sidebar-login" target="_blank">Sidebar Login</a>',
+								),
+				'section_id' => 'forms',
+				'type'       => 'checkbox',
+				'desc'       => sprintf('%s</p><p class="description">%s</p><p class="description">%s', 
+									sprintf( __( 'This setting only applies if you have activated that plugin and enabled the form %s.', 'cd-recaptcha' ),
+										sprintf( '<em>%s</em>', __( 'Login', 'cd-recaptcha' ) )
+									),
+									__( 'When that JavaScript is loaded, there is an issue where the reCAPTCHA response token in that plugin\'s login form only gets submitted after the user has been already been logged in.', 'cd-recaptcha' ),
+									__( 'You are seeing this setting because you have that plugin installed.', 'cd-recaptcha' )
+								),
+			];
+		}
+
 		if ( is_multisite() ) {
 			unset($fields['enabled_forms']['options']['registration']);
 			unset($fields['action_registration']);

@@ -216,7 +216,7 @@ class Frontend {
 		
 		return in_array( $form, $this->enabled_forms, true );
 	}
-	
+
 	/**
 	 * Registers actions and filters.
 	 *
@@ -227,8 +227,10 @@ class Frontend {
 	function actions_filters() {
 
 		if (! $this->is_available() ) { return; }
-		
+
 		if ( is_user_logged_in() && $this->config->get_option( 'loggedin_hide' ) ) { return; }
+
+		add_action ( 'wp_enqueue_scripts', [$this, 'enqueue_scripts'], 99 );
 
 		if ( $this->is_form_enabled( 'login' ) && ! defined( 'XMLRPC_REQUEST' ) ) {
 			add_action( 'login_form', [ $this, 'login_form_field' ], 99 );
@@ -276,6 +278,21 @@ class Frontend {
 		add_action( 'wp_footer', [$this, 'footer_script'], 99999 );
 		add_action( 'login_footer', [$this, 'footer_script'], 99999 );
 		add_filter( 'shake_error_codes', [$this, 'shake_error_codes']);
+	}
+
+	/**
+	 * Enqueue scripts and styles.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return void
+	 */
+	function enqueue_scripts() {
+		// Disable the AJAX JavaScript from the plugin Sidebar Login.
+		if ( $this->is_form_enabled( 'login' ) && $this->config->get_option( 'disable_sidebar_login_js' ) && is_plugin_active( 'sidebar-login/sidebar-login.php' ) ) {
+			wp_deregister_script('sidebar-login');
+			wp_deregister_script('sidebar-login-js-extra');
+		}
 	}
 
 	/**

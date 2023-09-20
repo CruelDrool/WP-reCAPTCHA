@@ -78,6 +78,7 @@ class Config {
 		'debug_log_rotate_interval'     => 'monthly',
 		'debug_log_separate'            => false,
 		'debug_log_min_level'           => 2,
+		'disable_sidebar_login_js'      => true,
 		// 'log_directory'                 => '',
 		'theme'                         => 'light',
 		// 'language'                      => '',
