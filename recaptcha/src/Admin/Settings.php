@@ -1027,12 +1027,24 @@ class Settings {
 	 * @return string
 	 */
 	function sanitize_action_name($name, $default) {
+		$input_name = $name;
 		// This regex matches any characters that aren't in the list.
 		$name = preg_replace('/[^a-zA-Z0-9_\/]+/', '', $name);
 
 		// Empty value, fallback to default.
 		if (empty($name)) {
 			$name = $default;
+		}
+
+		// Output a information message if the sanitized action name differs from the input name.
+		if ( $name !== $input_name ) {
+			/* translators: 1:  Input name, 2: Sanitized name */
+			$msg = sprintf( __( 'Action name "%1$s" was changed to "%2$s"', 'cd-recaptcha' ),
+				$input_name,
+				$name,
+			);
+
+			add_settings_error($this->menu_slug, 'sanitize_action_name', $msg, 'info' );
 		}
 
 		return $name;
