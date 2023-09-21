@@ -55,14 +55,12 @@ class Settings {
 		
 		add_action( 'admin_init', [ $this, 'admin_init' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
+		add_action( 'plugin_row_meta', [ $this, 'add_meta_links' ], 10, 3 );
 
 		$submenu_hook_name = 'admin_menu';
 		if ( $this->config->get_is_active_for_network() ) {
 			$submenu_hook_name = 'network_admin_menu';
 			add_action( 'admin_init', [ $this, 'network_settings_save' ], 99 );
-			add_filter( 'network_admin_plugin_action_links_' . plugin_basename( $this->config->get_file() ), [$this, 'add_settings_link' ] );
-		} else {
-			add_filter( 'plugin_action_links_' . plugin_basename( $this->config->get_file() ), [ $this, 'add_settings_link' ] );
 		}
 
 		add_action( $submenu_hook_name, [ $this, 'add_submenu_page' ] );
@@ -112,6 +110,51 @@ class Settings {
 		$parent_slug = $this->config->get_is_active_for_network() ? 'settings.php' : 'options-general.php';
 		$capability = $this->config->get_is_active_for_network() ? 'manage_network_options' : 'manage_options';
 		add_submenu_page( $parent_slug, sprintf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()), $this->config->get_plugin_name(), $capability, $this->menu_slug, [$this, 'admin_settings' ] );
+	}
+
+	/**
+	 * Add custom links to the meta row.
+	 *
+	 * @since x.y.z
+	 * @param array $plugin_meta 
+	 * @param string $plugin_file 
+	 * @param array $plugin_data 
+	 *
+	 * @return array
+	 */
+	function add_meta_links($plugin_meta, $plugin_file, $plugin_data) {
+
+		if ( $plugin_file == plugin_basename($this->config->get_file()) ) {
+			/* 
+			Replace "View details" link.
+			WordPress ignoring Plugin URI due to an elseif in 
+			wp-admin/includes/class-wp-plugins-list-table.php, line 1088.
+			 */
+			if ( current_user_can( 'install_plugins' ) ) {
+				$plugin_meta[2] = sprintf('<a href="%s" aria-label="%s">%s</a>',
+					$plugin_data['PluginURI'],
+					sprintf( __( 'Visit plugin site for %s', 'cd-recaptcha' ), $plugin_data['Name'] ),
+					__( 'Visit plugin site', 'cd-recaptcha' )
+				);
+			}
+			
+			$url = '';
+			if ( $this->config->get_is_active_for_network() && current_user_can('manage_network_options')) {
+				$url = network_admin_url( "settings.php?page={$this->menu_slug}" );
+			} elseif ( current_user_can('manage_options') ) {
+				$url = admin_url( "options-general.php?page={$this->menu_slug}" );
+			}
+
+			if ( !empty($url) ) {
+				$plugin_meta[] = sprintf('<a href="%s" aria-label="%s">%s</a>',
+					$url,
+					sprintf( __( 'Go to plugin settings for %s', 'cd-recaptcha' ), $plugin_data['Name'] ),
+					__( 'Settings', 'cd-recaptcha')
+				);
+			}
+		}
+
+		return $plugin_meta;
 	}
 
 	/**
@@ -190,27 +233,6 @@ class Settings {
 			</form>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Adds a link to the settings page on the Plugins page. 
-	 * 
-	 * See more on:
-	 * 
-	 * https://developer.wordpress.org/reference/hooks/plugin_action_links_plugin_file/
-	 * https://developer.wordpress.org/reference/hooks/network_admin_plugin_action_links_plugin_file/
-	 *
-	 * @since 1.0.0
-	 * @param array $actions 
-	 *
-	 * @return array
-	 */
-	function add_settings_link( $actions ) {
-		$url = $this->config->get_is_active_for_network() ? network_admin_url( "settings.php?page={$this->menu_slug}" ) : admin_url( "options-general.php?page={$this->menu_slug}" );
-		$links = [ '<a href="' . $url . '">' . __( 'Settings', 'cd-recaptcha') . '</a>'
-		];
-		$actions = array_merge( $actions, $links );
-		return $actions;
 	}
 
 	/**
