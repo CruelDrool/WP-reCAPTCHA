@@ -16,7 +16,7 @@ class Settings {
 	 * @var object
 	 */
 	private $config;
-	
+
 	/**
 	 * @since 1.0.0
 	 * @var array
@@ -28,7 +28,7 @@ class Settings {
 	 * @var string
 	 */
 	private $menu_slug;
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -40,17 +40,6 @@ class Settings {
 	function __construct(\CD\recaptcha\Config $config) {
 		$this->config = $config;
 		$this->menu_slug = $this->config->get_prefix().'-settings';
-		$this->init();
-	}
-	
-	/**
-	 * 
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	private function init() {
 		$this->fields = $this->get_fields();
 		$this->actions_filters();
 	}
@@ -65,16 +54,18 @@ class Settings {
 	function actions_filters() {
 		
 		add_action( 'admin_init', [ $this, 'admin_init' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 
+		$submenu_hook_name = 'admin_menu';
 		if ( $this->config->get_is_active_for_network() ) {
+			$submenu_hook_name = 'network_admin_menu';
 			add_action( 'admin_init', [ $this, 'network_settings_save' ], 99 );
-			add_action( 'network_admin_menu', [ $this, 'network_menu_page' ] );
 			add_filter( 'network_admin_plugin_action_links_' . plugin_basename( $this->config->get_file() ), [$this, 'add_settings_link' ] );
 		} else {
-			add_action( 'admin_menu', [ $this, 'menu_page' ] );
 			add_filter( 'plugin_action_links_' . plugin_basename( $this->config->get_file() ), [ $this, 'add_settings_link' ] );
 		}
+
+		add_action( $submenu_hook_name, [ $this, 'add_submenu_page' ] );
 	}
 
 	/**
@@ -103,11 +94,123 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	function enqueue_scripts($hook_suffix) {
+	function admin_enqueue_scripts($hook_suffix) {
 		// Ensure it only outputs on our own settings page.
 		if ( $hook_suffix == "settings_page_{$this->menu_slug}" ) {
 			wp_enqueue_style( $this->menu_slug, plugins_url( '/', $this->config->get_file() ) . 'assets/css/settings.css', [], $this->config->get_current_version() );
 		}
+	}
+
+	/**
+	 * Adds this plugin's settings page as a submenu page to the Settings main menu.
+	 *
+	 * @since x.y.z Consolidation of menu_page() and network_menu_page()
+	 *
+	 * @return void
+	 */
+	function add_submenu_page() {
+		$parent_slug = $this->config->get_is_active_for_network() ? 'settings.php' : 'options-general.php';
+		$capability = $this->config->get_is_active_for_network() ? 'manage_network_options' : 'manage_options';
+		add_submenu_page( $parent_slug, sprintf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()), $this->config->get_plugin_name(), $capability, $this->menu_slug, [$this, 'admin_settings' ] );
+	}
+
+	/**
+	 * [Multisite - Network Admin] Save settings
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	 function network_settings_save() {
+		if ( current_user_can( 'manage_network_options' ) &&
+			isset( $_POST[$this->config->get_option_name()] ) &&
+			isset( $_POST['action'] ) && $_POST['action'] === 'update' &&
+			isset( $_GET['page'] ) && $this->menu_slug === $_GET['page'] ) {
+
+			check_admin_referer( $this->config->get_option_name().'-options' );
+
+			$value = wp_unslash( $_POST[$this->config->get_option_name()] );
+			if ( ! is_array( $value ) ) {
+				$value = [];
+			}
+			$this->config->update_option( $value );
+			
+			add_settings_error( $this->menu_slug, 'settings_updated', __( 'Settings saved.', 'cd-recaptcha' ), 'success' );
+
+			set_transient( 'settings_errors', get_settings_errors($this->menu_slug), 30 );
+
+			// Redirect back to the settings page that was submitted.
+			$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
+			wp_redirect( $goback );
+			exit;
+		}
+	}
+
+	/**
+	 * Output the Admin page
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	function admin_settings() {
+		?>
+		
+		<script>
+			jQuery(document).ready(function( $ ){		
+				function show_hide_fields(){
+					var selected_value = $('#<?php echo $this->config->get_option_name();?>_recaptcha_version').val();
+					$( '.hidden' ).hide();
+					$( '.show-field-for-'+ selected_value ).show();
+				}
+				if( $('#<?php echo $this->config->get_option_name();?>_recaptcha_version').length ){
+					show_hide_fields();
+				}
+				
+				$('.form-table').on( "change", "#<?php echo $this->config->get_option_name();?>_recaptcha_version", function(e) {
+				show_hide_fields();
+				});
+			});
+		</script>
+		<div class="wrap">
+			<h1><?php printf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()) ?></h1>
+			<?php
+			$page = 'options.php';
+			if ($this->config->get_is_active_for_network()) {
+				$page = '';
+				settings_errors();
+			}
+			?>
+			<form method="post" action="<?php echo $page; ?>">
+				<?php
+				settings_fields( $this->config->get_option_name() );
+				do_settings_sections( $this->config->get_option_name() );
+				submit_button();
+				?>
+			</form>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Adds a link to the settings page on the Plugins page. 
+	 * 
+	 * See more on:
+	 * 
+	 * https://developer.wordpress.org/reference/hooks/plugin_action_links_plugin_file/
+	 * https://developer.wordpress.org/reference/hooks/network_admin_plugin_action_links_plugin_file/
+	 *
+	 * @since 1.0.0
+	 * @param array $actions 
+	 *
+	 * @return array
+	 */
+	function add_settings_link( $actions ) {
+		$url = $this->config->get_is_active_for_network() ? network_admin_url( "settings.php?page={$this->menu_slug}" ) : admin_url( "options-general.php?page={$this->menu_slug}" );
+		$links = [ '<a href="' . $url . '">' . __( 'Settings', 'cd-recaptcha') . '</a>'
+		];
+		$actions = array_merge( $actions, $links );
+		return $actions;
 	}
 
 	/**
@@ -689,7 +792,7 @@ class Settings {
 		
 		return $fields;
 	}
-	
+
 	/**
 	 * 
 	 *
@@ -814,7 +917,7 @@ class Settings {
 			printf( '<p class="description">%s</p>', $field['desc'] );
 		}
 	}
-	
+
 	/**
 	 * 
 	 *
@@ -955,7 +1058,7 @@ class Settings {
 
 		$setting_code = 'sanitize_directory_path';
 		$setting_slug = $this->menu_slug;
-		$path = $value;
+		$path = trim($value);
 
 		// Relative directory path, try to resolve it.
 		if ( boolval(preg_match('/^[^\x2f\x5c]|[\x2f\x5c]?\.\.[\x2f\x5c]|[\x2f\x5c]\.[\x2f\x5c]|[\x2f\x5c]\.+?\.?$/', $path)) && !boolval(preg_match('/^[A-Za-z]:/', $path)) ) {
@@ -1028,128 +1131,6 @@ class Settings {
 			add_settings_error($setting_slug, $setting_code, $error_msg, 'error' );
 		}
 
-		return $error ? $default : rtrim($path, '\/');
-	}
-
-	/**
-	 * Adds this plugin's options page as a submenu page to the Settings main menu.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	function menu_page() {
-		add_options_page( sprintf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()), $this->config->get_plugin_name(), 'manage_options', $this->menu_slug, [$this, 'admin_settings' ] );
-	}
-
-	/**
-	 * [Multisite - Network Admin] Adds this plugin's options page as a submenu page to the Settings main menu.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	function network_menu_page() {
-		add_submenu_page( 'settings.php', sprintf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()), $this->config->get_plugin_name(), 'manage_network_options', $this->menu_slug, [ $this, 'admin_settings' ] );
-	}
-
-	/**
-	 * [Multisite - Network Admin] Save settings
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-
-	function network_settings_save() {
-		if ( current_user_can( 'manage_options' ) &&
-			isset( $_POST[$this->config->get_option_name()] ) &&
-			isset( $_POST['action'] ) && $_POST['action'] === 'update' &&
-			isset( $_GET['page'] ) && $this->menu_slug === $_GET['page'] ) {
-
-			check_admin_referer( $this->config->get_option_name().'-options' );
-
-			$value = wp_unslash( $_POST[$this->config->get_option_name()] );
-			if ( ! is_array( $value ) ) {
-				$value = [];
-			}
-			$this->config->update_option( $value );
-			
-			add_settings_error( $this->menu_slug, 'settings_updated', __( 'Settings saved.', 'cd-recaptcha' ), 'success' );
-
-			set_transient( 'settings_errors', get_settings_errors($this->menu_slug), 30 );
-
-			// Redirect back to the settings page that was submitted.
-			$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
-			wp_redirect( $goback );
-			exit;
-		}
-	}
-	
-	/**
-	 * Output the Admin page
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	function admin_settings() {
-		?>
-		
-		<script>
-			jQuery(document).ready(function( $ ){		
-				function show_hide_fields(){
-					var selected_value = $('#<?php echo $this->config->get_option_name();?>_recaptcha_version').val();
-					$( '.hidden' ).hide();
-					$( '.show-field-for-'+ selected_value ).show();
-				}
-				if( $('#<?php echo $this->config->get_option_name();?>_recaptcha_version').length ){
-					show_hide_fields();
-				}
-				
-				$('.form-table').on( "change", "#<?php echo $this->config->get_option_name();?>_recaptcha_version", function(e) {
-				show_hide_fields();
-				});
-			});
-		</script>
-		<div class="wrap">
-			<h1><?php printf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()) ?></h1>
-			<?php
-			$page = 'options.php';
-			if ($this->config->get_is_active_for_network()) {
-				$page = '';
-				settings_errors();
-			}
-			?>
-			<form method="post" action="<?php echo $page; ?>">
-				<?php
-				settings_fields( $this->config->get_option_name() );
-				do_settings_sections( $this->config->get_option_name() );
-				submit_button();
-				?>
-			</form>
-		</div>
-		<?php
-	}
-
-	/**
-	 * Adds a link to the settings page on the Plugins page. 
-	 * 
-	 * See more on:
-	 * 
-	 * https://developer.wordpress.org/reference/hooks/plugin_action_links_plugin_file/
-	 * https://developer.wordpress.org/reference/hooks/network_admin_plugin_action_links_plugin_file/
-	 *
-	 * @since 1.0.0
-	 * @param array $actions 
-	 *
-	 * @return array
-	 */
-	function add_settings_link( $actions ) {
-		$url = $this->config->get_is_active_for_network() ? network_admin_url( "settings.php?page={$this->menu_slug}" ) : admin_url( "options-general.php?page={$this->menu_slug}" );
-		$links = [ '<a href="' . $url . '">' . __( 'Settings', 'cd-recaptcha') . '</a>'
-		];
-		$actions = array_merge( $actions, $links );
-		return $actions;
+		return $error ? $default : rtrim($path, "\x2f\x5c");
 	}
 }

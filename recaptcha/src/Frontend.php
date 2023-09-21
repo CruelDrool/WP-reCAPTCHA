@@ -19,7 +19,13 @@ class Frontend {
 	 * @var object Plugin options.
 	 */
 	private $config;
-			
+
+	/**
+	 * @since x.y.z
+	 * @var string
+	 */
+	private $recaptcha_version;
+
 	/**
 	 * @since 1.0.0
 	 * @var array The forms where reCAPTCHA should be loaded.
@@ -71,6 +77,7 @@ class Frontend {
 	 */
 	public function __construct(Config $config) {
 		$this->config = $config;
+		$this->recaptcha_version = $this->config->get_option('recaptcha_version');
 		$this->enabled_forms = $this->config->get_option('enabled_forms');
 		$this->onload_callback_name = "{$this->config->get_prefix()}_onloadCallback";
 		$this->captcha_div_class = "{$this->config->get_prefix()}_recaptcha_container";
@@ -173,8 +180,7 @@ class Frontend {
 	 * @return bool
 	 */
 	private function is_available() {
-		$version = $this->config->get_option('recaptcha_version');
-		return ( !empty($this->config->get_option($version.'_site_key')) && !empty($this->config->get_option($version.'_secret_key')) );
+		return ( !empty($this->config->get_option($this->recaptcha_version.'_site_key')) && !empty($this->config->get_option($this->recaptcha_version.'_secret_key')) );
 	}
 
 	/**
@@ -303,7 +309,7 @@ class Frontend {
 	 * @return void
 	 */
 	function login_enqueue_scripts() {
-		if ( $this->config->get_option( 'recaptcha_version' )  == 'v2_checkbox' && $this->config->get_option( 'v2_checkbox_add_css' ) && $this->config->get_option( 'v2_checkbox_size' ) != 'compact' ) {
+		if ( $this->recaptcha_version  == 'v2_checkbox' && $this->config->get_option( 'v2_checkbox_add_css' ) && $this->config->get_option( 'v2_checkbox_size' ) != 'compact' ) {
 			wp_enqueue_style( $this->config->get_prefix().'-login', plugins_url( '/', $this->config->get_file() ) . 'assets/css/loginform.css', [], $this->config->get_current_version() );
 		}
 	}
@@ -354,7 +360,6 @@ class Frontend {
 	 * @return bool
 	 */
 	function verify() {
-		$version = $this->config->get_option('recaptcha_version');
 		$remote_ip = $this->get_remote_ip();
 		$response_token = $_POST['g-recaptcha-response'] ?? '';
 
@@ -372,7 +377,7 @@ class Frontend {
 		$verify_url = sprintf(self::API_URL_FORMAT, $this->config->get_domain(), '/siteverify');
 
 		$post_params = [
-			'secret'   => $this->config->get_option($version.'_secret_key'),
+			'secret'   => $this->config->get_option($this->recaptcha_version.'_secret_key'),
 			'response' => $response_token,
 		];
 
@@ -419,7 +424,7 @@ class Frontend {
 
 		if ( $hostname_match )  {		
 			if ( $result['success'] == true ) {
-				if ( $version == 'v3' ) {
+				if ( $this->recaptcha_version == 'v3' ) {
 					$threshold = $this->config->get_option( 'threshold_'.$this->recaptcha_action );
 					$expected_action = $this->config->get_option('action_'.$this->recaptcha_action);
 
@@ -449,7 +454,7 @@ class Frontend {
 				}
 			} else {
 				// Not so interested in this when it's v2
-				$debug_message = $version == 'v3' ? 'Array key "success" was not equal to true' : '';
+				$debug_message = $this->recaptcha_version == 'v3' ? 'Array key "success" was not equal to true' : '';
 			}
 		} else {
 			// This message can only occur if 'verify_origin' is set to true.
@@ -459,7 +464,7 @@ class Frontend {
 
 		$this->debug_log($debug_level,
 			sprintf('%s verification result: %s%s%s',
-				$version,
+				$this->recaptcha_version,
 				$is_success ? 'success' : 'no success',
 				!empty($debug_message) ? ". {$debug_message}" : '',
 				$remote_ip !== false ? ". IP address: {$remote_ip}" : ''
@@ -506,7 +511,7 @@ class Frontend {
 			$file = sprintf('%s%srecaptcha_%s_log%s.jsonl',
 				$dir,
 				DIRECTORY_SEPARATOR,
-				$this->config->get_option('recaptcha_version'),
+				$this->recaptcha_version,
 				!empty($date) ? sprintf('_%s', $date) : ''
 			);
 			
@@ -532,26 +537,14 @@ class Frontend {
 	 * @return string
 	 */
 	function get_error_msg($prepend = true) {
-		$version = $this->config->get_option( 'recaptcha_version' );
-		$default_msg = $this->config->get_default_error_msg($version);
-		$m = $this->config->get_option( $version.'_error_message', $default_msg);
+		$default_msg = $this->config->get_default_error_msg($this->recaptcha_version);
+		$m = $this->config->get_option( $this->recaptcha_version.'_error_message', $default_msg);
 		
 		if (!$prepend) {return $m;}
 
 		$message = sprintf('<strong>%s</strong>: %s', __( 'Error', 'cd-recaptcha' ), $m);
 
 		return $message;
-	}
-
-	/**
-	 * Get total number of reCAPTCHAs that have been added to a page.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return int
-	 */
-	function total_captcha() {
-		return self::$captcha_count;
 	}
 
 	/**
@@ -563,18 +556,13 @@ class Frontend {
 	 */
 	function captcha_form_field() {
 		self::$captcha_count++;
-		$number   = $this->total_captcha();
-		$version = $this->config->get_option( 'recaptcha_version' );
-		$action = $this->config->get_option('action_'.$this->recaptcha_action);
 
-		// Hidden field so that the v3's grecaptcha.execute() knows what action it is doing for this field.
-		$hidden = sprintf('<input type="hidden" name="recaptcha_action" value="%s" />', $action);
-
-		$field = sprintf('<div id="%4$s_recaptcha_field_%2$s">%1$s<div class="%3$s"></div></div>',
-			$version == 'v3' ? $hidden : '',
-			$number,
-			$this->captcha_div_class,
-			$this->config->get_prefix()
+		$field = sprintf('<div id="%s_recaptcha_field_%s">%s<div class="%s"></div></div>',
+			$this->config->get_prefix(),
+			self::$captcha_count,
+			// Hidden field so that the v3's grecaptcha.execute() knows what action it is doing for this field.
+			$this->recaptcha_version == 'v3' ?  sprintf('<input type="hidden" name="recaptcha_action" value="%s" />', $this->config->get_option('action_'.$this->recaptcha_action)) : '',
+			$this->captcha_div_class
 		);
 
 		return $field;
@@ -589,24 +577,16 @@ class Frontend {
 	 */
 	function footer_script() {
 
-		$number = $this->total_captcha();
-		$version = $this->config->get_option( 'recaptcha_version');
-
-		if ( ! $number && ( $version !== 'v3' || $this->config->get_option( 'v3_script_load' ) !== 'all_pages' ) ) {
-			return;
-		}
-
-		if ( 'v2_checkbox' === $version ) {
-			$this->v2_checkbox_script();
-		} elseif ( 'v2_invisible' === $version ) {
-			$this->v2_invisible_script();
-		} elseif ( 'v3' === $version ) {
-			if ($number > 0) {
+		if ( self::$captcha_count > 0 ) {
+			if ( $this->recaptcha_version === 'v2_checkbox' ) {
+				$this->v2_checkbox_script();
+			} elseif ( $this->recaptcha_version === 'v2_invisible' ) {
+				$this->v2_invisible_script();
+			} elseif ( $this->recaptcha_version === 'v3' ) {
 				$this->v3_script_form_pages();
-			} else {
-				$this->v3_script_all_pages();
 			}
-
+		} elseif ( $this->recaptcha_version === 'v3' && $this->config->get_option( 'v3_script_load' ) === 'all_pages' ) {
+			$this->v3_script_all_pages();
 		}
 	}
 
@@ -875,7 +855,7 @@ SCRIPT;
 	/**
 	 * Filter hook: Add custom error code to the login form.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/shake_error_codes/
+	 * @link https://developer.wordpress.org/reference/hooks/shake_error_codes/
 	 * 
 	 * @since 1.0.0
 	 * @param array $shake_error_codes 
@@ -891,7 +871,7 @@ SCRIPT;
 	/**
 	 * Action hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/login_form/
+	 * @link https://developer.wordpress.org/reference/hooks/login_form/
 	 *
 	 * @since 1.0.0
 	 *
@@ -905,7 +885,7 @@ SCRIPT;
 	/**
 	 * Filter hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/login_form_middle/
+	 * @link https://developer.wordpress.org/reference/hooks/login_form_middle/
 	 *
 	 * @since 1.0.0
 	 * @param string $field 
@@ -922,7 +902,7 @@ SCRIPT;
 	/**
 	 * Action hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/register_form/
+	 * @link https://developer.wordpress.org/reference/hooks/register_form/
 	 *
 	 * @since 1.0.0
 	 *
@@ -936,9 +916,9 @@ SCRIPT;
 	/**
 	 * Action hook. 
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/signup_extra_fields/
+	 * @link https://developer.wordpress.org/reference/hooks/signup_extra_fields/
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/signup_blogform/
+	 * @link https://developer.wordpress.org/reference/hooks/signup_blogform/
 	 *
 	 * @since 1.0.0
 	 * @param mixed $errors 
@@ -956,7 +936,7 @@ SCRIPT;
 	/**
 	 * Action hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/lostpassword_form/
+	 * @link https://developer.wordpress.org/reference/hooks/lostpassword_form/
 	 *
 	 * @since 1.0.0
 	 *
@@ -970,7 +950,7 @@ SCRIPT;
 	/**
 	 * Action hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/resetpass_form/
+	 * @link https://developer.wordpress.org/reference/hooks/resetpass_form/
 	 *
 	 * @since 1.0.0
 	 *
@@ -984,7 +964,7 @@ SCRIPT;
 	/**
 	 * Action hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/comment_form_after_fields/
+	 * @link https://developer.wordpress.org/reference/hooks/comment_form_after_fields/
 	 *
 	 * @since 1.0.0
 	 *
@@ -998,7 +978,7 @@ SCRIPT;
 	/**
 	 * Filter hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/comment_form_field_comment/
+	 * @link https://developer.wordpress.org/reference/hooks/comment_form_field_comment/
 	 *
 	 * @since 1.0.0
 	 * @param string $field 
@@ -1013,7 +993,7 @@ SCRIPT;
 	/**
 	 * Not currently in use.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/wp_login/
+	 * @link https://developer.wordpress.org/reference/hooks/wp_login/
 	 *
 	 * @param string $user_login 
 	 * @param WP_User $user 
@@ -1029,7 +1009,7 @@ SCRIPT;
 	/**
 	 * Filter hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/authenticate/
+	 * @link https://developer.wordpress.org/reference/hooks/authenticate/
 	 *
 	 * @since 1.0.0
 	 * @param null|WP_User|WP_Error $user 
@@ -1059,7 +1039,7 @@ SCRIPT;
 	/**
 	 * Filter hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/registration_errors/
+	 * @link https://developer.wordpress.org/reference/hooks/registration_errors/
 	 *
 	 * @since 1.0.0
 	 * @param WP_Error $errors 
@@ -1080,7 +1060,7 @@ SCRIPT;
 	/**
 	 * Filter hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/wpmu_validate_user_signup/
+	 * @link https://developer.wordpress.org/reference/hooks/wpmu_validate_user_signup/
 	 *
 	 * @since 1.0.0
 	 * @param array $result 
@@ -1102,7 +1082,7 @@ SCRIPT;
 	/**
 	 * Filter hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/wpmu_validate_blog_signup/
+	 * @link https://developer.wordpress.org/reference/hooks/wpmu_validate_blog_signup/
 	 *
 	 * @since 1.0.0
 	 * @param array $result 
@@ -1121,7 +1101,7 @@ SCRIPT;
 	/**
 	 * Action hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/lostpassword_post/
+	 * @link https://developer.wordpress.org/reference/hooks/lostpassword_post/
 	 *
 	 * @since 1.0.0
 	 * @param WP_Error $errors 
@@ -1138,7 +1118,7 @@ SCRIPT;
 	/**
 	 * Action hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/validate_password_reset/
+	 * @link https://developer.wordpress.org/reference/hooks/validate_password_reset/
 	 *
 	 * @since 1.0.0
 	 * @param WP_Error $errors 
@@ -1158,7 +1138,7 @@ SCRIPT;
 	/**
 	 * Filter hook.
 	 * 
-	 * https://developer.wordpress.org/reference/hooks/pre_comment_approved/
+	 * @link https://developer.wordpress.org/reference/hooks/pre_comment_approved/
 	 *
 	 * @since 1.0.0
 	 * @param int|string|WP_Error $approved 

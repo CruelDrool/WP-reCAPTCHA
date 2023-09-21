@@ -32,20 +32,7 @@ class Plugin {
 	function __construct(string $file) {
 		$this->file = $file;
 		$this->config = new Config($file);
-		$this->init();
-	}
-	
-	/**
-	 * Initiate the plugin.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	private function init() {
-		$updated = $this->update();
-
-		if ($updated) {
+		if ( $this->update() ) {
 			$this->actions_filters();
 		}
 	}
@@ -58,14 +45,25 @@ class Plugin {
 	 * @return void
 	 */
 	private function actions_filters() {
-		add_action( 'init', [$this, 'load_plugin_textdomain']);
+		add_action( 'init', [$this, 'load_translations']);
 		if ( is_admin() ) {
 			add_action( 'wp_loaded', [$this, 'load_admin']);
 		} else {
 			add_action( 'wp_loaded', [$this, 'load_frontend']);
 		}
 	}
-	
+
+	/**
+	 * Load translations
+	 *
+	 * @since x.y.z Rename of load_plugin_textdomain()
+	 *
+	 * @return void
+	 */
+	function load_translations() {
+		load_plugin_textdomain( $this->config->get_text_domain(), false, dirname( plugin_basename( $this->file) ) . '/languages' );
+	}
+
 	/**
 	 * Instantiates the Frontend class.
 	 *
@@ -94,17 +92,6 @@ class Plugin {
 			$instance = new Admin\Settings($this->config);
 		}
 		return $instance;
-	}
-	
-	/**
-	 * Load translations.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	function load_plugin_textdomain() {
-		load_plugin_textdomain( $this->config->get_text_domain(), false, dirname( plugin_basename( $this->file) ) . '/languages' );
 	}
 	
 	/**
