@@ -21,7 +21,7 @@ class Frontend {
 	private $config;
 
 	/**
-	 * @since x.y.z
+	 * @since 1.1.0
 	 * @var string
 	 */
 	private $recaptcha_version;
@@ -88,7 +88,7 @@ class Frontend {
 	/**
 	 * Output debug logging to the error log.
 	 *
-	 * @since x.y.z
+	 * @since 1.1.0
 	 * @param int $level 
 	 * @param string $message 
 	 * @param null|WP_Error $wp_error 
@@ -289,7 +289,7 @@ class Frontend {
 	/**
 	 * Enqueue scripts and styles.
 	 *
-	 * @since x.y.z
+	 * @since 1.1.0
 	 *
 	 * @return void
 	 */
@@ -304,7 +304,7 @@ class Frontend {
 	/**
 	 * Enqueue scripts and styles for the login page.
 	 *
-	 * @since x.y.z
+	 * @since 1.1.0
 	 *
 	 * @return void
 	 */
@@ -317,7 +317,7 @@ class Frontend {
 	/**
 	 * Determines the user's actual IP address.
 	 *
-	 * @since x.y.z
+	 * @since 1.1.0
 	 *
 	 * @return false|string
 	 */
@@ -479,7 +479,7 @@ class Frontend {
 	 *
 	 * @since 1.0.6
 	 * @since 1.0.7 Removed parameter $version.
-	 * @since x.y.z $remoteip renamed to $remote_ip and can now be false.
+	 * @since 1.1.0 $remoteip renamed to $remote_ip and can now be false.
 	 * @param array $result 
 	 * @param false|string $remote_ip 
 	 *

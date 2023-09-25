@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: CruelDrool's reCAPTCHA 1.x.y\n"
-"POT-Creation-Date: 2023-09-25 06:29+0200\n"
-"PO-Revision-Date: 2023-09-25 06:31+0200\n"
+"Project-Id-Version: CruelDrool's reCAPTCHA 1.1.x\n"
+"POT-Creation-Date: 2023-09-25 22:52+0200\n"
+"PO-Revision-Date: 2023-09-25 22:52+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_GB\n"
@@ -548,8 +548,8 @@ msgstr ""
 
 #: src/Admin/Settings.php:817
 msgid ""
-"If you are logging to a directory that is web accessible, then you take "
-"measures to prevent people from accessing the logs."
+"If you are logging to a directory that is web accessible, then you should "
+"take measures to prevent people from accessing the logs."
 msgstr ""
 
 #. translators: 1: .htaccess , 2: Code example #1, 3: Code example #2

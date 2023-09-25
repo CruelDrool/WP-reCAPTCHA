@@ -56,7 +56,7 @@ class Plugin {
 	/**
 	 * Load translations
 	 *
-	 * @since x.y.z Rename of load_plugin_textdomain()
+	 * @since 1.1.0 Rename of load_plugin_textdomain()
 	 *
 	 * @return void
 	 */

@@ -87,7 +87,7 @@ class Settings {
 	/**
 	 * Enqueues admin scripts and styles.
 	 *
-	 * @since x.y.z
+	 * @since 1.1.0
 	 * @param string $hook_suffix 
 	 *
 	 * @return void
@@ -102,7 +102,7 @@ class Settings {
 	/**
 	 * Adds this plugin's settings page as a submenu page to the Settings main menu.
 	 *
-	 * @since x.y.z Consolidation of menu_page() and network_menu_page()
+	 * @since 1.1.0 Consolidation of menu_page() and network_menu_page()
 	 *
 	 * @return void
 	 */
@@ -115,7 +115,7 @@ class Settings {
 	/**
 	 * Add custom links to the meta row.
 	 *
-	 * @since x.y.z
+	 * @since 1.1.0
 	 * @param array $plugin_meta 
 	 * @param string $plugin_file 
 	 * @param array $plugin_data 
@@ -430,7 +430,7 @@ class Settings {
 				'type'       => 'checkbox',
 				'class'      => 'checkbox',
 				'desc'		 => sprintf( __( '%s This is only required if you have chosen not to have Google do this verification.', 'cd-recaptcha' ), 
-									sprintf( '<strong>%s</strong>', __( 'NB!', 'cd-recaptcha' ) ), 
+									sprintf( '<strong>%s</strong>', __( 'NB!', 'cd-recaptcha' ) )
 								),
 			],
 			'v3_script_load'     => [
@@ -657,7 +657,7 @@ class Settings {
 									sprintf('<a href="%ssidebar-login" target="_blank">%s</a>',
 										translate('https://wordpress.org/plugins/'),
 										__('Sidebar Login', 'cd-recaptcha')
-									),
+									)
 								),
 				'section_id' => 'forms',
 				'type'       => 'checkbox',
@@ -788,7 +788,7 @@ class Settings {
 										sprintf(__( 'Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ),
 											sprintf('<a href="https://www.iso.org/standard/40874.html" target="_blank">%s</a>',
 											__( 'ISO 8601' , 'cd-recaptcha'))
-										),
+										)
 									),
 				],
 				'debug_log_min_level'  => [ 
@@ -814,7 +814,7 @@ class Settings {
 					'desc'       => sprintf('%s %s</p><p class="description">%s</p><p class="description">%s',
 									__( 'Specify your own directory where the log files will be stored.', 'cd-recaptcha' ),
 									__( 'Using an absolute path is recommended.', 'cd-recaptcha'),
-									__( 'If you are logging to a directory that is web accessible, then you take measures to prevent people from accessing the logs.', 'cd-recaptcha' ),
+									__( 'If you are logging to a directory that is web accessible, then you should take measures to prevent people from accessing the logs.', 'cd-recaptcha' ),
 									/* translators: 1: .htaccess , 2: Code example #1, 3: Code example #2  */
 									sprintf( __( 'One way of doing that is to create a %1$s file in that directory you are logging to and add something like this: %2$s Or this: %3$s', 'cd-recaptcha' ),
 										'<code>.htaccess</code>',
@@ -1075,7 +1075,7 @@ class Settings {
 			/* translators: 1:  Input name, 2: Sanitized name */
 			$msg = sprintf( __( 'Action name "%1$s" was changed to "%2$s."', 'cd-recaptcha' ),
 				$input_name,
-				$name,
+				$name
 			);
 
 			add_settings_error($this->menu_slug, 'sanitize_action_name', $msg, 'info' );
@@ -1105,7 +1105,7 @@ class Settings {
 	/**
 	 * Sanitize a directory path.
 	 *
-	 * @since x.y.z
+	 * @since 1.1.0
 	 * @param string $value 
 	 * @param string $default 
 	 *

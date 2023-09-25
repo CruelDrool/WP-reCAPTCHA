@@ -43,7 +43,7 @@ class Config {
 	private $is_active_for_network;
 	
 	/**
-	 * @since x.y.z
+	 * @since 1.1.0
 	 * @var array List of ISO-8601 date formats
 	 */
 	private const DATE_FORMATS = [
@@ -361,7 +361,7 @@ class Config {
 	/**
 	 * Get date a format.
 	 *
-	 * @since x.y.z
+	 * @since 1.1.0
 	 * @param string $type 
 	 *
 	 * @return string ISO 8601 date format.
@@ -373,7 +373,7 @@ class Config {
 	/**
 	 * Return a log's rotation interval - a date stamp.
 	 *
-	 * @since x.y.z
+	 * @since 1.1.0
 	 * @param string $log 
 	 *
 	 * @return string Date stamp in the ISO 8601 date format.
