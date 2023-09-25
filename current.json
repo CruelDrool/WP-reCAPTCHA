@@ -1,10 +1,10 @@
 {
-	"version": "1.0.8",
+	"version": "1.1.0",
 	"slug": "recaptcha",
 	"requires_php": "7.1",
-	"tested": "6.1",
+	"tested": "6.3.1",
 	"icons": {
 		"svg": "https://github.com/CruelDrool/WP-reCAPTCHA/raw/main/.assets/icon.svg"
     },
-	"package": "https://github.com/CruelDrool/WP-reCAPTCHA/releases/download/1.0.8/recaptcha-1.0.8.zip"
+	"package": "https://github.com/CruelDrool/WP-reCAPTCHA/releases/download/1.1.0/recaptcha-1.1.0.zip"
 }
