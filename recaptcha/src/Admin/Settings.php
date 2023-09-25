@@ -133,8 +133,8 @@ class Settings {
 			if ( current_user_can( 'install_plugins' ) ) {
 				$plugin_meta[2] = sprintf('<a href="%s" aria-label="%s">%s</a>',
 					$plugin_data['PluginURI'],
-					sprintf( __( 'Visit plugin site for %s', 'cd-recaptcha' ), $plugin_data['Name'] ),
-					__( 'Visit plugin site', 'cd-recaptcha' )
+					sprintf( translate( 'Visit plugin site for %s' ), $plugin_data['Name'] ),
+					translate( 'Visit plugin site' )
 				);
 			}
 			
@@ -146,10 +146,9 @@ class Settings {
 			}
 
 			if ( !empty($url) ) {
-				$plugin_meta[] = sprintf('<a href="%s" aria-label="%s">%s</a>',
+				$plugin_meta[] = sprintf('<a href="%s">%s</a>',
 					$url,
-					sprintf( __( 'Go to plugin settings for %s', 'cd-recaptcha' ), $plugin_data['Name'] ),
-					__( 'Settings', 'cd-recaptcha')
+					translate( 'Settings' )
 				);
 			}
 		}
@@ -178,7 +177,7 @@ class Settings {
 			}
 			$this->config->update_option( $value );
 			
-			add_settings_error( $this->menu_slug, 'settings_updated', __( 'Settings saved.', 'cd-recaptcha' ), 'success' );
+			add_settings_error( $this->menu_slug, 'settings_updated', translate( 'Settings saved.' ), 'success' );
 
 			set_transient( 'settings_errors', get_settings_errors($this->menu_slug), 30 );
 
@@ -264,7 +263,7 @@ class Settings {
 				'section_callback' => function() {
 					printf('<p class="hidden show-field-for-v3">%s</p>',
 						/* translators: 1: 1.0, 2: 0.0 */
-						sprintf(__( 'reCAPTCHA v3 returns a score (%1$s is very likely a good interaction, %1$s is very likely a bot).', 'cd-recaptcha' ), 
+						sprintf(__( 'reCAPTCHA v3 returns a score (%1$s is very likely a good interaction, %2$s is very likely a bot).', 'cd-recaptcha' ), 
 							sprintf( '<samp>%s</samp>', number_format_i18n(1.0, 1) ),
 							sprintf( '<samp>%s</samp>', number_format_i18n(0.0, 1) )
 						)
@@ -315,43 +314,71 @@ class Settings {
 					'v2_invisible' => __( 'v2 Invisible', 'cd-recaptcha' ),
 					'v3'           => __( 'v3', 'cd-recaptcha' ),
 				],
-				'desc'       => sprintf( __( 'Select your reCAPTCHA version. Make sure to use keys for your selected version. Read more about the versions on %s.', 'cd-recaptcha' ), '<a href="//developers.google.com/recaptcha/docs/versions" target="_blank">developers.google.com/recaptcha/docs/versions</a>'),
+				'desc'       => sprintf( __( 'Select your reCAPTCHA version. Make sure to use keys for your selected version. %s.', 'cd-recaptcha' ),
+									sprintf( '<a href="https://developers.google.com/recaptcha/docs/versions" target="_blank">%s</a>',
+										__( 'Read more about the versions', 'cd-recaptcha' )
+									)
+								),
 			],
 			'v2_checkbox_site_key'           => [
 				'label'      => __( 'Site Key', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'class'		=> 'hidden regular-text show-field-for-v2_checkbox',
-				'desc'		=> sprintf( __('The public site key is used to load the widget. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
+				'desc'		=> sprintf( __( 'The public site key is used to load the widget. %s.', 'cd-recaptcha' ), 
+								sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
+									__( 'Keys can be obtained here', 'cd-recaptcha' )
+								)
+							),
 			],
 			'v2_checkbox_secret_key'         => [
 				'label'      => __( 'Secret Key', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'class'		=> 'hidden regular-text show-field-for-v2_checkbox',
-				'desc'		=> sprintf( __('The private secret key is for communication between your site and the reCAPTCHA verification server. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
+				'desc'		=> sprintf( __( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s.', 'cd-recaptcha' ), 
+								sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
+									__( 'Keys can be obtained here', 'cd-recaptcha' )
+								)
+							),
 			],
 			'v2_invisible_site_key'           => [
 				'label'      => __( 'Site Key', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'class'		=> 'hidden regular-text show-field-for-v2_invisible',
-				'desc'		=> sprintf( __('The public site key is used to load the widget. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
+				'desc'		=> sprintf( __( 'The public site key is used to load the widget. %s.', 'cd-recaptcha' ), 
+								sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
+									__( 'Keys can be obtained here', 'cd-recaptcha' )
+								)
+							),
 			],
 			'v2_invisible_secret_key'         => [
 				'label'      => __( 'Secret Key', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'class'		=> 'hidden regular-text show-field-for-v2_invisible',
-				'desc'		=> sprintf( __('The private secret key is for communication between your site and the reCAPTCHA verification server. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
+				'desc'		=> sprintf( __( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s.', 'cd-recaptcha' ), 
+								sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
+									__( 'Keys can be obtained here', 'cd-recaptcha' )
+								)
+							),
 			],
 			'v3_site_key'           => [
 				'label'      => __( 'Site Key', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'class'		=> 'hidden regular-text show-field-for-v3',
-				'desc'		=> sprintf( __('The public site key is used to load the widget. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
+				'desc'		=> sprintf( __( 'The public site key is used to load the widget. %s.', 'cd-recaptcha' ), 
+								sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
+									__( 'Keys can be obtained here', 'cd-recaptcha' )
+								)
+							),
 			],
 			'v3_secret_key'         => [
 				'label'      => __( 'Secret Key', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'class'		=> 'hidden regular-text show-field-for-v3',
-				'desc'		=> sprintf( __('The private secret key is for communication between your site and the reCAPTCHA verification server. Keys can be obtained on %s.', 'cd-recaptcha'), '<a href="//www.google.com/recaptcha" target="_blank">www.google.com/recaptcha</a>'),
+				'desc'		=> sprintf( __( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s.', 'cd-recaptcha' ), 
+								sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
+									__( 'Keys can be obtained here', 'cd-recaptcha' )
+								)
+							),
 			],
 			'v2_checkbox_error_message'=> [
 				'label'      => __( 'Error message', 'cd-recaptcha' ),
@@ -403,7 +430,7 @@ class Settings {
 				'type'       => 'checkbox',
 				'class'      => 'checkbox',
 				'desc'		 => sprintf( __( '%s This is only required if you have chosen not to have Google do this verification.', 'cd-recaptcha' ), 
-									sprintf( '<strong>%s</strong>', __( 'NB!' ) ), 
+									sprintf( '<strong>%s</strong>', __( 'NB!', 'cd-recaptcha' ) ), 
 								),
 			],
 			'v3_script_load'     => [
@@ -555,7 +582,11 @@ class Settings {
 				'label'      => __( 'Language code', 'cd-recaptcha' ),
 				'section_id' => 'other',
 				'class'      => 'small-text',
-				'desc'		 => sprintf( __( 'Language of the widget. Leave it blank to auto-detect the language. Read more about language codes on %s.', 'cd-recaptcha' ), '<a href="//developers.google.com/recaptcha/docs/language" target="_blank">developers.google.com/recaptcha/docs/language</a>'),
+				'desc'		 => sprintf( __( 'Language of the widget. Leave it blank to auto-detect the language. %s.', 'cd-recaptcha' ),
+									sprintf('<a href="https://developers.google.com/recaptcha/docs/language" target="_blank">%s</a>',
+										__('Read more about language codes', 'cd-recaptcha' )
+									)
+								),
 			],
 			'theme'              => [
 				'label'      => __( 'Theme', 'cd-recaptcha' ),
@@ -568,7 +599,7 @@ class Settings {
 					'dark'  => __( 'Dark', 'cd-recaptcha' ),
 					'auto'  => __( 'Automatic', 'cd-recaptcha' ),
 				],
-				'desc'       => sprintf(__( 'Color theme of the widget. Select %s to have the theme be set based on the brightness of the background color.', 'cd-recaptcha' ),
+				'desc'       => sprintf(__( 'Color theme of the widget. Select %s to set the theme based on the brightness of the page\'s background color.', 'cd-recaptcha' ),
 									sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
 								),
 			],
@@ -623,7 +654,10 @@ class Settings {
 		if ( file_exists(WP_PLUGIN_DIR . '/sidebar-login') ) {
 			$fields['disable_sidebar_login_js'] = [
 				'label'      => sprintf(__( 'Disable the AJAX JavaScript from the plugin %s', 'cd-recaptcha' ),
-									'<a href="https://wordpress.org/plugins/sidebar-login" target="_blank">Sidebar Login</a>',
+									sprintf('<a href="%ssidebar-login" target="_blank">%s</a>',
+										translate('https://wordpress.org/plugins/'),
+										__('Sidebar Login', 'cd-recaptcha')
+									),
 								),
 				'section_id' => 'forms',
 				'type'       => 'checkbox',
@@ -631,8 +665,8 @@ class Settings {
 									sprintf( __( 'This setting only applies if you have activated that plugin and enabled the form %s.', 'cd-recaptcha' ),
 										sprintf( '<em>%s</em>', __( 'Login', 'cd-recaptcha' ) )
 									),
-									__( 'When that JavaScript is loaded, there is an issue where the reCAPTCHA response token in that plugin\'s login form only gets submitted after the user has been already been logged in.', 'cd-recaptcha' ),
-									__( 'You are seeing this setting because you have that plugin installed.', 'cd-recaptcha' )
+									sprintf( __( 'The problem is that this script does not submit the required information needed for the verification process. Fortunately, no errors happen. That is because "%s" sends the login requests to WordPress\' admin backend, where this reCAPTCHA plugin\'s frontend does not get loaded. However, it does mean that there is no verification of those particular login requests.', 'cd-recaptcha' ), __( 'Sidebar Login', 'cd-recaptcha' ) ) ,
+									sprintf( __( 'You are seeing this setting because "%s" is installed in this WordPress installation.', 'cd-recaptcha' ), __( 'Sidebar Login', 'cd-recaptcha' ) )
 								),
 			];
 		}
@@ -683,10 +717,10 @@ class Settings {
 					'std'        => $this->config->get_default('recaptcha_log_rotate_interval'),
 					'options'    => [
 						'never'   => __( 'Never', 'cd-recaptcha' ),
-						'daily'   => __( 'Daily', 'cd-recaptcha' ),
-						'weekly'  => __( 'Weekly', 'cd-recaptcha' ),
-						'monthly' => __( 'Monthly', 'cd-recaptcha' ),
-						'yearly'  => __( 'Yearly', 'cd-recaptcha' ),
+						'daily'   => sprintf(__( 'Daily (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('daily'), time())),
+						'weekly'  => sprintf(__( 'Weekly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('weekly'), time())),
+						'monthly' => sprintf(__( 'Monthly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('monthly'), time())),
+						'yearly'  => sprintf(__( 'Yearly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('yearly'), time())),
 					],
 					'desc'       => sprintf( __( 'Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ),
 										sprintf( '<a href="https://www.iso.org/standard/40874.html" target="_blank">%s</a>',
@@ -744,10 +778,10 @@ class Settings {
 					'std'        => $this->config->get_default('debug_log_rotate_interval'),
 					'options'    => [
 						'never'   => __( 'Never', 'cd-recaptcha' ),
-						'daily'   => __( 'Daily', 'cd-recaptcha' ),
-						'weekly'  => __( 'Weekly', 'cd-recaptcha' ),
-						'monthly' => __( 'Monthly', 'cd-recaptcha' ),
-						'yearly'  => __( 'Yearly', 'cd-recaptcha' ),
+						'daily'   => sprintf(__( 'Daily (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('daily'), time())),
+						'weekly'  => sprintf(__( 'Weekly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('weekly'), time())),
+						'monthly' => sprintf(__( 'Monthly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('monthly'), time())),
+						'yearly'  => sprintf(__( 'Yearly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('yearly'), time())),
 					],
 					'desc'       => sprintf('%s %s',
 										__( 'Only applicable if you have chosen to have a separate debug log.', 'cd-recaptcha' ),
@@ -764,14 +798,14 @@ class Settings {
 					'class'      => 'regular',
 					'std'        => $this->config->get_default('debug_log_min_level'),
 					'options'    => [
-						__( 'Disabled/No output', 'cd-recaptcha' ),
+						sprintf( '*%s*', __( 'Disabled', 'cd-recaptcha' ) ),
 						__( 'Error', 'cd-recaptcha' ),
 						__( 'Warning', 'cd-recaptcha' ),
 						__( 'Notice', 'cd-recaptcha' ),
 						__( 'Info', 'cd-recaptcha' ),
 						__( 'Debug', 'cd-recaptcha' ),
 					],
-					'desc'       => __('Determines the verbosity of the debug log.', 'cd-recaptcha' ),
+					'desc'       => __('The minimum required severity level that messages must have for them to be written to the log.', 'cd-recaptcha' ),
 				],
 				'log_directory'  => [ 
 					'label'      => __( 'Path to log directory', 'cd-recaptcha' ),
@@ -1039,7 +1073,7 @@ class Settings {
 		// Output a information message if the sanitized action name differs from the input name.
 		if ( $name !== $input_name ) {
 			/* translators: 1:  Input name, 2: Sanitized name */
-			$msg = sprintf( __( 'Action name "%1$s" was changed to "%2$s"', 'cd-recaptcha' ),
+			$msg = sprintf( __( 'Action name "%1$s" was changed to "%2$s."', 'cd-recaptcha' ),
 				$input_name,
 				$name,
 			);
@@ -1100,14 +1134,8 @@ class Settings {
 
 			if ( $path !== false ) {
 				add_settings_error( $setting_slug, $setting_code,
-					sprintf('%s %s',
-						/* translators: 1: Input path from user, 2: Resolved absolute path */
-						sprintf(__( 'The relative path, "%1$s", was resolved to "%2$s".', 'cd-recaptcha' ),
-							$value,
-							$path
-						),
-						__( 'Using an absolute path is recommended.', 'cd-recaptcha' )
-					),
+					/* translators: 1: Input path from user, 2: Resolved absolute path */
+					sprintf( __( 'The relative path, "%1$s", was changed to "%2$s".', 'cd-recaptcha' ), $value, $path ),
 					'info'
 				);
 			}
@@ -1144,12 +1172,7 @@ class Settings {
 
 		if ($path === false) {
 			$error = true;
-			$error_msg = sprintf('%s %s',
-							sprintf( __( 'Was unable to find the absolute path for "%s".', 'cd-recaptcha' ),
-								$value
-							),
-							__( 'Using an absolute path is recommended.', 'cd-recaptcha' )
-						);
+			$error_msg = sprintf(__( 'Was unable to find the absolute path for "%s".', 'cd-recaptcha' ), $value	);
 		} elseif ( !file_exists($path) ) {
 			$error = true;
 			$error_msg = sprintf(__( 'The path, "%s", does not exist.', 'cd-recaptcha' ), $path);

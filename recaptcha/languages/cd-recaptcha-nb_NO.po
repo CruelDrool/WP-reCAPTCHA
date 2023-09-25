@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CruelDrool's reCAPTCHA 1.x.y\n"
-"POT-Creation-Date: 2023-09-17 07:47+0200\n"
-"PO-Revision-Date: 2023-09-17 07:47+0200\n"
+"POT-Creation-Date: 2023-09-25 06:29+0200\n"
+"PO-Revision-Date: 2023-09-25 06:30+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nb_NO\n"
@@ -18,109 +18,121 @@ msgstr ""
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/Admin/Settings.php:123
+#: src/Admin/Settings.php:112 src/Admin/Settings.php:218
+#, php-format
+msgid "%s Settings"
+msgstr "%s-innstillinger"
+
+#: src/Admin/Settings.php:247
 msgid "General"
 msgstr "Generelle"
 
-#: src/Admin/Settings.php:129
+#: src/Admin/Settings.php:253
 msgid "Forms"
 msgstr "Skjemaer"
 
-#: src/Admin/Settings.php:132
+#: src/Admin/Settings.php:256
 msgid "Actions"
 msgstr "Handlinger"
 
-#: src/Admin/Settings.php:134
+#: src/Admin/Settings.php:258
 msgid ""
 "Action names may only contain alphanumeric characters, underscores, and "
 "forward slashes."
 msgstr ""
-"Navn på handlinger kan bare inneholde alfanumerisk tegn, understreker, og "
+"Navn på handlinger kan bare inneholde alfanumeriske tegn, understreker, og "
 "skråstreker."
 
-#: src/Admin/Settings.php:138
+#: src/Admin/Settings.php:262
 msgid "Thresholds"
 msgstr "Terskler"
 
 #. translators: 1: 1.0, 2: 0.0
-#: src/Admin/Settings.php:142
+#: src/Admin/Settings.php:266
 #, php-format
 msgid ""
-"reCAPTCHA v3 returns a score (%1$s is very likely a good interaction, %1$s "
+"reCAPTCHA v3 returns a score (%1$s is very likely a good interaction, %2$s "
 "is very likely a bot)."
 msgstr ""
 "reCAPTCHA v3 returnerer en poengscore (%1$s  er mest sannsynligvis en god "
-"interaksjon, %1$s er mest sannsynligvis en bot)."
+"interaksjon, %2$s er mest sannsynligvis en bot)."
 
-#: src/Admin/Settings.php:150
+#: src/Admin/Settings.php:274
 msgid "Other"
 msgstr "Annet"
 
-#: src/Admin/Settings.php:155
+#: src/Admin/Settings.php:279
 msgid "Logging"
 msgstr "Logging"
 
-#: src/Admin/Settings.php:183
+#: src/Admin/Settings.php:307
 msgid "Version"
 msgstr "Versjon"
 
-#: src/Admin/Settings.php:189
+#: src/Admin/Settings.php:313
 msgid "v2 \"I'm not a robot\""
 msgstr "v2 \"Jeg er ikke en robot\""
 
-#: src/Admin/Settings.php:190
+#: src/Admin/Settings.php:314
 msgid "v2 Invisible"
 msgstr "v2 Usynlig"
 
-#: src/Admin/Settings.php:191
+#: src/Admin/Settings.php:315
 msgid "v3"
 msgstr "v3"
 
-#: src/Admin/Settings.php:193
+#: src/Admin/Settings.php:317
 #, php-format
 msgid ""
 "Select your reCAPTCHA version. Make sure to use keys for your selected "
-"version. Read more about the versions on %s."
+"version. %s."
 msgstr ""
 "Velg din reCAPTCHA-versjon. Sørg for å anvende nøkler for din valgte "
-"versjon. Les mer om versjonene på %s."
+"versjon. %s."
 
-#: src/Admin/Settings.php:196 src/Admin/Settings.php:208
-#: src/Admin/Settings.php:220
+#: src/Admin/Settings.php:319
+msgid "Read more about the versions"
+msgstr "Les mer om versjonene"
+
+#: src/Admin/Settings.php:324 src/Admin/Settings.php:344
+#: src/Admin/Settings.php:364
 msgid "Site Key"
 msgstr "Nettsted-nøkkel"
 
-#: src/Admin/Settings.php:199 src/Admin/Settings.php:211
-#: src/Admin/Settings.php:223
+#: src/Admin/Settings.php:327 src/Admin/Settings.php:347
+#: src/Admin/Settings.php:367
 #, php-format
-msgid ""
-"The public site key is used to load the widget. Keys can be obtained on %s."
-msgstr ""
-"Den offentlige nettsted-nøkkelen brukes til å laste inn modulen. Nøkler kan "
-"hentes på %s."
+msgid "The public site key is used to load the widget. %s."
+msgstr "Den offentlige nettsted-nøkkelen brukes til å laste inn modulen. %s."
 
-#: src/Admin/Settings.php:202 src/Admin/Settings.php:214
-#: src/Admin/Settings.php:226
+#: src/Admin/Settings.php:329 src/Admin/Settings.php:339
+#: src/Admin/Settings.php:349 src/Admin/Settings.php:359
+#: src/Admin/Settings.php:369 src/Admin/Settings.php:379
+msgid "Keys can be obtained here"
+msgstr "Nøkler kan hentes her"
+
+#: src/Admin/Settings.php:334 src/Admin/Settings.php:354
+#: src/Admin/Settings.php:374
 msgid "Secret Key"
 msgstr "Hemmelig nøkkel"
 
-#: src/Admin/Settings.php:205 src/Admin/Settings.php:217
-#: src/Admin/Settings.php:229
+#: src/Admin/Settings.php:337 src/Admin/Settings.php:357
+#: src/Admin/Settings.php:377
 #, php-format
 msgid ""
 "The private secret key is for communication between your site and the "
-"reCAPTCHA verification server. Keys can be obtained on %s."
+"reCAPTCHA verification server. %s."
 msgstr ""
 "Den private, hemmelige nøkkelen brukes til kommunikasjon mellom ditt "
-"nettsted og reCAPTCHA sin verifikasjonstjener. Nøkler kan hentes på %s."
+"nettsted og reCAPTCHA sin verifikasjonstjener. %s."
 
-#: src/Admin/Settings.php:232 src/Admin/Settings.php:240
-#: src/Admin/Settings.php:248
+#: src/Admin/Settings.php:384 src/Admin/Settings.php:392
+#: src/Admin/Settings.php:400
 msgid "Error message"
 msgstr "Feilmelding"
 
-#: src/Admin/Settings.php:236 src/Admin/Settings.php:244
-#: src/Admin/Settings.php:252
+#: src/Admin/Settings.php:388 src/Admin/Settings.php:396
+#: src/Admin/Settings.php:404
 msgid ""
 "In this textbox, you can type in a custom error message. Leave it empty to "
 "use the default one."
@@ -128,20 +140,20 @@ msgstr ""
 "I denne tekstboksen kan du skrive inn en selvtilpasset feilmelding. La den "
 "stå tom for å bruke standardmeldingen."
 
-#: src/Admin/Settings.php:256
+#: src/Admin/Settings.php:408
 msgid "Hide for logged-in users"
 msgstr "Skjul for innloggede brukere"
 
-#: src/Admin/Settings.php:260
+#: src/Admin/Settings.php:412
 msgid "Only load for guest users."
 msgstr "Bare last inn for gjestebrukere."
 
-#: src/Admin/Settings.php:263
+#: src/Admin/Settings.php:415
 msgid "Request domain"
 msgstr "Forespørselsdomene"
 
 #. translators: 1: recaptcha.net 2: google.com
-#: src/Admin/Settings.php:270
+#: src/Admin/Settings.php:422
 #, php-format
 msgid ""
 "The domain to fetch the script from, and to use when verifying requests. Use "
@@ -150,11 +162,11 @@ msgstr ""
 "Domenet skriptet hentes fra, og som brukes når forespørsler blir verifisert. "
 "Bruk %1$s når %2$s  er utilgjengelig."
 
-#: src/Admin/Settings.php:276
+#: src/Admin/Settings.php:428
 msgid "Verify origin of the solutions"
 msgstr "Verifiser løsningenes opprinnelse"
 
-#: src/Admin/Settings.php:280
+#: src/Admin/Settings.php:432
 #, php-format
 msgid ""
 "%s This is only required if you have chosen not to have Google do this "
@@ -163,23 +175,23 @@ msgstr ""
 "%s Dette er bare påkrevd hvis du ikke har valgt at Google skal utføre denne "
 "verifisering."
 
-#: src/Admin/Settings.php:281
+#: src/Admin/Settings.php:433
 msgid "NB!"
 msgstr "NB!"
 
-#: src/Admin/Settings.php:285
+#: src/Admin/Settings.php:437
 msgid "Load on..."
 msgstr "Last på..."
 
-#: src/Admin/Settings.php:291
+#: src/Admin/Settings.php:443
 msgid "All pages"
 msgstr "Alle sider"
 
-#: src/Admin/Settings.php:292
+#: src/Admin/Settings.php:444
 msgid "Form pages"
 msgstr "Skjemasider"
 
-#: src/Admin/Settings.php:294
+#: src/Admin/Settings.php:446
 msgid ""
 "For analytics purposes, it's recommended to load the widget in the "
 "background of all pages."
@@ -187,11 +199,11 @@ msgstr ""
 "For analytiske formål er det anbefalt å laste inn modulen i bakgrunnen av "
 "alle sider."
 
-#: src/Admin/Settings.php:297
+#: src/Admin/Settings.php:449
 msgid "Require the client's IP address"
 msgstr "Krev klientens IP-adresse"
 
-#: src/Admin/Settings.php:301
+#: src/Admin/Settings.php:453
 msgid ""
 "Require that the client's IP address has been determined before submitting "
 "data to the reCAPTCHA server. An undetermined IP address will be treated as "
@@ -201,98 +213,98 @@ msgstr ""
 "reCAPTCHA-serveren. En ikke-fastslått IP-adresse vil bli ansett som et "
 "mislykket CAPTCHA-forsøk."
 
-#: src/Admin/Settings.php:305
+#: src/Admin/Settings.php:457
 msgid "Enabled forms"
 msgstr "Aktiverte skjemaer"
 
-#: src/Admin/Settings.php:310 src/Admin/Settings.php:320
-#: src/Admin/Settings.php:375
+#: src/Admin/Settings.php:462 src/Admin/Settings.php:472
+#: src/Admin/Settings.php:527 src/Admin/Settings.php:666
 msgid "Login"
 msgstr "Innlogging"
 
-#: src/Admin/Settings.php:311 src/Admin/Settings.php:329
-#: src/Admin/Settings.php:384
+#: src/Admin/Settings.php:463 src/Admin/Settings.php:481
+#: src/Admin/Settings.php:536
 msgid "Registration"
 msgstr "Registrering"
 
-#: src/Admin/Settings.php:312 src/Admin/Settings.php:338
-#: src/Admin/Settings.php:393
+#: src/Admin/Settings.php:464 src/Admin/Settings.php:490
+#: src/Admin/Settings.php:545
 msgid "Multisite User Signup"
 msgstr "Flernettsted brukerregistering"
 
-#: src/Admin/Settings.php:313 src/Admin/Settings.php:347
-#: src/Admin/Settings.php:402
+#: src/Admin/Settings.php:465 src/Admin/Settings.php:499
+#: src/Admin/Settings.php:554
 msgid "Lost Password"
 msgstr "Tapt passord"
 
-#: src/Admin/Settings.php:314 src/Admin/Settings.php:356
-#: src/Admin/Settings.php:411
+#: src/Admin/Settings.php:466 src/Admin/Settings.php:508
+#: src/Admin/Settings.php:563
 msgid "Reset Password"
 msgstr "Sett nytt passord"
 
-#: src/Admin/Settings.php:315 src/Admin/Settings.php:365
-#: src/Admin/Settings.php:420
+#: src/Admin/Settings.php:467 src/Admin/Settings.php:517
+#: src/Admin/Settings.php:572
 msgid "Comment"
 msgstr "Kommentar"
 
-#: src/Admin/Settings.php:430
+#: src/Admin/Settings.php:582
 msgid "Language code"
 msgstr "Språkkode"
 
-#: src/Admin/Settings.php:433
+#: src/Admin/Settings.php:585
 #, php-format
-msgid ""
-"Language of the widget. Leave it blank to auto-detect the language. Read "
-"more about language codes on %s."
-msgstr ""
-"Modulens språk. La stå blank for å automatisk oppdage språk. Les mer om "
-"språkkoder på %s."
+msgid "Language of the widget. Leave it blank to auto-detect the language. %s."
+msgstr "Modulens språk. La stå blank for å automatisk oppdage språk. %s."
 
-#: src/Admin/Settings.php:436
+#: src/Admin/Settings.php:587
+msgid "Read more about language codes"
+msgstr "Les mer om språkkodene"
+
+#: src/Admin/Settings.php:592
 msgid "Theme"
 msgstr "Tema"
 
-#: src/Admin/Settings.php:442
+#: src/Admin/Settings.php:598
 msgid "Light"
 msgstr "Lys"
 
-#: src/Admin/Settings.php:443
+#: src/Admin/Settings.php:599
 msgid "Dark"
 msgstr "Mørk"
 
-#: src/Admin/Settings.php:444 src/Admin/Settings.php:447
-#: src/Admin/Settings.php:460 src/Admin/Settings.php:463
-#: src/Admin/Settings.php:475 src/Admin/Settings.php:479
-#: src/Admin/Settings.php:493
+#: src/Admin/Settings.php:600 src/Admin/Settings.php:603
+#: src/Admin/Settings.php:616 src/Admin/Settings.php:619
+#: src/Admin/Settings.php:631 src/Admin/Settings.php:635
+#: src/Admin/Settings.php:649
 msgid "Automatic"
 msgstr "Automatisk"
 
-#: src/Admin/Settings.php:446
+#: src/Admin/Settings.php:602
 #, php-format
 msgid ""
-"Color theme of the widget. Select %s to have the theme be set based on the "
-"brightness of the background color."
+"Color theme of the widget. Select %s to set the theme based on the "
+"brightness of the page's background color."
 msgstr ""
-"Modulens fargetema. Velg %s for å sette fargetema basert på bakgrunnsfargens "
-"lysstyrke."
+"Modulens fargetema. Velg %s for å sette fargetema basert på lysstyrken til "
+"sidens bakgrunnsfarge."
 
-#: src/Admin/Settings.php:451
+#: src/Admin/Settings.php:607
 msgid "Placement"
 msgstr "Plassering"
 
-#: src/Admin/Settings.php:457
+#: src/Admin/Settings.php:613
 msgid "Bottom Right"
 msgstr "Nede til høyre"
 
-#: src/Admin/Settings.php:458
+#: src/Admin/Settings.php:614
 msgid "Bottom Left"
 msgstr "Nede til venstre"
 
-#: src/Admin/Settings.php:459
+#: src/Admin/Settings.php:615
 msgid "Inline"
 msgstr "På linje"
 
-#: src/Admin/Settings.php:462
+#: src/Admin/Settings.php:618
 #, php-format
 msgid ""
 "Position of the widget. Select %s to place the widget based on text "
@@ -303,21 +315,21 @@ msgstr ""
 "(på en side med \"høyre-til-venstre\", så vil modulen bli plassert til "
 "venstre)."
 
-#: src/Admin/Settings.php:467
+#: src/Admin/Settings.php:623
 msgid "Size"
 msgstr "Størrelse"
 
-#: src/Admin/Settings.php:473 src/Admin/Settings.php:481
-#: src/Admin/Settings.php:492
+#: src/Admin/Settings.php:629 src/Admin/Settings.php:637
+#: src/Admin/Settings.php:648
 msgid "Normal"
 msgstr "Normal"
 
-#: src/Admin/Settings.php:474 src/Admin/Settings.php:480
+#: src/Admin/Settings.php:630 src/Admin/Settings.php:636
 msgid "Compact"
 msgstr "Kompakt"
 
 #. translators: 1: Automatic, 2: Compact, 3: Normal
-#: src/Admin/Settings.php:478
+#: src/Admin/Settings.php:634
 #, php-format
 msgid ""
 "Size of the widget. Select %1$s to automatically set the size to %2$s if the "
@@ -326,16 +338,16 @@ msgstr ""
 "Modulens størrelse. Velg %1$s for å automatisk sette størrelsen til %2$s "
 "hvis området er for smalt for %3$s."
 
-#: src/Admin/Settings.php:485
+#: src/Admin/Settings.php:641
 msgid "Add stylesheet (CSS)"
 msgstr "Legg til stilsett (CSS)"
 
-#: src/Admin/Settings.php:489
+#: src/Admin/Settings.php:645
 msgid "Add this plugin's stylesheet to the login page."
 msgstr "Legg til denne utvidelsen sitt stilsett på innloggingssiden."
 
 #. translators: 1: Normal, 2: Automatic
-#: src/Admin/Settings.php:491
+#: src/Admin/Settings.php:647
 #, php-format
 msgid ""
 "This stylesheet increases the width of the container element that holds the "
@@ -346,18 +358,62 @@ msgstr ""
 "innloggingsskjemaet. Dette er for at modulen skal få bedre plass. Gjelder "
 "bare hvis du har valgt %1$s  eller %2$s som størrelse."
 
-#: src/Admin/Settings.php:513
+#: src/Admin/Settings.php:656
+#, php-format
+msgid "Disable the AJAX JavaScript from the plugin %s"
+msgstr "Deaktiverer AJAX-JavaScriptet fra utvidelsen %s"
+
+#: src/Admin/Settings.php:659 src/Admin/Settings.php:668
+#: src/Admin/Settings.php:669
+msgid "Sidebar Login"
+msgstr "Sidebar innlogging"
+
+#: src/Admin/Settings.php:665
+#, php-format
+msgid ""
+"This setting only applies if you have activated that plugin and enabled the "
+"form %s."
+msgstr ""
+"Denne innstillingen gjelder bare hvis du har aktivert den utvidelsen og "
+"aktivert skjemaet %s."
+
+#: src/Admin/Settings.php:668
+#, php-format
+msgid ""
+"The problem is that this script does not submit the required information "
+"needed for the verification process. Fortunately, no errors happen. That is "
+"because \"%s\" sends the login requests to WordPress' admin backend, where "
+"this reCAPTCHA plugin's frontend does not get loaded. However, it does mean "
+"that there is no verification of those particular login requests."
+msgstr ""
+"Problemet er at dette skriptet ikke sender inn den påkrevde informasjonen "
+"nødvendig for verifikasjonsprosessen. Heldigvis så oppstår det ingen feil. "
+"Det er fordi \"%s\" sender innloggingsforespørslene  til WordPress sin admin-"
+"\"backend\", hvor denne reCAPTCHA-utvidelsen sin \"frontend\" ikke blir "
+"lastet inn. Men dette betyr derimot at er ingen verifikasjon av akkurat "
+"disse innloggingsforespørslene."
+
+#: src/Admin/Settings.php:669
+#, php-format
+msgid ""
+"You are seeing this setting because \"%s\" is installed in this WordPress "
+"installation."
+msgstr ""
+"Du ser denne innstillingen fordi \"%s\" er installert i denne WordPress-"
+"installasjonen."
+
+#: src/Admin/Settings.php:689
 msgid "Enable logging of reCAPTCHA's JSON response data"
 msgstr "Aktiver logging av reCAPTCHA sin JSON-responsdata"
 
 #. translators: 1: WP_DEBUG, 2: WP_DEBUG_LOG, 3: true
-#: src/Admin/Settings.php:519 src/Admin/Settings.php:563
+#: src/Admin/Settings.php:695 src/Admin/Settings.php:739
 #, php-format
 msgid "Setting both %1$s and %2$s to %3$s will automatically enable this."
-msgstr "Å sette både %1$s og %2$s til %3$s vil automatisk slå på dette."
+msgstr "Å sette både %1$s og %2$s til %3$s vil automatisk aktivere dette."
 
 #. translators: 1: /wp-content, 2: Path to log directory
-#: src/Admin/Settings.php:521
+#: src/Admin/Settings.php:697
 #, php-format
 msgid ""
 "The log files are by default written to the %1$s directory, but that can be "
@@ -366,67 +422,71 @@ msgstr ""
 "Loggfilene blir, som standard, skrevet til  katalogen %1$s, men det kan "
 "endres med innstillingen \"%2$s\"."
 
-#: src/Admin/Settings.php:523 src/Admin/Settings.php:592
-#: src/Admin/Settings.php:635
+#: src/Admin/Settings.php:699 src/Admin/Settings.php:768
+#: src/Admin/Settings.php:811
 msgid "Path to log directory"
 msgstr "Bane til loggkatalog"
 
-#: src/Admin/Settings.php:525
+#: src/Admin/Settings.php:701
 #, php-format
 msgid "The text format used is %s."
 msgstr "Tekstformatet som brukes er %s."
 
-#: src/Admin/Settings.php:526
+#: src/Admin/Settings.php:702
 msgid "JSON Lines"
 msgstr "JSON Lines"
 
-#: src/Admin/Settings.php:531
+#: src/Admin/Settings.php:707
 msgid "Add the client's IP address to the JSON response data"
 msgstr "Legg til klientens IP-adresse til JSON-responsdata"
 
-#: src/Admin/Settings.php:537
+#: src/Admin/Settings.php:713
 msgid "reCAPTCHA log's rotate interval"
 msgstr "reCAPTCHA-loggens roteringsintervall"
 
-#: src/Admin/Settings.php:543 src/Admin/Settings.php:604
+#: src/Admin/Settings.php:719 src/Admin/Settings.php:780
 msgid "Never"
 msgstr "Aldri"
 
-#: src/Admin/Settings.php:544 src/Admin/Settings.php:605
-msgid "Daily"
-msgstr "Daglig"
+#: src/Admin/Settings.php:720 src/Admin/Settings.php:781
+#, php-format
+msgid "Daily (%s)"
+msgstr "Daglig (%s)"
 
-#: src/Admin/Settings.php:545 src/Admin/Settings.php:606
-msgid "Weekly"
-msgstr "Ukentlig"
+#: src/Admin/Settings.php:721 src/Admin/Settings.php:782
+#, php-format
+msgid "Weekly (%s)"
+msgstr "Ukentlig (%s)"
 
-#: src/Admin/Settings.php:546 src/Admin/Settings.php:607
-msgid "Monthly"
-msgstr "Månedlig"
+#: src/Admin/Settings.php:722 src/Admin/Settings.php:783
+#, php-format
+msgid "Monthly (%s)"
+msgstr "Månedlig (%s)"
 
-#: src/Admin/Settings.php:547 src/Admin/Settings.php:608
-msgid "Yearly"
-msgstr "Årlig"
+#: src/Admin/Settings.php:723 src/Admin/Settings.php:784
+#, php-format
+msgid "Yearly (%s)"
+msgstr "Årlig (%s)"
 
-#: src/Admin/Settings.php:549 src/Admin/Settings.php:612
+#: src/Admin/Settings.php:725 src/Admin/Settings.php:788
 #, php-format
 msgid "Uses UTC/GMT time with a %s date format."
 msgstr "Bruker UTC/GMT-tid med et %s datoformat."
 
-#: src/Admin/Settings.php:551 src/Admin/Settings.php:614
+#: src/Admin/Settings.php:727 src/Admin/Settings.php:790
 msgid "ISO 8601"
 msgstr "ISO 8601"
 
-#: src/Admin/Settings.php:556
+#: src/Admin/Settings.php:732
 msgid "Enable debug logging"
 msgstr "Aktiver feilsøkingslogging"
 
-#: src/Admin/Settings.php:561
+#: src/Admin/Settings.php:737
 msgid "This only applies to this plugin."
 msgstr "Dette gjelder bare for denne utvidelsen."
 
 #. translators: 1: Separate debug log, 2: PHP has been set up to do it
-#: src/Admin/Settings.php:569
+#: src/Admin/Settings.php:745
 #, php-format
 msgid ""
 "Important to note that if debug logging in WordPress is off, you should "
@@ -437,15 +497,15 @@ msgstr ""
 "burde du slå på innstilligen \"%1$s\". Hvis ikke, så vil meldingene bli "
 "logget hvor %2$s."
 
-#: src/Admin/Settings.php:571 src/Admin/Settings.php:580
+#: src/Admin/Settings.php:747 src/Admin/Settings.php:756
 msgid "Separate debug log"
 msgstr "Separat feilsøkingslogg"
 
-#: src/Admin/Settings.php:574
+#: src/Admin/Settings.php:750
 msgid "PHP has been set up to do it"
 msgstr "PHP har blitt satt opp til å gjøre det"
 
-#: src/Admin/Settings.php:585
+#: src/Admin/Settings.php:761
 #, php-format
 msgid ""
 "When debug logging in WordPress is enabled, the log is by default written to "
@@ -454,7 +514,7 @@ msgstr ""
 "Når feilsøkingslogging er slått på i WordPress, så vil loggen som standard "
 "bli skrevet til %s."
 
-#: src/Admin/Settings.php:586
+#: src/Admin/Settings.php:762
 msgid ""
 "By enabling this option, this plugin's debug log will be written to a "
 "separate file in the same directory."
@@ -462,7 +522,7 @@ msgstr ""
 "Ved å slå på denne innstillingen, så vil denne utvidelsen sin "
 "feilsøkingslogg bli skrevet til en separat fil i samme katalog."
 
-#: src/Admin/Settings.php:587
+#: src/Admin/Settings.php:763
 #, php-format
 msgid ""
 "However, this directory can be changed either by specifying a different file "
@@ -473,68 +533,71 @@ msgstr ""
 "(eksempel: \"%s\") eller ved å spesifisere din egen katalog med "
 "innstillingen \"%s\"."
 
-#: src/Admin/Settings.php:590
+#: src/Admin/Settings.php:766
 msgid "c:\\path\\to\\debug.log"
 msgstr "c:\\bane\\til\\debug.log"
 
-#: src/Admin/Settings.php:590
+#: src/Admin/Settings.php:766
 msgid "/path/to/debug.log"
 msgstr "/bane/til/debug.log"
 
-#: src/Admin/Settings.php:594
+#: src/Admin/Settings.php:770
 msgid "Read more about debugging in WordPress"
 msgstr "Les mer om feilsøking i WordPress"
 
-#: src/Admin/Settings.php:598
+#: src/Admin/Settings.php:774
 msgid "Debug log's rotate interval"
 msgstr "Feilsøkingsloggens roteringsintervall"
 
-#: src/Admin/Settings.php:611
+#: src/Admin/Settings.php:787
 msgid "Only applicable if you have chosen to have a separate debug log."
 msgstr "Bare gjeldende hvis har valgt å ha en separat feilsøkingslogg."
 
-#: src/Admin/Settings.php:619
+#: src/Admin/Settings.php:795
 msgid "Debug log's minimum level"
 msgstr "Feilsøkingsloggens minstenivå"
 
-#: src/Admin/Settings.php:625
-msgid "Disabled/No output"
+#: src/Admin/Settings.php:801
+msgid "Disabled"
 msgstr "Avslått"
 
-#: src/Admin/Settings.php:626 src/Frontend.php:524
+#: src/Admin/Settings.php:802 src/Frontend.php:545
 msgid "Error"
 msgstr "Feil"
 
-#: src/Admin/Settings.php:627
+#: src/Admin/Settings.php:803
 msgid "Warning"
 msgstr "Advarsel"
 
-#: src/Admin/Settings.php:628
+#: src/Admin/Settings.php:804
 msgid "Notice"
 msgstr "Merknad"
 
-#: src/Admin/Settings.php:629
+#: src/Admin/Settings.php:805
 msgid "Info"
 msgstr "Info"
 
-#: src/Admin/Settings.php:630
+#: src/Admin/Settings.php:806
 msgid "Debug"
 msgstr "Debug"
 
-#: src/Admin/Settings.php:632
-msgid "Determines the verbosity of the debug log."
+#: src/Admin/Settings.php:808
+msgid ""
+"The minimum required severity level that messages must have for them to be "
+"written to the log."
 msgstr ""
+"Det minste påkrevde alvorlighetsnivået som meldinger må ha for at de skal "
+"skrives til loggen."
 
-#: src/Admin/Settings.php:639
+#: src/Admin/Settings.php:815
 msgid "Specify your own directory where the log files will be stored."
 msgstr "Spesifiser din egen katalog hvor loggfilene vil bli lagret."
 
-#: src/Admin/Settings.php:640 src/Admin/Settings.php:955
-#: src/Admin/Settings.php:997
+#: src/Admin/Settings.php:816
 msgid "Using an absolute path is recommended."
 msgstr "Å bruke en absolutt bane er anbefalt."
 
-#: src/Admin/Settings.php:641
+#: src/Admin/Settings.php:817
 msgid ""
 "If you are logging to a directory that is web accessible, then you take "
 "measures to prevent people from accessing the logs."
@@ -543,7 +606,7 @@ msgstr ""
 "for at folk ikke får tilgang til loggene."
 
 #. translators: 1: .htaccess , 2: Code example #1, 3: Code example #2
-#: src/Admin/Settings.php:643
+#: src/Admin/Settings.php:819
 #, php-format
 msgid ""
 "One way of doing that is to create a %1$s file in that directory you are "
@@ -552,51 +615,43 @@ msgstr ""
 "En måte å gjøre det på er å opprette en %1$s-fil i den katalogen du logger "
 "til og legg til noe som dette: %2$s Eller dette: %3$s"
 
-#. translators: 1: Input path from user, 2: Resolved absolute path
-#: src/Admin/Settings.php:951
+#. translators: 1:  Input name, 2: Sanitized name
+#: src/Admin/Settings.php:1076
 #, php-format
-msgid "The relative path, \"%1$s\", was resolved to \"%2$s\"."
-msgstr ""
+msgid "Action name \"%1$s\" was changed to \"%2$s.\""
+msgstr "Handlingsnavn \"%1$s\" ble endret til \"%2$s\"."
 
-#: src/Admin/Settings.php:994
+#. translators: 1: Input path from user, 2: Resolved absolute path
+#: src/Admin/Settings.php:1138
+#, php-format
+msgid "The relative path, \"%1$s\", was changed to \"%2$s\"."
+msgstr "Den relative banen, \"%1$s\", ble endret til \"%2$s\"."
+
+#: src/Admin/Settings.php:1175
 #, php-format
 msgid "Was unable to find the absolute path for \"%s\"."
 msgstr "Kunne ikke finne den absolutte banen for \"%s\"."
 
-#: src/Admin/Settings.php:1001
+#: src/Admin/Settings.php:1178
 #, php-format
 msgid "The path, \"%s\", does not exist."
 msgstr "Banen, \"%s\", eksisterer ikke."
 
-#: src/Admin/Settings.php:1004
+#: src/Admin/Settings.php:1181
 #, php-format
 msgid "The path, \"%s\", is not a directory."
 msgstr "Banen, \"%s\", er ikke en katalog."
 
-#: src/Admin/Settings.php:1007
+#: src/Admin/Settings.php:1184
 #, php-format
 msgid "The path, \"%s\", is not writable."
 msgstr "Banen, \"%s\", er ikke skrivbar."
 
-#: src/Admin/Settings.php:1025 src/Admin/Settings.php:1036
-#: src/Admin/Settings.php:1099
-#, php-format
-msgid "%s Settings"
-msgstr "%s-innstillinger"
-
-#: src/Admin/Settings.php:1061
-msgid "Settings saved."
-msgstr "Innstillinger lagret."
-
-#: src/Admin/Settings.php:1133
-msgid "Settings"
-msgstr "Innstillinger"
-
-#: src/Config.php:199
+#: src/Config.php:200
 msgid "The CAPTCHA solution you provided was incorrect."
 msgstr "CAPTCHA-løsningen du ga var feil."
 
-#: src/Config.php:202
+#: src/Config.php:203
 msgid ""
 "reCAPTCHA v3 returns a score based on your interaction with this site. Your "
 "score did not meet our threshold requirement set for this particular action."
@@ -605,62 +660,10 @@ msgstr ""
 "nettstedet. Din poengscore oppfylte ikke vårt terskelkrav satt for denne "
 "handlingen."
 
-#, php-format
-#~ msgid ""
-#~ "Setting both <code>%1$s</code> and <code>%2$s</code> to <code>%3$s</code> "
-#~ "will automatically enable this."
-#~ msgstr ""
-#~ "Å sette både <code>%1$s</code> og <code>%2$s</code> til <code>%3$s</code> "
-#~ "vil automatisk slå på dette."
-
-#~ msgid ""
-#~ "Setting both <code>WP_DEBUG</code> and <code>WP_DEBUG_LOG</code> to "
-#~ "<code>true</code> will automatically enable this."
-#~ msgstr ""
-#~ "Å sette både <code>WP_DEBUG</code> og <code>WP_DEBUG_LOG</code> til "
-#~ "<code>true</code> vil automatisk slå på dette."
-
-#, php-format
-#~ msgid ""
-#~ "<strong>%s</strong>: <i>%s</i> is an undefined <strong>&lt;input&gt;</"
-#~ "strong> type."
-#~ msgstr ""
-#~ "<strong>%s</strong>: <i>%s</i> er en udefinert <strong>&lt;input&gt;</"
-#~ "strong>-type."
-
-#, fuzzy
-#~ msgid "Log directory path"
-#~ msgstr "Logg-katalogbane"
-
-#, php-format
-#~ msgid ""
-#~ "Log JSON response data (with the the user's IP address is added in).<br /"
-#~ ">The log file is located in the <code>wp-content</code> directory. It "
-#~ "rotates every month. Text format used is %s. <br />Setting both "
-#~ "<code>WP_DEBUG</code> and <code>WP_DEBUG_LOG</code> will have the same "
-#~ "effect as enabling this setting."
-#~ msgstr ""
-#~ "Loggfør JSON-svardata (med brukerens IP-adresse er lagt til).<br /> Filen "
-#~ "ligger i mappen <code>wp-content</code>. Den roteres ut hver måned. "
-#~ "Tekstformatet som brukes er %s.<br /> Å sette både <code>WP_DEBUG</code> "
-#~ "og <code>WP_DEBUG_LOG</code> vil ha samme effekt som å aktivere denne "
-#~ "innstillingen."
-
-#~ msgid "Auto adjust size"
-#~ msgstr "Automatisk tilpasning av størrelse"
-
-#~ msgid "Set theme based on a page's background color"
-#~ msgstr "Sett tema basert på sidens bakgrunnsfarge"
-
-#~ msgid ""
-#~ "This overrides any selection of theme. The theme will instead be set "
-#~ "based on the background color's brightness."
-#~ msgstr ""
-#~ "Dette overstyrer enhver valg av tema. Temaet vil heller bli satt basert "
-#~ "på bakgrunnsfargens lysstyrke."
-
-#~ msgid "Position of the widget."
-#~ msgstr "Modulens posisjon."
-
-#~ msgid "Set placement based on a page's text direction"
-#~ msgstr "Sett plassering basert på sidens tekstretning"
+#. Description of the plugin
+msgid ""
+"Allows you to place Google's reCAPTCHA widget on your WordPress forms. "
+"Supports customization of all reCAPTCHA versions."
+msgstr ""
+"Gjør det mulig for deg å plassere Googles reCAPTCHA-modul på dine WordPress-"
+"skjemaer. Støtter tilpasning av alle reCAPTCHA-versjoner."

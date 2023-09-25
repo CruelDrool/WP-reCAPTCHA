@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: CruelDrool's reCAPTCHA 1.x.y\n"
-"POT-Creation-Date: 2023-09-17 07:48+0200\n"
+"POT-Creation-Date: 2023-09-25 06:29+0200\n"
 "PO-Revision-Date: 2018-04-12 17:20+0600\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,544 +13,535 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.3.2\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;"
-"_n_noop:1,2;_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;"
-"esc_attr_x:1,2c;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;"
+"esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/Admin/Settings.php:123
+#: src/Admin/Settings.php:112 src/Admin/Settings.php:218
+#, php-format
+msgid "%s Settings"
+msgstr ""
+
+#: src/Admin/Settings.php:247
 msgid "General"
 msgstr ""
 
-#: src/Admin/Settings.php:129
+#: src/Admin/Settings.php:253
 msgid "Forms"
 msgstr ""
 
-#: src/Admin/Settings.php:132
+#: src/Admin/Settings.php:256
 msgid "Actions"
 msgstr ""
 
-#: src/Admin/Settings.php:134
-msgid ""
-"Action names may only contain alphanumeric characters, underscores, and "
-"forward slashes."
+#: src/Admin/Settings.php:258
+msgid "Action names may only contain alphanumeric characters, underscores, and forward slashes."
 msgstr ""
 
-#: src/Admin/Settings.php:138
+#: src/Admin/Settings.php:262
 msgid "Thresholds"
 msgstr ""
 
 #. translators: 1: 1.0, 2: 0.0
-#: src/Admin/Settings.php:142
+#: src/Admin/Settings.php:266
 #, php-format
-msgid ""
-"reCAPTCHA v3 returns a score (%1$s is very likely a good interaction, %1$s "
-"is very likely a bot)."
+msgid "reCAPTCHA v3 returns a score (%1$s is very likely a good interaction, %2$s is very likely a bot)."
 msgstr ""
 
-#: src/Admin/Settings.php:150
+#: src/Admin/Settings.php:274
 msgid "Other"
 msgstr ""
 
-#: src/Admin/Settings.php:155
+#: src/Admin/Settings.php:279
 msgid "Logging"
 msgstr ""
 
-#: src/Admin/Settings.php:183
+#: src/Admin/Settings.php:307
 msgid "Version"
 msgstr ""
 
-#: src/Admin/Settings.php:189
+#: src/Admin/Settings.php:313
 msgid "v2 \"I'm not a robot\""
 msgstr ""
 
-#: src/Admin/Settings.php:190
+#: src/Admin/Settings.php:314
 msgid "v2 Invisible"
 msgstr ""
 
-#: src/Admin/Settings.php:191
+#: src/Admin/Settings.php:315
 msgid "v3"
 msgstr ""
 
-#: src/Admin/Settings.php:193
+#: src/Admin/Settings.php:317
 #, php-format
-msgid ""
-"Select your reCAPTCHA version. Make sure to use keys for your selected "
-"version. Read more about the versions on %s."
+msgid "Select your reCAPTCHA version. Make sure to use keys for your selected version. %s."
 msgstr ""
 
-#: src/Admin/Settings.php:196 src/Admin/Settings.php:208
-#: src/Admin/Settings.php:220
+#: src/Admin/Settings.php:319
+msgid "Read more about the versions"
+msgstr ""
+
+#: src/Admin/Settings.php:324 src/Admin/Settings.php:344 src/Admin/Settings.php:364
 msgid "Site Key"
 msgstr ""
 
-#: src/Admin/Settings.php:199 src/Admin/Settings.php:211
-#: src/Admin/Settings.php:223
+#: src/Admin/Settings.php:327 src/Admin/Settings.php:347 src/Admin/Settings.php:367
 #, php-format
-msgid ""
-"The public site key is used to load the widget. Keys can be obtained on %s."
+msgid "The public site key is used to load the widget. %s."
 msgstr ""
 
-#: src/Admin/Settings.php:202 src/Admin/Settings.php:214
-#: src/Admin/Settings.php:226
+#: src/Admin/Settings.php:329 src/Admin/Settings.php:339 src/Admin/Settings.php:349 src/Admin/Settings.php:359
+#: src/Admin/Settings.php:369 src/Admin/Settings.php:379
+msgid "Keys can be obtained here"
+msgstr ""
+
+#: src/Admin/Settings.php:334 src/Admin/Settings.php:354 src/Admin/Settings.php:374
 msgid "Secret Key"
 msgstr ""
 
-#: src/Admin/Settings.php:205 src/Admin/Settings.php:217
-#: src/Admin/Settings.php:229
+#: src/Admin/Settings.php:337 src/Admin/Settings.php:357 src/Admin/Settings.php:377
 #, php-format
-msgid ""
-"The private secret key is for communication between your site and the "
-"reCAPTCHA verification server. Keys can be obtained on %s."
+msgid "The private secret key is for communication between your site and the reCAPTCHA verification server. %s."
 msgstr ""
 
-#: src/Admin/Settings.php:232 src/Admin/Settings.php:240
-#: src/Admin/Settings.php:248
+#: src/Admin/Settings.php:384 src/Admin/Settings.php:392 src/Admin/Settings.php:400
 msgid "Error message"
 msgstr ""
 
-#: src/Admin/Settings.php:236 src/Admin/Settings.php:244
-#: src/Admin/Settings.php:252
-msgid ""
-"In this textbox, you can type in a custom error message. Leave it empty to "
-"use the default one."
+#: src/Admin/Settings.php:388 src/Admin/Settings.php:396 src/Admin/Settings.php:404
+msgid "In this textbox, you can type in a custom error message. Leave it empty to use the default one."
 msgstr ""
 
-#: src/Admin/Settings.php:256
+#: src/Admin/Settings.php:408
 msgid "Hide for logged-in users"
 msgstr ""
 
-#: src/Admin/Settings.php:260
+#: src/Admin/Settings.php:412
 msgid "Only load for guest users."
 msgstr ""
 
-#: src/Admin/Settings.php:263
+#: src/Admin/Settings.php:415
 msgid "Request domain"
 msgstr ""
 
 #. translators: 1: recaptcha.net 2: google.com
-#: src/Admin/Settings.php:270
+#: src/Admin/Settings.php:422
 #, php-format
-msgid ""
-"The domain to fetch the script from, and to use when verifying requests. "
-"Use %1$s when %2$s is not accessible."
+msgid "The domain to fetch the script from, and to use when verifying requests. Use %1$s when %2$s is not accessible."
 msgstr ""
 
-#: src/Admin/Settings.php:276
+#: src/Admin/Settings.php:428
 msgid "Verify origin of the solutions"
 msgstr ""
 
-#: src/Admin/Settings.php:280
+#: src/Admin/Settings.php:432
 #, php-format
-msgid ""
-"%s This is only required if you have chosen not to have Google do this "
-"verification."
-msgstr ""
-
-#: src/Admin/Settings.php:281
-msgid "NB!"
-msgstr ""
-
-#: src/Admin/Settings.php:285
-msgid "Load on..."
-msgstr ""
-
-#: src/Admin/Settings.php:291
-msgid "All pages"
-msgstr ""
-
-#: src/Admin/Settings.php:292
-msgid "Form pages"
-msgstr ""
-
-#: src/Admin/Settings.php:294
-msgid ""
-"For analytics purposes, it's recommended to load the widget in the "
-"background of all pages."
-msgstr ""
-
-#: src/Admin/Settings.php:297
-msgid "Require the client's IP address"
-msgstr ""
-
-#: src/Admin/Settings.php:301
-msgid ""
-"Require that the client's IP address has been determined before submitting "
-"data to the reCAPTCHA server. An undetermined IP address will be treated "
-"as a failed CAPTCHA attempt."
-msgstr ""
-
-#: src/Admin/Settings.php:305
-msgid "Enabled forms"
-msgstr ""
-
-#: src/Admin/Settings.php:310 src/Admin/Settings.php:320
-#: src/Admin/Settings.php:375
-msgid "Login"
-msgstr ""
-
-#: src/Admin/Settings.php:311 src/Admin/Settings.php:329
-#: src/Admin/Settings.php:384
-msgid "Registration"
-msgstr ""
-
-#: src/Admin/Settings.php:312 src/Admin/Settings.php:338
-#: src/Admin/Settings.php:393
-msgid "Multisite User Signup"
-msgstr ""
-
-#: src/Admin/Settings.php:313 src/Admin/Settings.php:347
-#: src/Admin/Settings.php:402
-msgid "Lost Password"
-msgstr ""
-
-#: src/Admin/Settings.php:314 src/Admin/Settings.php:356
-#: src/Admin/Settings.php:411
-msgid "Reset Password"
-msgstr ""
-
-#: src/Admin/Settings.php:315 src/Admin/Settings.php:365
-#: src/Admin/Settings.php:420
-msgid "Comment"
-msgstr ""
-
-#: src/Admin/Settings.php:430
-msgid "Language code"
+msgid "%s This is only required if you have chosen not to have Google do this verification."
 msgstr ""
 
 #: src/Admin/Settings.php:433
-#, php-format
-msgid ""
-"Language of the widget. Leave it blank to auto-detect the language. Read "
-"more about language codes on %s."
+msgid "NB!"
 msgstr ""
 
-#: src/Admin/Settings.php:436
-msgid "Theme"
-msgstr ""
-
-#: src/Admin/Settings.php:442
-msgid "Light"
+#: src/Admin/Settings.php:437
+msgid "Load on..."
 msgstr ""
 
 #: src/Admin/Settings.php:443
-msgid "Dark"
+msgid "All pages"
 msgstr ""
 
-#: src/Admin/Settings.php:444 src/Admin/Settings.php:447
-#: src/Admin/Settings.php:460 src/Admin/Settings.php:463
-#: src/Admin/Settings.php:475 src/Admin/Settings.php:479
-#: src/Admin/Settings.php:493
-msgid "Automatic"
+#: src/Admin/Settings.php:444
+msgid "Form pages"
 msgstr ""
 
 #: src/Admin/Settings.php:446
-#, php-format
-msgid ""
-"Color theme of the widget. Select %s to have the theme be set based on the "
-"brightness of the background color."
+msgid "For analytics purposes, it's recommended to load the widget in the background of all pages."
 msgstr ""
 
-#: src/Admin/Settings.php:451
-msgid "Placement"
+#: src/Admin/Settings.php:449
+msgid "Require the client's IP address"
+msgstr ""
+
+#: src/Admin/Settings.php:453
+msgid ""
+"Require that the client's IP address has been determined before submitting data to the reCAPTCHA server. An undetermined IP "
+"address will be treated as a failed CAPTCHA attempt."
 msgstr ""
 
 #: src/Admin/Settings.php:457
+msgid "Enabled forms"
+msgstr ""
+
+#: src/Admin/Settings.php:462 src/Admin/Settings.php:472 src/Admin/Settings.php:527 src/Admin/Settings.php:666
+msgid "Login"
+msgstr ""
+
+#: src/Admin/Settings.php:463 src/Admin/Settings.php:481 src/Admin/Settings.php:536
+msgid "Registration"
+msgstr ""
+
+#: src/Admin/Settings.php:464 src/Admin/Settings.php:490 src/Admin/Settings.php:545
+msgid "Multisite User Signup"
+msgstr ""
+
+#: src/Admin/Settings.php:465 src/Admin/Settings.php:499 src/Admin/Settings.php:554
+msgid "Lost Password"
+msgstr ""
+
+#: src/Admin/Settings.php:466 src/Admin/Settings.php:508 src/Admin/Settings.php:563
+msgid "Reset Password"
+msgstr ""
+
+#: src/Admin/Settings.php:467 src/Admin/Settings.php:517 src/Admin/Settings.php:572
+msgid "Comment"
+msgstr ""
+
+#: src/Admin/Settings.php:582
+msgid "Language code"
+msgstr ""
+
+#: src/Admin/Settings.php:585
+#, php-format
+msgid "Language of the widget. Leave it blank to auto-detect the language. %s."
+msgstr ""
+
+#: src/Admin/Settings.php:587
+msgid "Read more about language codes"
+msgstr ""
+
+#: src/Admin/Settings.php:592
+msgid "Theme"
+msgstr ""
+
+#: src/Admin/Settings.php:598
+msgid "Light"
+msgstr ""
+
+#: src/Admin/Settings.php:599
+msgid "Dark"
+msgstr ""
+
+#: src/Admin/Settings.php:600 src/Admin/Settings.php:603 src/Admin/Settings.php:616 src/Admin/Settings.php:619
+#: src/Admin/Settings.php:631 src/Admin/Settings.php:635 src/Admin/Settings.php:649
+msgid "Automatic"
+msgstr ""
+
+#: src/Admin/Settings.php:602
+#, php-format
+msgid "Color theme of the widget. Select %s to set the theme based on the brightness of the page's background color."
+msgstr ""
+
+#: src/Admin/Settings.php:607
+msgid "Placement"
+msgstr ""
+
+#: src/Admin/Settings.php:613
 msgid "Bottom Right"
 msgstr ""
 
-#: src/Admin/Settings.php:458
+#: src/Admin/Settings.php:614
 msgid "Bottom Left"
 msgstr ""
 
-#: src/Admin/Settings.php:459
+#: src/Admin/Settings.php:615
 msgid "Inline"
 msgstr ""
 
-#: src/Admin/Settings.php:462
+#: src/Admin/Settings.php:618
 #, php-format
 msgid ""
-"Position of the widget. Select %s to place the widget based on text "
-"direction (on a page with \"right-to-left\", the placement will be on the "
-"left)."
+"Position of the widget. Select %s to place the widget based on text direction (on a page with \"right-to-left\", the "
+"placement will be on the left)."
 msgstr ""
 
-#: src/Admin/Settings.php:467
+#: src/Admin/Settings.php:623
 msgid "Size"
 msgstr ""
 
-#: src/Admin/Settings.php:473 src/Admin/Settings.php:481
-#: src/Admin/Settings.php:492
+#: src/Admin/Settings.php:629 src/Admin/Settings.php:637 src/Admin/Settings.php:648
 msgid "Normal"
 msgstr ""
 
-#: src/Admin/Settings.php:474 src/Admin/Settings.php:480
+#: src/Admin/Settings.php:630 src/Admin/Settings.php:636
 msgid "Compact"
 msgstr ""
 
 #. translators: 1: Automatic, 2: Compact, 3: Normal
-#: src/Admin/Settings.php:478
+#: src/Admin/Settings.php:634
 #, php-format
-msgid ""
-"Size of the widget. Select %1$s to automatically set the size to %2$s if "
-"the area is too narrow for %3$s."
+msgid "Size of the widget. Select %1$s to automatically set the size to %2$s if the area is too narrow for %3$s."
 msgstr ""
 
-#: src/Admin/Settings.php:485
+#: src/Admin/Settings.php:641
 msgid "Add stylesheet (CSS)"
 msgstr ""
 
-#: src/Admin/Settings.php:489
+#: src/Admin/Settings.php:645
 msgid "Add this plugin's stylesheet to the login page."
 msgstr ""
 
 #. translators: 1: Normal, 2: Automatic
-#: src/Admin/Settings.php:491
+#: src/Admin/Settings.php:647
 #, php-format
 msgid ""
-"This stylesheet increases the width of the container element that holds "
-"the login form. This is to fit in the widget better. Only applicable if "
-"you have selected %1$s or %2$s as size."
+"This stylesheet increases the width of the container element that holds the login form. This is to fit in the widget better. "
+"Only applicable if you have selected %1$s or %2$s as size."
 msgstr ""
 
-#: src/Admin/Settings.php:513
+#: src/Admin/Settings.php:656
+#, php-format
+msgid "Disable the AJAX JavaScript from the plugin %s"
+msgstr ""
+
+#: src/Admin/Settings.php:659 src/Admin/Settings.php:668 src/Admin/Settings.php:669
+msgid "Sidebar Login"
+msgstr ""
+
+#: src/Admin/Settings.php:665
+#, php-format
+msgid "This setting only applies if you have activated that plugin and enabled the form %s."
+msgstr ""
+
+#: src/Admin/Settings.php:668
+#, php-format
+msgid ""
+"The problem is that this script does not submit the required information needed for the verification process. Fortunately, no "
+"errors happen. That is because \"%s\" sends the login requests to WordPress' admin backend, where this reCAPTCHA plugin's "
+"frontend does not get loaded. However, it does mean that there is no verification of those particular login requests."
+msgstr ""
+
+#: src/Admin/Settings.php:669
+#, php-format
+msgid "You are seeing this setting because \"%s\" is installed in this WordPress installation."
+msgstr ""
+
+#: src/Admin/Settings.php:689
 msgid "Enable logging of reCAPTCHA's JSON response data"
 msgstr ""
 
 #. translators: 1: WP_DEBUG, 2: WP_DEBUG_LOG, 3: true
-#: src/Admin/Settings.php:519 src/Admin/Settings.php:563
+#: src/Admin/Settings.php:695 src/Admin/Settings.php:739
 #, php-format
 msgid "Setting both %1$s and %2$s to %3$s will automatically enable this."
 msgstr ""
 
 #. translators: 1: /wp-content, 2: Path to log directory
-#: src/Admin/Settings.php:521
+#: src/Admin/Settings.php:697
 #, php-format
-msgid ""
-"The log files are by default written to the %1$s directory, but that can "
-"be changed using the setting \"%2$s\"."
+msgid "The log files are by default written to the %1$s directory, but that can be changed using the setting \"%2$s\"."
 msgstr ""
 
-#: src/Admin/Settings.php:523 src/Admin/Settings.php:592
-#: src/Admin/Settings.php:635
+#: src/Admin/Settings.php:699 src/Admin/Settings.php:768 src/Admin/Settings.php:811
 msgid "Path to log directory"
 msgstr ""
 
-#: src/Admin/Settings.php:525
+#: src/Admin/Settings.php:701
 #, php-format
 msgid "The text format used is %s."
 msgstr ""
 
-#: src/Admin/Settings.php:526
+#: src/Admin/Settings.php:702
 msgid "JSON Lines"
 msgstr ""
 
-#: src/Admin/Settings.php:531
+#: src/Admin/Settings.php:707
 msgid "Add the client's IP address to the JSON response data"
 msgstr ""
 
-#: src/Admin/Settings.php:537
+#: src/Admin/Settings.php:713
 msgid "reCAPTCHA log's rotate interval"
 msgstr ""
 
-#: src/Admin/Settings.php:543 src/Admin/Settings.php:604
+#: src/Admin/Settings.php:719 src/Admin/Settings.php:780
 msgid "Never"
 msgstr ""
 
-#: src/Admin/Settings.php:544 src/Admin/Settings.php:605
-msgid "Daily"
+#: src/Admin/Settings.php:720 src/Admin/Settings.php:781
+#, php-format
+msgid "Daily (%s)"
 msgstr ""
 
-#: src/Admin/Settings.php:545 src/Admin/Settings.php:606
-msgid "Weekly"
+#: src/Admin/Settings.php:721 src/Admin/Settings.php:782
+#, php-format
+msgid "Weekly (%s)"
 msgstr ""
 
-#: src/Admin/Settings.php:546 src/Admin/Settings.php:607
-msgid "Monthly"
+#: src/Admin/Settings.php:722 src/Admin/Settings.php:783
+#, php-format
+msgid "Monthly (%s)"
 msgstr ""
 
-#: src/Admin/Settings.php:547 src/Admin/Settings.php:608
-msgid "Yearly"
+#: src/Admin/Settings.php:723 src/Admin/Settings.php:784
+#, php-format
+msgid "Yearly (%s)"
 msgstr ""
 
-#: src/Admin/Settings.php:549 src/Admin/Settings.php:612
+#: src/Admin/Settings.php:725 src/Admin/Settings.php:788
 #, php-format
 msgid "Uses UTC/GMT time with a %s date format."
 msgstr ""
 
-#: src/Admin/Settings.php:551 src/Admin/Settings.php:614
+#: src/Admin/Settings.php:727 src/Admin/Settings.php:790
 msgid "ISO 8601"
 msgstr ""
 
-#: src/Admin/Settings.php:556
+#: src/Admin/Settings.php:732
 msgid "Enable debug logging"
 msgstr ""
 
-#: src/Admin/Settings.php:561
+#: src/Admin/Settings.php:737
 msgid "This only applies to this plugin."
 msgstr ""
 
 #. translators: 1: Separate debug log, 2: PHP has been set up to do it
-#: src/Admin/Settings.php:569
+#: src/Admin/Settings.php:745
 #, php-format
 msgid ""
-"Important to note that if debug logging in WordPress is off, you should "
-"enable the setting \"%1$s\". If not, the the messages will be logged where "
-"%2$s."
+"Important to note that if debug logging in WordPress is off, you should enable the setting \"%1$s\". If not, the the messages "
+"will be logged where %2$s."
 msgstr ""
 
-#: src/Admin/Settings.php:571 src/Admin/Settings.php:580
+#: src/Admin/Settings.php:747 src/Admin/Settings.php:756
 msgid "Separate debug log"
 msgstr ""
 
-#: src/Admin/Settings.php:574
+#: src/Admin/Settings.php:750
 msgid "PHP has been set up to do it"
 msgstr ""
 
-#: src/Admin/Settings.php:585
+#: src/Admin/Settings.php:761
+#, php-format
+msgid "When debug logging in WordPress is enabled, the log is by default written to %s."
+msgstr ""
+
+#: src/Admin/Settings.php:762
+msgid "By enabling this option, this plugin's debug log will be written to a separate file in the same directory."
+msgstr ""
+
+#: src/Admin/Settings.php:763
 #, php-format
 msgid ""
-"When debug logging in WordPress is enabled, the log is by default written "
-"to %s."
+"However, this directory can be changed either by specifying a different file with %s (example: \"%s\") or by specifying your "
+"own directory using the setting \"%s\"."
 msgstr ""
 
-#: src/Admin/Settings.php:586
-msgid ""
-"By enabling this option, this plugin's debug log will be written to a "
-"separate file in the same directory."
-msgstr ""
-
-#: src/Admin/Settings.php:587
-#, php-format
-msgid ""
-"However, this directory can be changed either by specifying a different "
-"file with %s (example: \"%s\") or by specifying your own directory using "
-"the setting \"%s\"."
-msgstr ""
-
-#: src/Admin/Settings.php:590
+#: src/Admin/Settings.php:766
 msgid "c:\\path\\to\\debug.log"
 msgstr ""
 
-#: src/Admin/Settings.php:590
+#: src/Admin/Settings.php:766
 msgid "/path/to/debug.log"
 msgstr ""
 
-#: src/Admin/Settings.php:594
+#: src/Admin/Settings.php:770
 msgid "Read more about debugging in WordPress"
 msgstr ""
 
-#: src/Admin/Settings.php:598
+#: src/Admin/Settings.php:774
 msgid "Debug log's rotate interval"
 msgstr ""
 
-#: src/Admin/Settings.php:611
+#: src/Admin/Settings.php:787
 msgid "Only applicable if you have chosen to have a separate debug log."
 msgstr ""
 
-#: src/Admin/Settings.php:619
+#: src/Admin/Settings.php:795
 msgid "Debug log's minimum level"
 msgstr ""
 
-#: src/Admin/Settings.php:625
-msgid "Disabled/No output"
+#: src/Admin/Settings.php:801
+msgid "Disabled"
 msgstr ""
 
-#: src/Admin/Settings.php:626 src/Frontend.php:524
+#: src/Admin/Settings.php:802 src/Frontend.php:545
 msgid "Error"
 msgstr ""
 
-#: src/Admin/Settings.php:627
+#: src/Admin/Settings.php:803
 msgid "Warning"
 msgstr ""
 
-#: src/Admin/Settings.php:628
+#: src/Admin/Settings.php:804
 msgid "Notice"
 msgstr ""
 
-#: src/Admin/Settings.php:629
+#: src/Admin/Settings.php:805
 msgid "Info"
 msgstr ""
 
-#: src/Admin/Settings.php:630
+#: src/Admin/Settings.php:806
 msgid "Debug"
 msgstr ""
 
-#: src/Admin/Settings.php:632
-msgid "Determines the verbosity of the debug log."
+#: src/Admin/Settings.php:808
+msgid "The minimum required severity level that messages must have for them to be written to the log."
 msgstr ""
 
-#: src/Admin/Settings.php:639
+#: src/Admin/Settings.php:815
 msgid "Specify your own directory where the log files will be stored."
 msgstr ""
 
-#: src/Admin/Settings.php:640 src/Admin/Settings.php:955
-#: src/Admin/Settings.php:997
+#: src/Admin/Settings.php:816
 msgid "Using an absolute path is recommended."
 msgstr ""
 
-#: src/Admin/Settings.php:641
+#: src/Admin/Settings.php:817
 msgid ""
-"If you are logging to a directory that is web accessible, then you take "
-"measures to prevent people from accessing the logs."
+"If you are logging to a directory that is web accessible, then you take measures to prevent people from accessing the logs."
 msgstr ""
 
 #. translators: 1: .htaccess , 2: Code example #1, 3: Code example #2
-#: src/Admin/Settings.php:643
+#: src/Admin/Settings.php:819
 #, php-format
 msgid ""
-"One way of doing that is to create a %1$s file in that directory you are "
-"logging to and add something like this: %2$s Or this: %3$s"
+"One way of doing that is to create a %1$s file in that directory you are logging to and add something like this: %2$s Or "
+"this: %3$s"
+msgstr ""
+
+#. translators: 1:  Input name, 2: Sanitized name
+#: src/Admin/Settings.php:1076
+#, php-format
+msgid "Action name \"%1$s\" was changed to \"%2$s.\""
 msgstr ""
 
 #. translators: 1: Input path from user, 2: Resolved absolute path
-#: src/Admin/Settings.php:951
+#: src/Admin/Settings.php:1138
 #, php-format
-msgid "The relative path, \"%1$s\", was resolved to \"%2$s\"."
+msgid "The relative path, \"%1$s\", was changed to \"%2$s\"."
 msgstr ""
 
-#: src/Admin/Settings.php:994
+#: src/Admin/Settings.php:1175
 #, php-format
 msgid "Was unable to find the absolute path for \"%s\"."
 msgstr ""
 
-#: src/Admin/Settings.php:1001
+#: src/Admin/Settings.php:1178
 #, php-format
 msgid "The path, \"%s\", does not exist."
 msgstr ""
 
-#: src/Admin/Settings.php:1004
+#: src/Admin/Settings.php:1181
 #, php-format
 msgid "The path, \"%s\", is not a directory."
 msgstr ""
 
-#: src/Admin/Settings.php:1007
+#: src/Admin/Settings.php:1184
 #, php-format
 msgid "The path, \"%s\", is not writable."
 msgstr ""
 
-#: src/Admin/Settings.php:1025 src/Admin/Settings.php:1036
-#: src/Admin/Settings.php:1099
-#, php-format
-msgid "%s Settings"
-msgstr ""
-
-#: src/Admin/Settings.php:1061
-msgid "Settings saved."
-msgstr ""
-
-#: src/Admin/Settings.php:1133
-msgid "Settings"
-msgstr ""
-
-#: src/Config.php:199
+#: src/Config.php:200
 msgid "The CAPTCHA solution you provided was incorrect."
 msgstr ""
 
-#: src/Config.php:202
+#: src/Config.php:203
 msgid ""
-"reCAPTCHA v3 returns a score based on your interaction with this site. "
-"Your score did not meet our threshold requirement set for this particular "
-"action."
+"reCAPTCHA v3 returns a score based on your interaction with this site. Your score did not meet our threshold requirement set "
+"for this particular action."
+msgstr ""
+
+#. Description of the plugin
+msgid "Allows you to place Google's reCAPTCHA widget on your WordPress forms. Supports customization of all reCAPTCHA versions."
 msgstr ""
