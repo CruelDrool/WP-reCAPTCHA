@@ -11,9 +11,19 @@
 		- Adding a file named "disable" in the plugin's directory will stop the execution of its code.
 	- Determining the client's IP address should be a lot accurate now.
 	- Enqueue the login form's CSS stylesheet (v2 checkbox) at the proper place.
+	- Will verify the origin of the solution first.
+	- Moved plugin list's "Settings" link.
+		- New location of the settings link is on the meta row.
+		- Also added "Visit plugin site" link. WordPress isn't adding it automatically.
+	- Added info message to action name sanitization.
+		- Output a information message if the sanitized action name differs from the input name.
+	- Updated translations
+		- Removed all html tags from translation strings.
+		- Numbered text replacedments in all strings with more than one.
 ### Added
-	- New options and functionality:
+	- New settings and functionality:
 		- "Require client IP": Require that a client's IP address has been determined before submitting data to the reCAPTCHA server. An undetermined IP address will be treated as a failed CAPTCHA attempt.
+		- "Disable the AJAX JavaScript from the plugin Sidebar Login". The problem is that this script does not submit the required information needed for the verification process.
 		- "Add client IP address to the JSON response data"
 		- "reCAPTCHA log rotate interval": Never, Daily, Weekly, Monthly or Yearly. Uses UTC/GMT time with a ISO 8601 date format.
 		- "Enable debug logging": Enabling this will have the same effects as setting both `WP_DEBUG` and `WP_DEBUG_LOG` to `true`
@@ -92,5 +102,5 @@
 - Turn off autocomplete on input fields.
 
 ## [1.0.0] - 2021-07-23
-## First release!
+### First release!
 - Supports reCAPTCHA versions v2 Checkbox, v2 Invisible, and v3. Customisation of all versions.
