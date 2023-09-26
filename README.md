@@ -30,7 +30,7 @@ PHP >= 7.1
 	* Log reCAPTCHA's JSON response data.
 		* Add client's IP address to the data.
 	* Debug logging.
-		* Have a separate file from WordPress' `debug.log`.
+		* Have a separate file from WordPress' `/wp-content/debug.log`.
 		* Set a minimum required severity level that messages must have for them to be written to the log.
 	* Rotate interval: never, daily, monthly, yearly. Uses UTC/GMT time with a [ISO 8601](https://www.iso.org/standard/40874.html) date format.
 	* Specify a directory where to store the log files.
