@@ -25,7 +25,15 @@ PHP >= 7.1
 * Verify origin of solutions, if you've opted not to have Google do it.
 * Hide for logged in users.
 * Set which [language](https://developers.google.com/recaptcha/docs/language) to display the widget in.
-* Log JSON response data.
+* Require that the client's IP address has been determined before submitting data to the reCAPTCHA server.
+* Logging.
+	* Log reCAPTCHA's JSON response data.
+		* Add client's IP address to the data.
+	* Debug logging.
+		* Have a separate file from WordPress' `debug.log`.
+		* Set a minimum required severity level that messages must have for them to be written to the log.
+	* Rotate interval: never, daily, monthly, yearly. Uses UTC/GMT time with a [ISO 8601](https://www.iso.org/standard/40874.html) date format.
+	* Specify a directory where to store the log files.
 
 ### reCAPTCHA versions 
 #### v2 "I'm not a robot" Checkbox
