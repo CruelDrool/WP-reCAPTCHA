@@ -126,6 +126,12 @@ class Plugin {
 				$this->config->delete_option(['theme_auto', 'badge_auto', 'v2_checkbox_adjust_size' , 'v2_checkbox_remove_css']);
 			}
 
+			if (version_compare( $prev_version, "1.1.1", '<' )) {
+				$options['action_ms_user_signup'] = $this->config->get_option('action_multisite_signup', 'multisite_signup');
+				$options['threshold_ms_user_signup'] = $this->config->get_option('threshold_multisite_signup', 0.5);
+				$this->config->delete_option(['action_multisite_signup', 'threshold_multisite_signup']);
+			}
+
 		}
 
 		if ( version_compare( $current_version, $prev_version, '!=' ) ) {

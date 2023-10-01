@@ -486,13 +486,13 @@ class Settings {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_registration'));
 				},
 			],
-			'action_multisite_signup' => [
+			'action_ms_user_signup' => [
 				'label'      => __( 'Multisite User Signup', 'cd-recaptcha' ),
 				'section_id' => 'actions',
 				'class'      => 'regular hidden show-field-for-v3',
-				'placeholder' => $this->config->get_default('action_multisite_signup'),
+				'placeholder' => $this->config->get_default('action_ms_user_signup'),
 				'sanitize_callback' => function($value) {
-					return $this->sanitize_action_name($value, $this->config->get_default('action_multisite_signup'));
+					return $this->sanitize_action_name($value, $this->config->get_default('action_ms_user_signup'));
 				},
 			],
 			'action_lost_password'=> [
@@ -541,12 +541,12 @@ class Settings {
 				'options'    => $score_values,
 				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
-			'threshold_multisite_signup' => [
+			'threshold_ms_user_signup' => [
 				'label'      => __( 'Multisite User Signup', 'cd-recaptcha' ),
 				'section_id' => 'thresholds',
 				'type'       => 'select',
 				'class'      => 'regular hidden show-field-for-v3',
-				'std'        => $this->config->get_default('threshold_multisite_signup'),
+				'std'        => $this->config->get_default('threshold_ms_user_signup'),
 				'options'    => $score_values,
 				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
@@ -679,8 +679,8 @@ class Settings {
 
 		if ( !(is_main_site() && is_multisite()) ) {
 			unset($fields['enabled_forms']['options']['ms_user_signup']);
-			unset($fields['action_multisite_signup']);
-			unset($fields['threshold_multisite_signup']);
+			unset($fields['action_ms_user_signup']);
+			unset($fields['threshold_ms_user_signup']);
 		}
 
 		if ( is_main_site()  ) {
@@ -717,10 +717,10 @@ class Settings {
 					'std'        => $this->config->get_default('recaptcha_log_rotate_interval'),
 					'options'    => [
 						'never'   => __( 'Never', 'cd-recaptcha' ),
-						'daily'   => sprintf(__( 'Daily (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('daily'), time())),
-						'weekly'  => sprintf(__( 'Weekly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('weekly'), time())),
-						'monthly' => sprintf(__( 'Monthly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('monthly'), time())),
-						'yearly'  => sprintf(__( 'Yearly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('yearly'), time())),
+						'daily'   => sprintf(__( 'Daily (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('daily'))),
+						'weekly'  => sprintf(__( 'Weekly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('weekly'))),
+						'monthly' => sprintf(__( 'Monthly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('monthly'))),
+						'yearly'  => sprintf(__( 'Yearly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('yearly'))),
 					],
 					'desc'       => sprintf( __( 'Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ),
 										sprintf( '<a href="https://www.iso.org/standard/40874.html" target="_blank">%s</a>',
@@ -778,10 +778,10 @@ class Settings {
 					'std'        => $this->config->get_default('debug_log_rotate_interval'),
 					'options'    => [
 						'never'   => __( 'Never', 'cd-recaptcha' ),
-						'daily'   => sprintf(__( 'Daily (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('daily'), time())),
-						'weekly'  => sprintf(__( 'Weekly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('weekly'), time())),
-						'monthly' => sprintf(__( 'Monthly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('monthly'), time())),
-						'yearly'  => sprintf(__( 'Yearly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('yearly'), time())),
+						'daily'   => sprintf(__( 'Daily (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('daily'))),
+						'weekly'  => sprintf(__( 'Weekly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('weekly'))),
+						'monthly' => sprintf(__( 'Monthly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('monthly'))),
+						'yearly'  => sprintf(__( 'Yearly (%s)', 'cd-recaptcha' ), gmdate($this->config->get_date_format('yearly'))),
 					],
 					'desc'       => sprintf('%s %s',
 										__( 'Only applicable if you have chosen to have a separate debug log.', 'cd-recaptcha' ),
