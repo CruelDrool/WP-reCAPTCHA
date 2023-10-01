@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.1] - 2023-10-01
+### Changed
+- Changed the default action name for MS user signup.
+	- New action name: "ms_user_signup". Old default will be saved for those that started using the plugin prior to this version.
+- Adjusted some debug messages' severity level.
+
 ## [1.1.0] - 2023-09-25
 ### Changed
 - The reCAPTCHA log
@@ -33,6 +39,7 @@
 	- Creating a file named "disable" in the plugin's directory will stop the execution of its code.
 - Added info message to action name sanitization.
 	- Output a information message if the sanitized action name differs from the input name.
+
 ## [1.0.8] - 2022-11-28
 ### Changed
 - Logging update.
