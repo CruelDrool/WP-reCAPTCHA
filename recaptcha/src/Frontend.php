@@ -365,12 +365,18 @@ class Frontend {
 
 		// No user response token. Possible when the JavaScript was removed using the browser's developer tools interface.
 		if ( empty($response_token) ) {
-			$this->debug_log(1, 'Form was submitted without a response token' . ( $remote_ip !== false ? " from {$remote_ip}" : '' ));
+			$this->debug_log(3,
+				sprintf('No response token submitted. Form: %s. Server name: %s. IP address: %s',
+					$this->current_form,
+					$_SERVER['SERVER_NAME'],
+					$remote_ip !== false ? $remote_ip : '0.0.0.0'
+				)
+			);
 			return false;
 		}
 
 		if ( $this->config->get_option('require_remote_ip') && $remote_ip === false ) {
-			$this->debug_log(1, 'Required by settings to determine the remote IP, but was unable to do so');
+			$this->debug_log(3, 'Required by settings to determine the remote IP, but was unable to do so');
 			return false;
 		}
 
@@ -463,11 +469,11 @@ class Frontend {
 		}
 
 		$this->debug_log($debug_level,
-			sprintf('%s verification result: %s%s%s',
+			sprintf('%s verification result: %s%s. IP address: %s',
 				$this->recaptcha_version,
 				$is_success ? 'success' : 'no success',
 				!empty($debug_message) ? ". {$debug_message}" : '',
-				$remote_ip !== false ? ". IP address: {$remote_ip}" : ''
+				$remote_ip !== false ? $remote_ip : '0.0.0.0'
 			)
 		);
 
