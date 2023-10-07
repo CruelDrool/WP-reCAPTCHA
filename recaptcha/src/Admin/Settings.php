@@ -24,10 +24,40 @@ class Settings {
 	private $fields;
 
 	/**
-	 * @since 1.0.0
+	 * @since 1.1.2
 	 * @var string
 	 */
-	private $menu_slug;
+	private $page_slug;
+
+	/**
+	 * @since 1.1.2
+	 * @var string
+	 */
+	private $page;
+
+	/**
+	 * @since 1.1.2
+	 * @var string
+	 */
+	private $option_group;
+
+	/**
+	 * @since 1.1.2
+	 * @var string
+	 */
+	private $option_name;
+
+	/**
+	 * @since 1.1.2
+	 * @var string
+	 */
+	private $settings_error_slug;
+
+	/**
+	 * @since 1.1.2
+	 * @var string
+	 */
+	private $form_field;
 
 	/**
 	 * Constructor
@@ -39,7 +69,15 @@ class Settings {
 	 */
 	function __construct(\CD\recaptcha\Config $config) {
 		$this->config = $config;
-		$this->menu_slug = $this->config->get_prefix().'-settings';
+		
+		// All of these can have unique values. However, I'm a bit lazy.
+		$this->page_slug = $this->config->get_prefix().'-settings';
+		$this->page = $this->page_slug;
+		$this->option_group = $this->page_slug;
+		$this->option_name = $this->page_slug;
+		$this->settings_error_slug = $this->page_slug;
+		$this->form_field = $this->page_slug;
+
 		$this->fields = $this->get_fields();
 		$this->actions_filters();
 	}
@@ -52,18 +90,11 @@ class Settings {
 	 * @return void
 	 */
 	function actions_filters() {
-		
+		add_action( $this->config->get_is_active_for_network() ? 'network_admin_menu' : 'admin_menu', [ $this, 'add_submenu_page' ] );
 		add_action( 'admin_init', [ $this, 'admin_init' ] );
+		add_action( 'admin_init', [ $this, 'settings_save' ], 99 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 		add_action( 'plugin_row_meta', [ $this, 'add_meta_links' ], 10, 3 );
-
-		$submenu_hook_name = 'admin_menu';
-		if ( $this->config->get_is_active_for_network() ) {
-			$submenu_hook_name = 'network_admin_menu';
-			add_action( 'admin_init', [ $this, 'network_settings_save' ], 99 );
-		}
-
-		add_action( $submenu_hook_name, [ $this, 'add_submenu_page' ] );
 	}
 
 	/**
@@ -75,12 +106,12 @@ class Settings {
 	 */
 	function admin_init() {
 
-		register_setting( $this->config->get_option_name(), $this->config->get_option_name(), ['sanitize_callback' => [$this, 'options_sanitize']] );
+		register_setting( $this->option_group, $this->option_name, ['sanitize_callback' => [$this, 'options_sanitize']] );
 		foreach ( $this->get_sections() as $section_id => $section ) {
-			add_settings_section( $section_id, $section['section_title'], $section['section_callback'] ?? null, $this->config->get_option_name() );
+			add_settings_section( $section_id, $section['section_title'], $section['section_callback'] ?? null, $this->page );
 		}
 		foreach ( $this->fields as $field_id => $field ) {
-			add_settings_field( $field['id'], $field['label'], $field['callback'] ?? [$this, 'callback'], $this->config->get_option_name(), $field['section_id'], $field );
+			add_settings_field( $field['id'], $field['label'], $field['callback'] ?? [$this, 'callback'], $this->page, $field['section_id'], $field );
 		}
 	}
 
@@ -94,8 +125,8 @@ class Settings {
 	 */
 	function admin_enqueue_scripts($hook_suffix) {
 		// Ensure it only outputs on our own settings page.
-		if ( $hook_suffix == "settings_page_{$this->menu_slug}" ) {
-			wp_enqueue_style( $this->menu_slug, plugins_url( '/', $this->config->get_file() ) . 'assets/css/settings.css', [], $this->config->get_current_version() );
+		if ( $hook_suffix == "settings_page_{$this->page_slug}" ) {
+			wp_enqueue_style( $this->page_slug, plugins_url( '/', $this->config->get_file() ) . 'assets/css/settings.css', [], $this->config->get_current_version() );
 		}
 	}
 
@@ -109,7 +140,7 @@ class Settings {
 	function add_submenu_page() {
 		$parent_slug = $this->config->get_is_active_for_network() ? 'settings.php' : 'options-general.php';
 		$capability = $this->config->get_is_active_for_network() ? 'manage_network_options' : 'manage_options';
-		add_submenu_page( $parent_slug, sprintf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()), $this->config->get_plugin_name(), $capability, $this->menu_slug, [$this, 'admin_settings' ] );
+		add_submenu_page( $parent_slug, sprintf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()), $this->config->get_plugin_name(), $capability, $this->page_slug, [$this, 'admin_settings' ] );
 	}
 
 	/**
@@ -131,6 +162,7 @@ class Settings {
 			wp-admin/includes/class-wp-plugins-list-table.php, line 1088.
 			 */
 			if ( current_user_can( 'install_plugins' ) ) {
+				// Currently, "View details" is only visible to those that can install plugins. Those that can't, they have the "Visit plugin site".
 				$plugin_meta[2] = sprintf('<a href="%s" aria-label="%s">%s</a>',
 					$plugin_data['PluginURI'],
 					sprintf( translate( 'Visit plugin site for %s' ), $plugin_data['Name'] ),
@@ -140,9 +172,9 @@ class Settings {
 			
 			$url = '';
 			if ( $this->config->get_is_active_for_network() && current_user_can('manage_network_options')) {
-				$url = network_admin_url( "settings.php?page={$this->menu_slug}" );
+				$url = network_admin_url( "settings.php?page={$this->page_slug}" );
 			} elseif ( current_user_can('manage_options') ) {
-				$url = admin_url( "options-general.php?page={$this->menu_slug}" );
+				$url = admin_url( "options-general.php?page={$this->page_slug}" );
 			}
 
 			if ( !empty($url) ) {
@@ -157,29 +189,32 @@ class Settings {
 	}
 
 	/**
-	 * [Multisite - Network Admin] Save settings
+	 * Save settings
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.2 Rename of network_settings_save()
 	 *
 	 * @return void
 	 */
-	 function network_settings_save() {
-		if ( current_user_can( 'manage_network_options' ) &&
-			isset( $_POST[$this->config->get_option_name()] ) &&
-			isset( $_POST['action'] ) && $_POST['action'] === 'update' &&
-			isset( $_GET['page'] ) && $this->menu_slug === $_GET['page'] ) {
+	 function settings_save() {
+		if (!empty($_POST) &&
+			current_user_can( $this->config->get_is_active_for_network() ? 'manage_network_options' : 'manage_options' ) &&
+			isset( $_POST[$this->form_field] ) &&
+			( $_POST['action'] ?? '' ) === 'update' &&
+			( $_GET['page'] ?? ''  ) === $this->page_slug) {
 
-			check_admin_referer( $this->config->get_option_name().'-options' );
+			// Here $action param is determined by settings_fields(), which sets the nonce field.
+			check_admin_referer( "{$this->option_group}-options" );
 
-			$value = wp_unslash( $_POST[$this->config->get_option_name()] );
+			$value = wp_unslash( $_POST[$this->form_field] );
 			if ( ! is_array( $value ) ) {
 				$value = [];
 			}
-			$this->config->update_option( $value );
-			
-			add_settings_error( $this->menu_slug, 'settings_updated', translate( 'Settings saved.' ), 'success' );
 
-			set_transient( 'settings_errors', get_settings_errors($this->menu_slug), 30 );
+			$value = sanitize_option( $this->option_name, $value );
+			$this->config->update_option( $value );
+
+			add_settings_error( $this->settings_error_slug, 'settings_updated', translate( 'Settings saved.' ), 'success' );
+			set_transient( 'settings_errors', get_settings_errors($this->settings_error_slug), 30 );
 
 			// Redirect back to the settings page that was submitted.
 			$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
@@ -201,15 +236,15 @@ class Settings {
 		<script>
 			jQuery(document).ready(function( $ ){		
 				function show_hide_fields(){
-					var selected_value = $('#<?php echo $this->config->get_option_name();?>_recaptcha_version').val();
+					var selected_value = $('#<?php echo $this->form_field;?>_recaptcha_version').val();
 					$( '.hidden' ).hide();
 					$( '.show-field-for-'+ selected_value ).show();
 				}
-				if( $('#<?php echo $this->config->get_option_name();?>_recaptcha_version').length ){
+				if( $('#<?php echo $this->form_field;?>_recaptcha_version').length ){
 					show_hide_fields();
 				}
 				
-				$('.form-table').on( "change", "#<?php echo $this->config->get_option_name();?>_recaptcha_version", function(e) {
+				$('.form-table').on( "change", "#<?php echo $this->form_field;?>_recaptcha_version", function(e) {
 				show_hide_fields();
 				});
 			});
@@ -217,16 +252,14 @@ class Settings {
 		<div class="wrap">
 			<h1><?php printf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()) ?></h1>
 			<?php
-			$page = 'options.php';
 			if ($this->config->get_is_active_for_network()) {
-				$page = '';
 				settings_errors();
 			}
 			?>
-			<form method="post" action="<?php echo $page; ?>">
+			<form method="post" action="">
 				<?php
-				settings_fields( $this->config->get_option_name() );
-				do_settings_sections( $this->config->get_option_name() );
+				settings_fields( $this->option_group );
+				do_settings_sections( $this->page );
 				submit_button();
 				?>
 			</form>
@@ -850,7 +883,7 @@ class Settings {
 	}
 
 	/**
-	 * 
+	 * Create HTML form fields
 	 *
 	 * @since 1.0.0
 	 * @param mixed $array 
@@ -904,7 +937,7 @@ class Settings {
 					esc_attr( $value ),
 					// isset( $field['placeholder'] ) && $value == $default  ? '' : esc_attr( $value ),
 					$attrib,
-					$this->config->get_option_name()
+					$this->form_field
 				);
 				break;
 			case 'textarea':
@@ -915,11 +948,11 @@ class Settings {
 					$attrib,
 					esc_textarea( $value ),
 					// isset( $field['placeholder'] ) && $value == $default  ? '' : esc_textarea( $value ),
-					$this->config->get_option_name()
+					$this->form_field
 				);
 				break;
 			case 'checkbox':
-				// printf( '<input type="hidden" name="%s[%s]" value="" />', $this->config->get_option_name(), esc_attr( $field['id'] ) );
+				// printf( '<input type="hidden" name="%s[%s]" value="" />', $this->form_field, esc_attr( $field['id'] ) );
 				printf(
 					'<input type="hidden" name="%5$s[%1$s]" value="0" />
 					<label><input type="checkbox" id="%5$s_%1$s" class="%2$s" name="%5$s[%1$s]" value="1" %3$s/> %4$s</label>',
@@ -927,11 +960,11 @@ class Settings {
 					esc_attr( $field['class'] ),
 					checked( $value, true, false ),
 					esc_attr( $field['cb_label'] ),
-					$this->config->get_option_name()
+					$this->form_field
 				);
 				break;
 			case 'multicheck':
-				printf( '<input type="hidden" name="%s[%s][]" value="" />', $this->config->get_option_name(), esc_attr( $field['id'] ) );
+				printf( '<input type="hidden" name="%s[%s][]" value="" />', $this->form_field, esc_attr( $field['id'] ) );
 				foreach ( $field['options'] as $key => $label ) {
 					printf(
 						'<label><input type="checkbox" id="%6$s_%1$s_%3$s" class="%2$s" name="%6$s[%1$s][]" value="%3$s" %4$s/> %5$s</label><br>',
@@ -940,7 +973,7 @@ class Settings {
 						esc_attr( $key ),
 						checked( in_array( $key, (array) $value ), true, false ),
 						esc_attr( $label ),
-						$this->config->get_option_name()
+						$this->form_field
 					);
 				}
 				break;
@@ -949,7 +982,7 @@ class Settings {
 					'<select id="%3$s_%1$s" class="%2$s" name="%3$s[%1$s]">',
 					esc_attr( $field['id'] ),
 					esc_attr( $field['class'] ),
-					$this->config->get_option_name()
+					$this->form_field
 				);
 				foreach ( $field['options'] as $key => $label ) {
 					printf(
@@ -1078,7 +1111,7 @@ class Settings {
 				$name
 			);
 
-			add_settings_error($this->menu_slug, 'sanitize_action_name', $msg, 'info' );
+			add_settings_error($this->settings_error_slug, __FUNCTION__."-{$default}", $msg, 'info' );
 		}
 
 		return $name;
@@ -1124,8 +1157,7 @@ class Settings {
 		}
 		unset($matches);
 
-		$setting_code = 'sanitize_directory_path';
-		$setting_slug = $this->menu_slug;
+		$setting_error_code = __FUNCTION__;
 		$path = trim($value);
 
 		// Relative directory path, try to resolve it.
@@ -1133,7 +1165,7 @@ class Settings {
 			$path = realpath($path);
 
 			if ( $path !== false ) {
-				add_settings_error( $setting_slug, $setting_code,
+				add_settings_error( $this->settings_error_slug, $setting_error_code,
 					/* translators: 1: Input path from user, 2: Resolved absolute path */
 					sprintf( __( 'The relative path, "%1$s", was changed to "%2$s".', 'cd-recaptcha' ), $value, $path ),
 					'info'
@@ -1185,7 +1217,7 @@ class Settings {
 		}
 
 		if ( $error ) {
-			add_settings_error($setting_slug, $setting_code, $error_msg, 'error' );
+			add_settings_error($this->settings_error_slug, $setting_error_code, $error_msg, 'error' );
 		}
 
 		return $error ? $default : rtrim($path, "\x2f\x5c");

@@ -69,6 +69,7 @@ class Config {
 	 * @var array Default options.
 	 */
 	private const DEFAULTS = [
+		'version'                       => '',
 		'recaptcha_version'             => 'v2_checkbox',
 		'recaptcha_domain'              => self::DOMAINS['GOOGLE'],
 		'recaptcha_log'                 => false,
@@ -79,16 +80,16 @@ class Config {
 		'debug_log_separate'            => false,
 		'debug_log_min_level'           => 2,
 		'disable_sidebar_login_js'      => true,
-		// 'log_directory'                 => '',
+		'log_directory'                 => '',
 		'theme'                         => 'light',
-		// 'language'                      => '',
+		'language'                      => '',
 		'badge'                         => 'bottomright',
-		// 'v2_checkbox_site_key'          => '',
-		// 'v2_checkbox_secret_key'        => '',
-		// 'v2_invisible_site_key'         => '',
-		// 'v2_invisible_secret_key'       => '',
-		// 'v3_site_key'                   => '',
-		// 'v3_secret_key'                 => '',
+		'v2_checkbox_site_key'          => '',
+		'v2_checkbox_secret_key'        => '',
+		'v2_invisible_site_key'         => '',
+		'v2_invisible_secret_key'       => '',
+		'v3_site_key'                   => '',
+		'v3_secret_key'                 => '',
 		'v2_checkbox_size'              => 'normal',
 		'v2_checkbox_add_css'           => true,
 		'v3_script_load'                => 'all_pages',
@@ -251,42 +252,37 @@ class Config {
 	 * Update the value of an option.
 	 *
 	 * @since 1.0.0
-	 * @since 1.0.6 Discarding options with values that are the same as default. Renamed parameter `$options` to `$option`.
+	 * @since 1.0.6 Renamed parameter `$options` to `$option`.
+	 * @since 1.1.2 Added optional $save.
 	 * 
 	 * @param string|array $option Name of an option or an associative array with multiple option names and corresponding values set.
 	 * @param mixed $value Optional. Value to set for the given option. Default is an empty string. Ignored if parameter `$option` is an array.
+	 * @param bool $save Optional. Save the options directly.
 	 *
 	 * @return bool True if a successful update, false otherwise.
 	 */
-	function update_option($option, $value = '') {
+	function update_option($option, $value = '', $save = true) {
 		if ( !isset($option) ) { return false; }
 		if ( empty($option) ) { return false; }
 
 		$options = is_array( $option ) ? $option : [$option => $value];
 
-		$options = array_merge( $this->options, $options );
+		$this->options = array_merge( $this->options, $options );
 
-		foreach( $options as $key => $value) {
-			$default = $this->get_default($key);
-			if ( $default == $value) {
-				unset( $options[$key] );
-			}
-		}
-
-		$this->options = $options;
-
-		return $this->save_options();
+		return $save ? $this->save_options() : true;
 	}
 
 	/**
 	 * Delete an option.
 	 *
 	 * @since 1.0.6
+	 * @since 1.1.2 Added optional $save.
 	 * @param string|array $option Name of option or an array with options to delete.
+	 * @param bool $save Optional. Save the options directly.
 	 *
 	 * @return bool True if a successful update, false otherwise.
 	 */
-	function delete_option($option) {
+	function delete_option($option, $save = true) {
 		if ( !isset($option) ) { return false; }
 		if ( empty($option) ) { return false; }
 
@@ -298,17 +294,26 @@ class Config {
 			}
 		}
 
-		return $this->save_options();
+		return $save ? $this->save_options() : true;
 	}
 
 	/**
 	 * Save the options
 	 *
 	 * @since 1.0.6
+	 * @since 1.1.2 Discarding options not in the lists of defaults, or options with values that are the same as default.
 	 *
 	 * @return bool True if a successful update, false otherwise.
 	 */
-	private function save_options() {
+	function save_options() {
+		$exceptions = ['v2_checkbox_error_message', 'v2_invisible_error_message', 'v3_error_message'];
+
+		foreach( $this->options as $key => $value) {
+			if ( (!isset(self::DEFAULTS[$key]) && !in_array($key, $exceptions)) || $value == $this->get_default($key) ) {
+				unset( $this->options[$key] );
+			}
+		}
+
 		$update_options_func = $this->is_active_for_network ? 'update_site_option' : 'update_option';
 
 		return call_user_func($update_options_func, $this->option_name, $this->options);
