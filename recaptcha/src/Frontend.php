@@ -591,7 +591,7 @@ class Frontend {
 			} elseif ( $this->recaptcha_version === 'v3' ) {
 				$this->v3_script_form_pages();
 			}
-		} elseif ( $this->recaptcha_version === 'v3' && $this->config->get_option( 'v3_script_load' ) === 'all_pages' ) {
+		} elseif ( $this->recaptcha_version === 'v3' && $this->config->get_option( 'v3_load_all_pages' ) ) {
 			$this->v3_script_all_pages();
 		}
 	}

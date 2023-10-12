@@ -466,16 +466,11 @@ class Settings {
 									sprintf( '<strong>%s</strong>', __( 'NB!', 'cd-recaptcha' ) )
 								),
 			],
-			'v3_script_load'     => [
-				'label'      => __( 'Load on...', 'cd-recaptcha' ),
+			'v3_load_all_pages'     => [
+				'label'      => __( 'Load on all pages', 'cd-recaptcha' ),
 				'section_id' => 'general',
-				'type'       => 'select',
-				'class'      => 'regular hidden show-field-for-v3',
-				'std'        => $this->config->get_default('v3_script_load'),
-				'options'    => [
-					'all_pages'  => __( 'All pages', 'cd-recaptcha' ),
-					'form_pages' => __( 'Form pages', 'cd-recaptcha' ),
-				],
+				'type'       => 'checkbox',
+				'class'      => 'checkbox hidden show-field-for-v3',
 				'desc'       => __( 'For analytics purposes, it\'s recommended to load the widget in the background of all pages.', 'cd-recaptcha' ),
 			],
 			'require_remote_ip'     => [

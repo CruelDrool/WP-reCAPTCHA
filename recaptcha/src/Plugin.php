@@ -129,6 +129,12 @@ class Plugin {
 				$options['threshold_ms_user_signup'] = $this->config->get_option('threshold_multisite_signup', 0.5);
 			}
 
+			if (version_compare( $prev_version, "1.1.2", '<' )) {
+				if ($this->config->get_option('v3_script_load', 'all_pages') == 'form_pages') {
+					$options['v3_load_all_pages'] = false;
+				}
+			}
+
 		}
 
 		if ( version_compare( $current_version, $prev_version, '!=' ) ) {
