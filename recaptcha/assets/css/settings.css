@@ -5,3 +5,56 @@ code.code-pre {
 	margin-top: 4px;
 	padding: 3px;
 }
+
+.date-time-text {
+	display: inline-block;
+	min-width: 10em;
+}
+
+.regular-text {
+	width: 27em;
+}
+
+.wp-pwd input {
+	padding-right: 2.5rem;
+}
+
+.wp-pwd {
+	display: inline-block;
+	margin-top: 0;
+}
+
+.button.wp-hide-pw {
+	background: transparent;
+	border: 1px solid transparent;
+	box-shadow: none;
+	font-size: 14px;
+	line-height: 2;
+	width: 2.5rem;
+	min-width: 40px;
+	margin: 0;
+	padding: 0 9px;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.button.wp-hide-pw:hover {
+	background: transparent;
+	border-color: transparent;
+}
+
+.button.wp-hide-pw:focus {
+	background: transparent;
+	border-color: #3582c4;
+	border-radius: 4px;
+	box-shadow: 0 0 0 1px #3582c4;
+	/* Only visible in Windows High Contrast mode */
+	outline: 2px solid transparent;
+}
+
+.button.wp-hide-pw:active {
+	background: transparent;
+	box-shadow: none;
+	transform: none;
+}
