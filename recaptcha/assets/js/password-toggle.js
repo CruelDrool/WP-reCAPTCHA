@@ -1,15 +1,13 @@
 ( function () {
 	var toggleElements, status, input, icon;
-	
+
 	toggleElements = document.querySelectorAll( '.wp-hide-pw' );
-	
-	console.log(toggleElements);
+
 	toggleElements.forEach( function (toggle) {
-		console.log("heeey");
 		toggle.classList.remove( 'hide-if-no-js' );
 		toggle.addEventListener( 'click', togglePassword );
 	} );
-	
+
 	function togglePassword() {
 		status = this.getAttribute( 'data-toggle' );
 		input = this.parentElement.getElementsByTagName('input')[0]
