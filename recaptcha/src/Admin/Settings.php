@@ -234,18 +234,18 @@ class Settings {
 		?>
 		
 		<script>
-			jQuery(document).ready(function( $ ){		
+			jQuery(document).ready(function( $ ){
+				var select_field = $('#<?= $this->form_field ?>_recaptcha_version');
 				function show_hide_fields(){
-					var selected_value = $('#<?php echo $this->form_field;?>_recaptcha_version').val();
-					$( '.hidden' ).hide();
-					$( '.show-field-for-'+ selected_value ).show();
+					$( 'form .hidden' ).removeAttr('style');
+					$( 'form .show-field-for-'+ select_field.val() ).show();
 				}
-				if( $('#<?php echo $this->form_field;?>_recaptcha_version').length ){
+
+				if( select_field.length ){
 					show_hide_fields();
 				}
 				
-				$('.form-table').on( "change", "#<?php echo $this->form_field;?>_recaptcha_version", function(e) {
-				show_hide_fields();
+				select_field.on('change', show_hide_fields);
 
 				function togglePassword() {
 					var button = $(this);
@@ -352,7 +352,6 @@ class Settings {
 		for ( $i = 0.0; $i <= 1; $i += 0.1 ) {
 			$score_values[ "$i" ] = number_format_i18n( $i, 1 );
 		}
-
 		$domains = [];
 		
 		foreach ($this->config->get_domains() as $key => $domain) {
