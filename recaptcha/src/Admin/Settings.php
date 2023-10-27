@@ -126,8 +126,7 @@ class Settings {
 	function admin_enqueue_scripts($hook_suffix) {
 		// Ensure it only outputs on our own settings page.
 		if ( $hook_suffix == "settings_page_{$this->page_slug}" ) {
-			wp_enqueue_style( $this->page_slug, plugins_url( '/', $this->config->get_file() ) . 'assets/css/settings.css', [], $this->config->get_current_version() );
-			wp_enqueue_script( "{$this->page_slug}-password-toggle", plugins_url( '/', $this->config->get_file() ) . 'assets/js/password-toggle.js', [], $this->config->get_current_version(), 1 );
+			wp_enqueue_style( $this->page_slug, plugins_url( '/assets/css/settings.css', $this->config->get_file() ), [], $this->config->get_current_version() );
 		}
 	}
 
@@ -247,6 +246,31 @@ class Settings {
 				
 				$('.form-table').on( "change", "#<?php echo $this->form_field;?>_recaptcha_version", function(e) {
 				show_hide_fields();
+
+				function togglePassword() {
+					var button = $(this);
+					var status = button.attr('data-toggle');
+					var input = button.parent().children('input').first();
+					var icon = button.children('span');
+					
+					if ( parseInt( status, 10 ) === 0  ) {
+						button.attr( 'data-toggle', 1 );
+						button.attr( 'aria-label', '<?= translate( 'Hide password' ) ?>' );
+						input.attr('type', 'text');
+						icon.removeClass( 'dashicons-visibility' );
+						icon.addClass( 'dashicons-hidden' );
+					} else {
+						button.attr( 'data-toggle', 0);
+						button.attr('aria-label', '<?= translate( 'Show password' ) ?>' );
+						input.attr( 'type', 'password' );
+						icon.removeClass( 'dashicons-hidden' );
+						icon.addClass( 'dashicons-visibility' );
+					}
+				}
+
+				$('.wp-pwd button.wp-hide-pw').each(function(index, button) {
+					$(button).removeClass('hide-if-no-js');
+					$(button).on('click', togglePassword);
 				});
 			});
 		</script>
@@ -929,7 +953,7 @@ class Settings {
 					isset( $field['pattern']) ? sprintf(' pattern="%s"', $field['pattern'] ) : '', // 9
 					$attrib, // 10
 					$field['type'] == "password" ? '<div class="wp-pwd">' : '', // 11
-					$field['type'] == "password" ? '<button type="button" class="button wp-hide-pw" data-toggle="0"><span class="dashicons dashicons-visibility" aria-hidden="true"></span></button></div>' : '' // 12
+					$field['type'] == "password" ? sprintf('<button type="button" class="button wp-hide-pw" data-toggle="0" aria-label="%s"><span class="dashicons dashicons-visibility" aria-hidden="true"></span></button></div>', translate('Show password')) : '' // 12
 				);
 				break;
 			case 'textarea':
