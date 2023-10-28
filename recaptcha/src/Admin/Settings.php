@@ -71,10 +71,10 @@ class Settings {
 		$this->config = $config;
 		
 		// All of these can have unique values. However, I'm a bit lazy.
-		$this->page_slug = $this->config->get_prefix().'-settings';
+		$this->page_slug = "{$this->config->get_prefix()}-settings";
 		$this->page = $this->page_slug;
 		$this->option_group = $this->page_slug;
-		$this->option_name = $this->page_slug;
+		$this->option_name = $this->page_slug; // Keep this value different from Config::option_name
 		$this->settings_error_slug = $this->page_slug;
 		$this->form_field = $this->page_slug;
 
@@ -302,21 +302,21 @@ class Settings {
 	function get_sections() {
 		$sections = [
 			'general' => [
-				'section_title'    => __( 'General', 'cd-recaptcha' ),
+				'section_title' => __( 'General', 'cd-recaptcha' ),
 				// 'section_callback' => function() {
 					// printf( __( 'Get reCAPTCHA keys from <a href="%s" target="_blank" rel="noopener noreferrer">Google</a>. Make sure to get keys for your selected version.', 'cd-recaptcha' ), 'https://www.google.com/recaptcha/admin' );
 				// },
 			],
-			'forms'       => [
+			'forms' => [
 				'section_title' => __( 'Forms', 'cd-recaptcha' ),
 			],
-			'actions'       => [
+			'actions' => [
 				'section_title' => sprintf('<span class="hidden show-field-for-v3">%s</span>',__( 'Actions', 'cd-recaptcha' ) ),
 				'section_callback' => function() {
 					printf('<p class="hidden show-field-for-v3">%s</p>', __( 'Action names may only contain alphanumeric characters, underscores, and forward slashes.', 'cd-recaptcha' ));
 				},
 			],
-			'thresholds'       => [
+			'thresholds' => [
 				'section_title' => sprintf('<span class="hidden show-field-for-v3">%s</span>',__( 'Thresholds', 'cd-recaptcha' ) ),
 				'section_callback' => function() {
 					printf('<p class="hidden show-field-for-v3">%s</p>',
@@ -348,10 +348,12 @@ class Settings {
 	 * @return array
 	 */
 	function get_fields() {
+/* 
 		$score_values = [];
 		for ( $i = 0.0; $i <= 1; $i += 0.1 ) {
 			$score_values[ "$i" ] = number_format_i18n( $i, 1 );
 		}
+ */
 		$domains = [];
 		
 		foreach ($this->config->get_domains() as $key => $domain) {
@@ -360,382 +362,398 @@ class Settings {
 
 		$fields = [
 			// General
-			'recaptcha_version'            => [
-				'label'      => __( 'Version', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'       => 'select',
-				'std'        => $this->config->get_default('recaptcha_version'),
-				'options'    => [
-					'v2_checkbox'  => __( 'v2 "I\'m not a robot"', 'cd-recaptcha' ),
-					'v2_invisible' => __( 'v2 Invisible', 'cd-recaptcha' ),
-					'v3'           => __( 'v3', 'cd-recaptcha' ),
+			'recaptcha_version' => [
+				'label'         => __( 'Version', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'select',
+				'std'           => $this->config->get_default('recaptcha_version'),
+				'options'       => [
+					'v2_checkbox'   => __( 'v2 "I\'m not a robot"', 'cd-recaptcha' ),
+					'v2_invisible'  => __( 'v2 Invisible', 'cd-recaptcha' ),
+					'v3'            => __( 'v3', 'cd-recaptcha' ),
 				],
-				'desc'       => sprintf( __( 'Select your reCAPTCHA version. Make sure to use keys for your selected version. %s.', 'cd-recaptcha' ),
-									sprintf( '<a href="https://developers.google.com/recaptcha/docs/versions" target="_blank">%s</a>',
-										__( 'Read more about the versions', 'cd-recaptcha' )
-									)
-								),
+				'desc'          => sprintf(
+					__( 'Select your reCAPTCHA version. Make sure to use keys for your selected version. %s.', 'cd-recaptcha' ),
+					sprintf( '<a href="https://developers.google.com/recaptcha/docs/versions" target="_blank">%s</a>',
+						__( 'Read more about the versions', 'cd-recaptcha' )
+					)
+				),
 			],
-			'v2_checkbox_site_key'           => [
-				'label'       => __( 'Site Key', 'cd-recaptcha' ),
-				'section_id'  => 'general',
-				'class'		  => 'hidden show-field-for-v2_checkbox',
-				'field_class' => 'regular-text',
-				'desc'		=> sprintf( __( 'The public site key is used to load the widget. %s.', 'cd-recaptcha' ), 
-								sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
-									__( 'Keys can be obtained here', 'cd-recaptcha' )
-								)
-							),
+			'v2_checkbox_site_key' => [
+				'label'         => __( 'Site Key', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'class'         => 'hidden show-field-for-v2_checkbox',
+				'field_class'   => 'regular-text',
+				'desc'          => sprintf(
+					__( 'The public site key is used to load the widget. %s.', 'cd-recaptcha' ), 
+					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
+						__( 'Keys can be obtained here', 'cd-recaptcha' )
+					)
+				),
 			],
-			'v2_checkbox_secret_key'         => [
-				'label'       => __( 'Secret Key', 'cd-recaptcha' ),
-				'section_id'  => 'general',
-				'type'        => 'password',
-				'class'		  => 'hidden show-field-for-v2_checkbox',
-				'field_class' => 'regular-text',
-				'desc'		=> sprintf( __( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s.', 'cd-recaptcha' ), 
-								sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
-									__( 'Keys can be obtained here', 'cd-recaptcha' )
-								)
-							),
+			'v2_checkbox_secret_key' => [
+				'label'         => __( 'Secret Key', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'password',
+				'class'         => 'hidden show-field-for-v2_checkbox',
+				'field_class'   => 'regular-text',
+				'desc'          => sprintf(
+					__( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s.', 'cd-recaptcha' ), 
+					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
+						__( 'Keys can be obtained here', 'cd-recaptcha' )
+					)
+				),
 			],
-			'v2_invisible_site_key'           => [
-				'label'       => __( 'Site Key', 'cd-recaptcha' ),
-				'section_id'  => 'general',
-				'class'		  => 'hidden show-field-for-v2_invisible',
-				'field_class' => 'regular-text',
-				'desc'		=> sprintf( __( 'The public site key is used to load the widget. %s.', 'cd-recaptcha' ), 
-								sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
-									__( 'Keys can be obtained here', 'cd-recaptcha' )
-								)
-							),
+			'v2_invisible_site_key' => [
+				'label'         => __( 'Site Key', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'class'         => 'hidden show-field-for-v2_invisible',
+				'field_class'   => 'regular-text',
+				'desc'          => sprintf(
+					__( 'The public site key is used to load the widget. %s.', 'cd-recaptcha' ), 
+					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
+						__( 'Keys can be obtained here', 'cd-recaptcha' )
+					)
+				),
 			],
-			'v2_invisible_secret_key'         => [
-				'label'       => __( 'Secret Key', 'cd-recaptcha' ),
-				'section_id'  => 'general',
-				'type'        => 'password',
-				'class'		  => 'hidden show-field-for-v2_invisible',
-				'field_class' => 'regular-text',
-				'desc'		=> sprintf( __( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s.', 'cd-recaptcha' ), 
-								sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
-									__( 'Keys can be obtained here', 'cd-recaptcha' )
-								)
-							),
+			'v2_invisible_secret_key' => [
+				'label'         => __( 'Secret Key', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'password',
+				'class'         => 'hidden show-field-for-v2_invisible',
+				'field_class'   => 'regular-text',
+				'desc'		 => sprintf(
+					__( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s.', 'cd-recaptcha' ), 
+						sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
+							__( 'Keys can be obtained here', 'cd-recaptcha' )
+						)
+					),
 			],
-			'v3_site_key'           => [
-				'label'       => __( 'Site Key', 'cd-recaptcha' ),
-				'section_id'  => 'general',
-				'class'		  => 'hidden show-field-for-v3',
-				'field_class' => 'regular-text',
-				'desc'		=> sprintf( __( 'The public site key is used to load the widget. %s.', 'cd-recaptcha' ), 
-								sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
-									__( 'Keys can be obtained here', 'cd-recaptcha' )
-								)
-							),
+			'v3_site_key' => [
+				'label'         => __( 'Site Key', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'class'         => 'hidden show-field-for-v3',
+				'field_class'   => 'regular-text',
+				'desc'          => sprintf(
+					__( 'The public site key is used to load the widget. %s.', 'cd-recaptcha' ), 
+					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
+						__( 'Keys can be obtained here', 'cd-recaptcha' )
+					)
+				),
 			],
-			'v3_secret_key'         => [
-				'label'       => __( 'Secret Key', 'cd-recaptcha' ),
-				'section_id'  => 'general',
-				'type'        => 'password',
-				'class'		  => 'hidden show-field-for-v3',
-				'field_class' => 'regular-text',
-				'desc'		=> sprintf( __( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s.', 'cd-recaptcha' ), 
-								sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
-									__( 'Keys can be obtained here', 'cd-recaptcha' )
-								)
-							),
+			'v3_secret_key' => [
+				'label'         => __( 'Secret Key', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'password',
+				'class'         => 'hidden show-field-for-v3',
+				'field_class'   => 'regular-text',
+				'desc'          => sprintf(
+					__( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s.', 'cd-recaptcha' ), 
+					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
+						__( 'Keys can be obtained here', 'cd-recaptcha' )
+					)
+				),
 			],
-			'v2_checkbox_error_message'=> [
-				'label'      => __( 'Error message', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'		=> 'textarea',
-				'placeholder'	=> $this->config->get_default_error_msg('v2_checkbox'),
-				'desc'	=> __( 'In this textbox, you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
-				'class'		=> 'hidden show-field-for-v2_checkbox',
-				'field_class' => 'regular-text',
+			'v2_checkbox_error_message' => [
+				'label'         => __( 'Error message', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'textarea',
+				'placeholder'   => $this->config->get_default_error_msg('v2_checkbox'),
+				'desc'          => __( 'In this textbox, you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
+				'class'         => 'hidden show-field-for-v2_checkbox',
+				'field_class'   => 'regular-text',
 			],
-			'v2_invisible_error_message'=> [
-				'label'      => __( 'Error message', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'		=> 'textarea',
-				'placeholder' => $this->config->get_default_error_msg('v2_invisible'),
-				'desc'	=> __( 'In this textbox, you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
-				'class'		=> 'hidden show-field-for-v2_invisible',
-				'field_class' => 'regular-text',
+			'v2_invisible_error_message' => [
+				'label'         => __( 'Error message', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'textarea',
+				'placeholder'   => $this->config->get_default_error_msg('v2_invisible'),
+				'desc'          => __( 'In this textbox, you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
+				'class'         => 'hidden show-field-for-v2_invisible',
+				'field_class'   => 'regular-text',
 			],
-			'v3_error_message'      => [
-				'label'      => __( 'Error message', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'		=> 'textarea',
-				'placeholder' => $this->config->get_default_error_msg('v3'),
-				'desc'	=> __( 'In this textbox, you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
-				'class'		=> 'hidden show-field-for-v3',
-				'field_class' => 'regular-text',
+			'v3_error_message' => [
+				'label'         => __( 'Error message', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'textarea',
+				'placeholder'   => $this->config->get_default_error_msg('v3'),
+				'desc'          => __( 'In this textbox, you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
+				'class'         => 'hidden show-field-for-v3',
+				'field_class'   => 'regular-text',
 			],
-			'loggedin_hide'      => [
-				'label'      => __( 'Hide for logged-in users', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'       => 'checkbox',
-				'cb_label'		 => __( 'Only load for guest users.', 'cd-recaptcha'),
+			'loggedin_hide' => [
+				'label'         => __( 'Hide for logged-in users', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'checkbox',
+				'cb_label'      => __( 'Only load for guest users.', 'cd-recaptcha'),
 			],
-			'recaptcha_domain'      =>[
-				'label'      => __( 'Request domain', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'       => 'select',
-				'std'        => $this->config->get_default('recaptcha_domain'),
-				'options'    => $domains,
-								/* translators: 1: recaptcha.net 2: google.com */
-				'desc'        => sprintf( __( 'The domain to fetch the script from, and to use when verifying requests. Use %1$s when %2$s is not accessible.', 'cd-recaptcha' ),
-									'<samp>recaptcha.net</samp>',
-									'<samp>google.com</samp>'
-								),
+			'recaptcha_domain' =>[
+				'label'         => __( 'Request domain', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'select',
+				'std'           => $this->config->get_default('recaptcha_domain'),
+				'options'       => $domains,
+				'desc'          => sprintf(
+					/* translators: 1: recaptcha.net 2: google.com */
+					__( 'The domain to fetch the script from, and to use when verifying requests. Use %1$s when %2$s is not accessible.', 'cd-recaptcha' ),
+						'<samp>recaptcha.net</samp>',
+						'<samp>google.com</samp>'
+					),
 			],
-			'verify_origin'  => [
-				'label'      => __( 'Verify origin of the solutions', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'       => 'checkbox',
-				'desc'		 => sprintf( __( 'This is only required if you have chosen not to have Google do this verification. %s.', 'cd-recaptcha' ),
-									sprintf( '<a href="https://developers.google.com/recaptcha/docs/domain_validation" target="_blank">%s</a>', __( 'Read more about domain validation', 'cd-recaptcha' ) )
-								),
+			'verify_origin' => [
+				'label'         => __( 'Verify origin of the solutions', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'checkbox',
+				'desc'          => sprintf(
+					__( 'This is only required if you have chosen not to have Google do this verification. %s.', 'cd-recaptcha' ),
+						sprintf( '<a href="https://developers.google.com/recaptcha/docs/domain_validation" target="_blank">%s</a>', __( 'Read more about domain validation', 'cd-recaptcha' ) )
+					),
 			],
-			'require_remote_ip'     => [
-				'label'      => __( 'Require the client\'s IP address', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'       => 'checkbox',
-				'desc'       => __( 'Require that the client\'s IP address has been determined before submitting data to the reCAPTCHA server. An undetermined IP address will be treated as a failed CAPTCHA attempt.', 'cd-recaptcha' ),
+			'require_remote_ip' => [
+				'label'         => __( 'Require the client\'s IP address', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'checkbox',
+				'desc'          => __( 'Require that the client\'s IP address has been determined before submitting data to the reCAPTCHA server. An undetermined IP address will be treated as a failed CAPTCHA attempt.', 'cd-recaptcha' ),
 			],
-			'language'           => [
-				'label'      => __( 'Language code', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'field_class'      => 'small-text',
-				'desc'		 => sprintf( __( 'Language of the widget. Leave it blank to auto-detect the language. %s.', 'cd-recaptcha' ),
-									sprintf('<a href="https://developers.google.com/recaptcha/docs/language" target="_blank">%s</a>',
-										__('Read more about language codes', 'cd-recaptcha' )
-									)
-								),
+			'language' => [
+				'label'         => __( 'Language code', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'field_class'   => 'small-text',
+				'desc'          => sprintf(
+					__( 'Language of the widget. Leave it blank to auto-detect the language. %s.', 'cd-recaptcha' ),
+					sprintf('<a href="https://developers.google.com/recaptcha/docs/language" target="_blank">%s</a>',
+						__('Read more about language codes', 'cd-recaptcha' )
+					)
+				),
 			],
-			'theme'              => [
-				'label'      => __( 'Theme', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'       => 'select',
-				'std'        => $this->config->get_default('theme'),
-				'options'    => [
-					'light' => __( 'Light', 'cd-recaptcha' ),
-					'dark'  => __( 'Dark', 'cd-recaptcha' ),
-					'auto'  => __( 'Automatic', 'cd-recaptcha' ),
+			'theme' => [
+				'label'         => __( 'Theme', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'select',
+				'std'           => $this->config->get_default('theme'),
+				'options'       => [
+					'light'         => __( 'Light', 'cd-recaptcha' ),
+					'dark'          => __( 'Dark', 'cd-recaptcha' ),
+					'auto'          => __( 'Automatic', 'cd-recaptcha' ),
 				],
-				'desc'       => sprintf(__( 'Color theme of the widget. Select %s to set the theme based on the brightness of the page\'s background color.', 'cd-recaptcha' ),
-									sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
-								),
+				'desc'          => sprintf(
+					__( 'Color theme of the widget. Select %s to set the theme based on the brightness of the page\'s background color.', 'cd-recaptcha' ),
+					sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
+				),
 			],
 			'v2_checkbox_size' => [
-				'label'      => __( 'Size', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'       => 'select',
-				'class'      => 'hidden show-field-for-v2_checkbox',
-				'std'        => $this->config->get_default('v2_checkbox_size'),
-				'options'    => [
-					'normal'    => __( 'Normal', 'cd-recaptcha' ),
-					'compact'   => __( 'Compact', 'cd-recaptcha' ),
-					'auto'      => __( 'Automatic', 'cd-recaptcha' ),
+				'label'         => __( 'Size', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'select',
+				'class'         => 'hidden show-field-for-v2_checkbox',
+				'std'           => $this->config->get_default('v2_checkbox_size'),
+				'options'       => [
+					'normal'        => __( 'Normal', 'cd-recaptcha' ),
+					'compact'       => __( 'Compact', 'cd-recaptcha' ),
+					'auto'          => __( 'Automatic', 'cd-recaptcha' ),
 				],
-								/* translators: 1: Automatic, 2: Compact, 3: Normal */
-				'desc'       => sprintf( __( 'Size of the widget. Select %1$s to automatically set the size to %2$s if the area is too narrow for %3$s.', 'cd-recaptcha' ),
-									sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) ),
-									sprintf( '<i>%s</i>', __( 'Compact', 'cd-recaptcha' ) ),
-									sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) )
-							),
+				'desc'       => sprintf(
+					/* translators: 1: Automatic, 2: Compact, 3: Normal */
+					__( 'Size of the widget. Select %1$s to automatically set the size to %2$s if the area is too narrow for %3$s.', 'cd-recaptcha' ),
+						sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) ),
+						sprintf( '<i>%s</i>', __( 'Compact', 'cd-recaptcha' ) ),
+						sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) )
+				),
 			],
-			'v2_checkbox_add_css'  => [
-				'label'      => __( 'Add stylesheet (CSS)', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'       => 'checkbox',
-				'class'      => 'hidden show-field-for-v2_checkbox',
-				'cb_label'   => __( "Add this plugin's stylesheet to the login page.", 'cd-recaptcha' ),
-								/* translators: 1: Normal, 2: Automatic */
-				'desc'       => sprintf(__( 'This stylesheet increases the width of the container element that holds the login form. This is to fit in the widget better. Only applicable if you have selected %1$s or %2$s as size.', 'cd-recaptcha' ),
-									sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) ),
-									sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
-								),
+			'v2_checkbox_add_css' => [
+				'label'         => __( 'Add stylesheet (CSS)', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-v2_checkbox',
+				'cb_label'      => __( "Add this plugin's stylesheet to the login page.", 'cd-recaptcha' ),
+				'desc'          => sprintf(
+					/* translators: 1: Normal, 2: Automatic */
+					__( 'This stylesheet increases the width of the container element that holds the login form. This is to fit in the widget better. Only applicable if you have selected %1$s or %2$s as size.', 'cd-recaptcha' ),
+						sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) ),
+						sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
+					),
 			],
-			'badge'              => [
-				'label'      => __( 'Placement', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'       => 'select',
-				'class'      => 'hidden show-field-for-v2_invisible show-field-for-v3',
-				'std'        => $this->config->get_default('badge'),
-				'options'    => [
-					'bottomright' => __( 'Bottom Right', 'cd-recaptcha' ),
-					'bottomleft'  => __( 'Bottom Left', 'cd-recaptcha' ),
-					'inline'      => __( 'Inline', 'cd-recaptcha' ),
-					'auto'        => __( 'Automatic', 'cd-recaptcha' ),
+			'badge' => [
+				'label'         => __( 'Placement', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'select',
+				'class'         => 'hidden show-field-for-v2_invisible show-field-for-v3',
+				'std'           => $this->config->get_default('badge'),
+				'options'       => [
+					'bottomright'   => __( 'Bottom Right', 'cd-recaptcha' ),
+					'bottomleft'    => __( 'Bottom Left', 'cd-recaptcha' ),
+					'inline'        => __( 'Inline', 'cd-recaptcha' ),
+					'auto'          => __( 'Automatic', 'cd-recaptcha' ),
 				],
-				'desc'       => sprintf( __( 'Position of the widget. Select %s to place the widget based on text direction (on a page with "right-to-left", the placement will be on the left).', 'cd-recaptcha' ),
-									sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
-								),
+				'desc'          => sprintf(
+					__( 'Position of the widget. Select %s to place the widget based on text direction (on a page with "right-to-left", the placement will be on the left).', 'cd-recaptcha' ),
+					sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
+				),
 			],
-			'v3_load_all_pages'     => [
-				'label'      => __( 'Load on all pages', 'cd-recaptcha' ),
-				'section_id' => 'general',
-				'type'       => 'checkbox',
-				'class'      => 'hidden show-field-for-v3',
-				'desc'       => __( 'For analytics purposes, it\'s recommended to load the widget in the background of all pages.', 'cd-recaptcha' ),
+			'v3_load_all_pages' => [
+				'label'         => __( 'Load on all pages', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-v3',
+				'desc'          => __( 'For analytics purposes, it\'s recommended to load the widget in the background of all pages.', 'cd-recaptcha' ),
 			],
 			// Forms
-			'enabled_forms'      => [
-				'label'      => __( 'Enabled forms', 'cd-recaptcha' ),
-				'section_id' => 'forms',
-				'type'       => 'multicheck',
-				'options'    => [
-					'login'          => __( 'Login', 'cd-recaptcha' ),
-					'registration'   => __( 'Registration', 'cd-recaptcha' ),
-					'ms_user_signup' => __( 'Multisite User Signup', 'cd-recaptcha' ),
-					'lost_password'  => __( 'Lost Password', 'cd-recaptcha' ),
-					'reset_password' => __( 'Reset Password', 'cd-recaptcha' ),
-					'comment'        => __( 'Comment', 'cd-recaptcha' ),
+			'enabled_forms'     => [
+				'label'         => __( 'Enabled forms', 'cd-recaptcha' ),
+				'section_id'    => 'forms',
+				'type'          => 'multicheck',
+				'options'       => [
+					'login'         => __( 'Login', 'cd-recaptcha' ),
+					'registration'  => __( 'Registration', 'cd-recaptcha' ),
+					'ms_user_signup'=> __( 'Multisite User Signup', 'cd-recaptcha' ),
+					'lost_password' => __( 'Lost Password', 'cd-recaptcha' ),
+					'reset_password'=> __( 'Reset Password', 'cd-recaptcha' ),
+					'comment'       => __( 'Comment', 'cd-recaptcha' ),
 				],
 			],
 			// Actions
-			'action_login'   => [
-				'label'      => __( 'Login', 'cd-recaptcha' ),
-				'section_id' => 'actions',
-				'class'      => 'hidden show-field-for-v3',
-				'placeholder' => $this->config->get_default('action_login'),
+			'action_login' => [
+				'label'             => __( 'Login', 'cd-recaptcha' ),
+				'section_id'        => 'actions',
+				'class'             => 'hidden show-field-for-v3',
+				'placeholder'       => $this->config->get_default('action_login'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_login'));
 				},
 			],
-			'action_registration'   => [
-				'label'      => __( 'Registration', 'cd-recaptcha' ),
-				'section_id' => 'actions',
-				'class'      => 'hidden show-field-for-v3',
-				'placeholder' => $this->config->get_default('action_registration'),
+			'action_registration' => [
+				'label'             => __( 'Registration', 'cd-recaptcha' ),
+				'section_id'        => 'actions',
+				'class'             => 'hidden show-field-for-v3',
+				'placeholder'       => $this->config->get_default('action_registration'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_registration'));
 				},
 			],
 			'action_ms_user_signup' => [
-				'label'      => __( 'Multisite User Signup', 'cd-recaptcha' ),
-				'section_id' => 'actions',
-				'class'      => 'hidden show-field-for-v3',
-				'placeholder' => $this->config->get_default('action_ms_user_signup'),
+				'label'             => __( 'Multisite User Signup', 'cd-recaptcha' ),
+				'section_id'        => 'actions',
+				'class'             => 'hidden show-field-for-v3',
+				'placeholder'       => $this->config->get_default('action_ms_user_signup'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_ms_user_signup'));
 				},
 			],
-			'action_lost_password'=> [
-				'label'      => __( 'Lost Password', 'cd-recaptcha' ),
-				'section_id' => 'actions',
-				'class'      => 'hidden show-field-for-v3',
-				'placeholder' => $this->config->get_default('action_lost_password'),
+			'action_lost_password' => [
+				'label'             => __( 'Lost Password', 'cd-recaptcha' ),
+				'section_id'        => 'actions',
+				'class'             => 'hidden show-field-for-v3',
+				'placeholder'       => $this->config->get_default('action_lost_password'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_lost_password'));
 				},
 			],
-			'action_reset_password'=> [
-				'label'      => __( 'Reset Password', 'cd-recaptcha' ),
-				'section_id' => 'actions',
-				'class'      => 'hidden show-field-for-v3',
-				'placeholder' => $this->config->get_default('action_reset_password'),
+			'action_reset_password' => [
+				'label'             => __( 'Reset Password', 'cd-recaptcha' ),
+				'section_id'        => 'actions',
+				'class'             => 'hidden show-field-for-v3',
+				'placeholder'       => $this->config->get_default('action_reset_password'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_reset_password'));
 				},
 			],
-			'action_comment'=> [
-				'label'      => __( 'Comment', 'cd-recaptcha' ),
-				'section_id' => 'actions',
-				'class'      => 'hidden show-field-for-v3',
-				'placeholder' => $this->config->get_default('action_comment'),
+			'action_comment' => [
+				'label'             => __( 'Comment', 'cd-recaptcha' ),
+				'section_id'        => 'actions',
+				'class'             => 'hidden show-field-for-v3',
+				'placeholder'       => $this->config->get_default('action_comment'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_comment'));
 				},
 			],
 			// Thresholds
-			'threshold_login'=> [
-				'label'      => __( 'Login', 'cd-recaptcha' ),
-				'section_id' => 'thresholds',
-				'type'       => 'number',
-				'class'      => 'hidden show-field-for-v3',
-				'field_class'=> 'small-text',
-				'min'        => 0.0,
-				'max'        => 1.0,
-				'step'       => 0.1,
+			'threshold_login' => [
+				'label'             => __( 'Login', 'cd-recaptcha' ),
+				'section_id'        => 'thresholds',
+				'type'              => 'number',
+				'class'             => 'hidden show-field-for-v3',
+				'field_class'       => 'small-text',
+				'min'               => 0.0,
+				'max'               => 1.0,
+				'step'              => 0.1,
 				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
-			'threshold_registration'=> [
-				'label'      => __( 'Registration', 'cd-recaptcha' ),
-				'section_id' => 'thresholds',
-				'type'       => 'number',
-				'class'      => 'hidden show-field-for-v3',
-				'field_class'=> 'small-text',
-				'min'        => 0.0,
-				'max'        => 1.0,
-				'step'       => 0.1,
+			'threshold_registration' => [
+				'label'             => __( 'Registration', 'cd-recaptcha' ),
+				'section_id'        => 'thresholds',
+				'type'              => 'number',
+				'class'             => 'hidden show-field-for-v3',
+				'field_class'       => 'small-text',
+				'min'               => 0.0,
+				'max'               => 1.0,
+				'step'              => 0.1,
 				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
 			'threshold_ms_user_signup' => [
-				'label'      => __( 'Multisite User Signup', 'cd-recaptcha' ),
-				'section_id' => 'thresholds',
-				'type'       => 'number',
-				'class'      => 'hidden show-field-for-v3',
-				'field_class'=> 'small-text',
-				'min'        => 0.0,
-				'max'        => 1.0,
-				'step'       => 0.1,
+				'label'             => __( 'Multisite User Signup', 'cd-recaptcha' ),
+				'section_id'        => 'thresholds',
+				'type'              => 'number',
+				'class'             => 'hidden show-field-for-v3',
+				'field_class'       => 'small-text',
+				'min'               => 0.0,
+				'max'               => 1.0,
+				'step'              => 0.1,
 				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
-			'threshold_lost_password'=> [
-				'label'      => __( 'Lost Password', 'cd-recaptcha' ),
-				'section_id' => 'thresholds',
-				'type'       => 'number',
-				'class'      => 'hidden show-field-for-v3',
-				'field_class'=> 'small-text',
-				'min'        => 0.0,
-				'max'        => 1.0,
-				'step'       => 0.1,
+			'threshold_lost_password' => [
+				'label'             => __( 'Lost Password', 'cd-recaptcha' ),
+				'section_id'        => 'thresholds',
+				'type'              => 'number',
+				'class'             => 'hidden show-field-for-v3',
+				'field_class'       => 'small-text',
+				'min'               => 0.0,
+				'max'               => 1.0,
+				'step'              => 0.1,
 				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
-			'threshold_reset_password'=> [
-				'label'      => __( 'Reset Password', 'cd-recaptcha' ),
-				'section_id' => 'thresholds',
-				'type'       => 'number',
-				'class'      => 'hidden show-field-for-v3',
-				'field_class'=> 'small-text',
-				'min'        => 0.0,
-				'max'        => 1.0,
-				'step'       => 0.1,
+			'threshold_reset_password' => [
+				'label'             => __( 'Reset Password', 'cd-recaptcha' ),
+				'section_id'        => 'thresholds',
+				'type'              => 'number',
+				'class'             => 'hidden show-field-for-v3',
+				'field_class'       => 'small-text',
+				'min'               => 0.0,
+				'max'               => 1.0,
+				'step'              => 0.1,
 				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
-			'threshold_comment'=> [
-				'label'      => __( 'Comment', 'cd-recaptcha' ),
-				'section_id' => 'thresholds',
-				'type'       => 'number',
-				'class'      => 'hidden show-field-for-v3',
-				'field_class'=> 'small-text',
-				'min'        => 0.0,
-				'max'        => 1.0,
-				'step'       => 0.1,
+			'threshold_comment' => [
+				'label'             => __( 'Comment', 'cd-recaptcha' ),
+				'section_id'        => 'thresholds',
+				'type'              => 'number',
+				'class'             => 'hidden show-field-for-v3',
+				'field_class'       => 'small-text',
+				'min'               => 0.0,
+				'max'               => 1.0,
+				'step'              => 0.1,
 				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
 		];
 
 		if ( file_exists(WP_PLUGIN_DIR . '/sidebar-login') ) {
 			$fields['disable_sidebar_login_js'] = [
-				'label'      => sprintf(__( 'Disable the AJAX JavaScript from the plugin %s', 'cd-recaptcha' ),
-									sprintf('<a href="%ssidebar-login" target="_blank">%s</a>',
-										translate('https://wordpress.org/plugins/'),
-										__('Sidebar Login', 'cd-recaptcha')
-									)
-								),
-				'section_id' => 'forms',
-				'type'       => 'checkbox',
-				'desc'       => sprintf('%s</p><p class="description">%s</p><p class="description">%s', 
-									sprintf( __( 'This setting only applies if you have activated that plugin and enabled the form %s.', 'cd-recaptcha' ),
-										sprintf( '<em>%s</em>', __( 'Login', 'cd-recaptcha' ) )
-									),
-									sprintf( __( 'The problem is that this script does not submit the required information needed for the verification process. Fortunately, no errors happen. That is because "%s" sends the login requests to WordPress\' admin backend, where this reCAPTCHA plugin\'s frontend does not get loaded. However, it does mean that there is no verification of those particular login requests.', 'cd-recaptcha' ), __( 'Sidebar Login', 'cd-recaptcha' ) ) ,
-									sprintf( __( 'You are seeing this setting because "%s" is installed in this WordPress installation.', 'cd-recaptcha' ), __( 'Sidebar Login', 'cd-recaptcha' ) )
-								),
+				'label'         => sprintf(
+					__( 'Disable the AJAX JavaScript from the plugin %s', 'cd-recaptcha' ),
+					sprintf('<a href="%ssidebar-login" target="_blank">%s</a>',
+						translate('https://wordpress.org/plugins/'),
+						__('Sidebar Login', 'cd-recaptcha')
+					)
+				),
+				'section_id'    => 'forms',
+				'type'          => 'checkbox',
+				'desc'          => sprintf(
+					'%s</p><p class="description">%s</p><p class="description">%s', 
+					sprintf( __( 'This setting only applies if you have activated that plugin and enabled the form %s.', 'cd-recaptcha' ),
+						sprintf( '<em>%s</em>', __( 'Login', 'cd-recaptcha' ) )
+					),
+					sprintf( __( 'The problem is that this script does not submit the required information needed for the verification process. Fortunately, no errors happen. That is because "%s" sends the login requests to WordPress\' admin backend, where this reCAPTCHA plugin\'s frontend does not get loaded. However, it does mean that there is no verification of those particular login requests.', 'cd-recaptcha' ), __( 'Sidebar Login', 'cd-recaptcha' ) ) ,
+					sprintf( __( 'You are seeing this setting because "%s" is installed in this WordPress installation.', 'cd-recaptcha' ), __( 'Sidebar Login', 'cd-recaptcha' ) )
+				),
 			];
 		}
 
@@ -753,112 +771,117 @@ class Settings {
 
 		if ( is_main_site()  ) {
 			$log_fields = [
-				'recaptcha_log'  => [ 
-					'label'      => __( 'Enable logging of reCAPTCHA\'s JSON response data', 'cd-recaptcha' ),
-					'section_id' => 'logging',
-					'type'       => 'checkbox',
-					'desc'       => sprintf('%s</p><p class="description">%s</p><p class="description">%s',
-										/* translators: 1: WP_DEBUG, 2: WP_DEBUG_LOG, 3: true */
-										sprintf( __( 'Setting both %1$s and %2$s to %3$s will automatically enable this.', 'cd-recaptcha' ), '<code>WP_DEBUG</code>', '<code>WP_DEBUG_LOG</code>', '<code>true</code>' ),
-										/* translators: 1: /wp-content, 2: Path to log directory */
-										sprintf( __( 'The log files are by default written to the %1$s directory, but that can be changed using the setting "%2$s".', 'cd-recaptcha' ),
-											'<code>/wp-content</code>',
-											sprintf( '<strong>%s</strong>', __( 'Path to log directory', 'cd-recaptcha' ) )
-										),
-										sprintf( __( 'The text format used is %s.', 'cd-recaptcha' ), 
-											sprintf('<a href="https://jsonlines.org" target="_blank">%s</a>', __( 'JSON Lines' , 'cd-recaptcha' ) )
-										)
-									),
+				'recaptcha_log' => [ 
+					'label'        => __( 'Enable logging of reCAPTCHA\'s JSON response data', 'cd-recaptcha' ),
+					'section_id'   => 'logging',
+					'type'         => 'checkbox',
+					'desc'         => sprintf(
+						'%s</p><p class="description">%s</p><p class="description">%s',
+						/* translators: 1: WP_DEBUG, 2: WP_DEBUG_LOG, 3: true */
+						sprintf( __( 'Setting both %1$s and %2$s to %3$s will automatically enable this.', 'cd-recaptcha' ), '<code>WP_DEBUG</code>', '<code>WP_DEBUG_LOG</code>', '<code>true</code>' ),
+						/* translators: 1: /wp-content, 2: Path to log directory */
+						sprintf( __( 'The log files are by default written to the %1$s directory, but that can be changed using the setting "%2$s".', 'cd-recaptcha' ),
+							'<code>/wp-content</code>',
+							sprintf( '<strong>%s</strong>', __( 'Path to log directory', 'cd-recaptcha' ) )
+						),
+						sprintf( __( 'The text format used is %s.', 'cd-recaptcha' ), 
+							sprintf('<a href="https://jsonlines.org" target="_blank">%s</a>', __( 'JSON Lines' , 'cd-recaptcha' ) )
+						)
+					),
 				],
-				'recaptcha_log_ip'  => [ 
-					'label'      => __( 'Add the client\'s IP address to the JSON response data', 'cd-recaptcha' ),
-					'section_id' => 'logging',
-					'type'       => 'checkbox',
+				'recaptcha_log_ip' => [ 
+					'label'        => __( 'Add the client\'s IP address to the JSON response data', 'cd-recaptcha' ),
+					'section_id'   => 'logging',
+					'type'         => 'checkbox',
 				],
-				'recaptcha_log_rotate_interval'  => [ 
-					'label'      => __( 'reCAPTCHA log\'s rotate interval', 'cd-recaptcha' ),
-					'section_id' => 'logging',
-					'type'       => 'radio',
-					'std'        => $this->config->get_default('recaptcha_log_rotate_interval'),
-					'options'    => [
-						'never'   => __( 'Never', 'cd-recaptcha' ),
-						'daily'   => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Daily', 'cd-recaptcha' ), gmdate($this->config->get_date_format('daily'))),
-						'weekly'  => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Weekly', 'cd-recaptcha' ), gmdate($this->config->get_date_format('weekly'))),
-						'monthly' => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Monthly', 'cd-recaptcha' ), gmdate($this->config->get_date_format('monthly'))),
-						'yearly'  => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Yearly', 'cd-recaptcha' ), gmdate($this->config->get_date_format('yearly'))),
+				'recaptcha_log_rotate_interval' => [ 
+					'label'         => __( 'reCAPTCHA log\'s rotate interval', 'cd-recaptcha' ),
+					'section_id'    => 'logging',
+					'type'          => 'radio',
+					'std'           => $this->config->get_default('recaptcha_log_rotate_interval'),
+					'options'       => [
+						'never'         => __( 'Never', 'cd-recaptcha' ),
+						'daily'         => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Daily', 'cd-recaptcha' ), gmdate($this->config->get_date_format('daily'))),
+						'weekly'        => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Weekly', 'cd-recaptcha' ), gmdate($this->config->get_date_format('weekly'))),
+						'monthly'       => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Monthly', 'cd-recaptcha' ), gmdate($this->config->get_date_format('monthly'))),
+						'yearly'        => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Yearly', 'cd-recaptcha' ), gmdate($this->config->get_date_format('yearly'))),
 					],
-					'desc'       => sprintf( __( 'Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ),
-										sprintf( '<a href="https://www.iso.org/standard/40874.html" target="_blank">%s</a>',
-											__( 'ISO 8601' , 'cd-recaptcha')
-										)
-								),
+					'desc'          => sprintf(
+						__( 'Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ),
+						sprintf( '<a href="https://www.iso.org/standard/40874.html" target="_blank">%s</a>',
+							__( 'ISO 8601' , 'cd-recaptcha')
+						)
+					),
 				],
-				'debug_log'  => [ 
-					'label'      => __( 'Enable debug logging', 'cd-recaptcha' ),
-					'section_id' => 'logging',
-					'type'       => 'checkbox',
-					'desc'       => sprintf('%s %s </p><p class="description">%s',
-										__( 'This only applies to this plugin.', 'cd-recaptcha' ),
-										/* translators: 1: WP_DEBUG, 2: WP_DEBUG_LOG, 3: true */
-										sprintf( __( 'Setting both %1$s and %2$s to %3$s will automatically enable this.', 'cd-recaptcha' ),
-											'<code>WP_DEBUG</code>',
-											'<code>WP_DEBUG_LOG</code>',
-											'<code>true</code>'
-										),
-										/* translators: 1: Separate debug log, 2: PHP has been set up to do it */
-										sprintf( __( 'Important to note that if debug logging in WordPress is off, you should enable the setting "%1$s". If not, the the messages will be logged where %2$s.', 'cd-recaptcha' ),
-											sprintf( '<strong>%s</strong>',
-												__( 'Separate debug log', 'cd-recaptcha' )
-									),
-											sprintf( '<a href="https://www.php.net/manual/en/errorfunc.configuration.php#ini.error-log" target="_blank">%s</a>',
-												__( 'PHP has been set up to do it', 'cd-recaptcha' )
-											)
-										)
-									),
+				'debug_log' => [ 
+					'label'         => __( 'Enable debug logging', 'cd-recaptcha' ),
+					'section_id'    => 'logging',
+					'type'          => 'checkbox',
+					'desc'          => sprintf(
+						'%s %s </p><p class="description">%s',
+						__( 'This only applies to this plugin.', 'cd-recaptcha' ),
+						/* translators: 1: WP_DEBUG, 2: WP_DEBUG_LOG, 3: true */
+						sprintf( __( 'Setting both %1$s and %2$s to %3$s will automatically enable this.', 'cd-recaptcha' ),
+							'<code>WP_DEBUG</code>',
+							'<code>WP_DEBUG_LOG</code>',
+							'<code>true</code>'
+						),
+						/* translators: 1: Separate debug log, 2: PHP has been set up to do it */
+						sprintf( __( 'Important to note that if debug logging in WordPress is off, you should enable the setting "%1$s". If not, the the messages will be logged where %2$s.', 'cd-recaptcha' ),
+							sprintf( '<strong>%s</strong>',
+								__( 'Separate debug log', 'cd-recaptcha' )
+							),
+							sprintf( '<a href="https://www.php.net/manual/en/errorfunc.configuration.php#ini.error-log" target="_blank">%s</a>',
+								__( 'PHP has been set up to do it', 'cd-recaptcha' )
+							)
+						)
+					),
 				],
-				'debug_log_separate'  => [ 
-					'label'      => __( 'Separate debug log', 'cd-recaptcha' ),
-					'section_id' => 'logging',
-					'type'       => 'checkbox',
-					'desc'       => sprintf('%s</p><p class="description">%s</p><p class="description">%s</p><p class="description">%s.',
-										sprintf( __( 'When debug logging in WordPress is enabled, the log is by default written to %s.' , 'cd-recaptcha' ), '<code>/wp-content/debug.log</code>' ),
-										__( 'By enabling this option, this plugin\'s debug log will be written to a separate file in the same directory.' , 'cd-recaptcha' ),
-										sprintf( __( 'However, this directory can be changed either by specifying a different file with %s (example: "%s") or by specifying your own directory using the setting "%s".' , 'cd-recaptcha' ),
-											'<code>WP_DEBUG_LOG</code>',
-											sprintf('<samp>%s</samp>',
-												strtolower(substr(php_uname('s'),0,3)) == 'win' ? __( 'c:\path\to\debug.log', 'cd-recaptcha' ) : __( '/path/to/debug.log', 'cd-recaptcha' )
-											),
-											sprintf( '<strong>%s</strong>', __( 'Path to log directory', 'cd-recaptcha' ) ) 
-										),
-										sprintf('<a href="https://wordpress.org/documentation/article/debugging-in-wordpress/" target="_blank">%s</a>',__('Read more about debugging in WordPress', 'cd-recaptcha'))
-									),
+				'debug_log_separate' => [ 
+					'label'         => __( 'Separate debug log', 'cd-recaptcha' ),
+					'section_id'    => 'logging',
+					'type'          => 'checkbox',
+					'desc'          => sprintf(
+						'%s</p><p class="description">%s</p><p class="description">%s</p><p class="description">%s.',
+						sprintf( __( 'When debug logging in WordPress is enabled, the log is by default written to %s.' , 'cd-recaptcha' ), '<code>/wp-content/debug.log</code>' ),
+						__( 'By enabling this option, this plugin\'s debug log will be written to a separate file in the same directory.' , 'cd-recaptcha' ),
+						sprintf( __( 'However, this directory can be changed either by specifying a different file with %s (example: "%s") or by specifying your own directory using the setting "%s".' , 'cd-recaptcha' ),
+							'<code>WP_DEBUG_LOG</code>',
+							sprintf('<samp>%s</samp>',
+								strtolower(substr(php_uname('s'),0,3)) == 'win' ? __( 'c:\path\to\debug.log', 'cd-recaptcha' ) : __( '/path/to/debug.log', 'cd-recaptcha' )
+							),
+							sprintf( '<strong>%s</strong>', __( 'Path to log directory', 'cd-recaptcha' ) ) 
+						),
+						sprintf('<a href="https://wordpress.org/documentation/article/debugging-in-wordpress/" target="_blank">%s</a>',__('Read more about debugging in WordPress', 'cd-recaptcha'))
+					),
 				],
-				'debug_log_rotate_interval'  => [ 
-					'label'      => __( 'Debug log\'s rotate interval', 'cd-recaptcha' ),
-					'section_id' => 'logging',
-					'type'       => 'radio',
-					'std'        => $this->config->get_default('debug_log_rotate_interval'),
-					'options'    => [
-						'never'   => __( 'Never', 'cd-recaptcha' ),
-						'daily'   => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Daily', 'cd-recaptcha' ), gmdate($this->config->get_date_format('daily'))),
-						'weekly'  => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Weekly', 'cd-recaptcha' ), gmdate($this->config->get_date_format('weekly'))),
-						'monthly' => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Monthly', 'cd-recaptcha' ), gmdate($this->config->get_date_format('monthly'))),
-						'yearly'  => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Yearly', 'cd-recaptcha' ), gmdate($this->config->get_date_format('yearly'))),
+				'debug_log_rotate_interval' => [ 
+					'label'         => __( 'Debug log\'s rotate interval', 'cd-recaptcha' ),
+					'section_id'    => 'logging',
+					'type'          => 'radio',
+					'std'           => $this->config->get_default('debug_log_rotate_interval'),
+					'options'       => [
+						'never'         => __( 'Never', 'cd-recaptcha' ),
+						'daily'         => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Daily', 'cd-recaptcha' ), gmdate($this->config->get_date_format('daily'))),
+						'weekly'        => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Weekly', 'cd-recaptcha' ), gmdate($this->config->get_date_format('weekly'))),
+						'monthly'       => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Monthly', 'cd-recaptcha' ), gmdate($this->config->get_date_format('monthly'))),
+						'yearly'        => sprintf( '<span class="date-time-text">%s</span><code>%s</code>', __( 'Yearly', 'cd-recaptcha' ), gmdate($this->config->get_date_format('yearly'))),
 					],
-					'desc'       => sprintf('%s %s',
-										__( 'Only applicable if you have chosen to have a separate debug log.', 'cd-recaptcha' ),
-										sprintf(__( 'Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ),
-											sprintf('<a href="https://www.iso.org/standard/40874.html" target="_blank">%s</a>',
-											__( 'ISO 8601' , 'cd-recaptcha'))
-										)
-									),
+					'desc'          => sprintf(
+						'%s %s',
+						__( 'Only applicable if you have chosen to have a separate debug log.', 'cd-recaptcha' ),
+						sprintf(__( 'Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ),
+							sprintf('<a href="https://www.iso.org/standard/40874.html" target="_blank">%s</a>',
+							__( 'ISO 8601' , 'cd-recaptcha'))
+						)
+					),
 				],
-				'debug_log_min_level'  => [ 
-					'label'      => __( 'Debug log\'s minimum level', 'cd-recaptcha' ),
-					'section_id' => 'logging',
-					'type'       => 'select',
-					'std'        => $this->config->get_default('debug_log_min_level'),
-					'options'    => [
+				'debug_log_min_level' => [ 
+					'label'         => __( 'Debug log\'s minimum level', 'cd-recaptcha' ),
+					'section_id'    => 'logging',
+					'type'          => 'select',
+					'std'           => $this->config->get_default('debug_log_min_level'),
+					'options'       => [
 						sprintf( '*%s*', __( 'Disabled', 'cd-recaptcha' ) ),
 						__( 'Error', 'cd-recaptcha' ),
 						__( 'Warning', 'cd-recaptcha' ),
@@ -866,24 +889,25 @@ class Settings {
 						__( 'Info', 'cd-recaptcha' ),
 						__( 'Debug', 'cd-recaptcha' ),
 					],
-					'desc'       => __('The minimum required severity level that messages must have for them to be written to the log.', 'cd-recaptcha' ),
+					'desc'       => __( 'The minimum required severity level that messages must have for them to be written to the log.', 'cd-recaptcha' ),
 				],
-				'log_directory'  => [ 
-					'label'      => __( 'Path to log directory', 'cd-recaptcha' ),
-					'section_id' => 'logging',
-					'type'       => 'text',
-					'field_class'=> 'regular-text',
-					'desc'       => sprintf('%s %s</p><p class="description">%s</p><p class="description">%s',
-									__( 'Specify your own directory where the log files will be stored.', 'cd-recaptcha' ),
-									__( 'Using an absolute path is recommended.', 'cd-recaptcha'),
-									__( 'If you are logging to a directory that is web accessible, then you should take measures to prevent people from accessing the logs.', 'cd-recaptcha' ),
-									/* translators: 1: .htaccess , 2: Code example #1, 3: Code example #2  */
-									sprintf( __( 'One way of doing that is to create a %1$s file in that directory you are logging to and add something like this: %2$s Or this: %3$s', 'cd-recaptcha' ),
-										'<code>.htaccess</code>',
-										'<code class="code-pre">RedirectMatch 404 ".*\.(log|jsonl)$"</code>',
-										"<code class=\"code-pre\">&lt;Files ~ \".*\.(log|jsonl)$\"&gt;\n\tRedirect 404\n&lt;/Files&gt;</code>"
-									)
-								),
+				'log_directory' => [ 
+					'label'             => __( 'Path to log directory', 'cd-recaptcha' ),
+					'section_id'        => 'logging',
+					'type'              => 'text',
+					'field_class'       => 'regular-text',
+					'desc'              => sprintf(
+						'%s %s</p><p class="description">%s</p><p class="description">%s',
+						__( 'Specify your own directory where the log files will be stored.', 'cd-recaptcha' ),
+						__( 'Using an absolute path is recommended.', 'cd-recaptcha'),
+						__( 'If you are logging to a directory that is web accessible, then you should take measures to prevent people from accessing the logs.', 'cd-recaptcha' ),
+						/* translators: 1: .htaccess , 2: Code example #1, 3: Code example #2  */
+						sprintf( __( 'One way of doing that is to create a %1$s file in that directory you are logging to and add something like this: %2$s Or this: %3$s', 'cd-recaptcha' ),
+							'<code>.htaccess</code>',
+							'<code class="code-pre">RedirectMatch 404 ".*\.(log|jsonl)$"</code>',
+							'<code class="code-pre">&lt;Files ~ ".*\.(log|jsonl)$"&gt;&#x0a;&#x9;Redirect 404&#x0a&lt;/Files&gt;</code>'
+						)
+					),
 					'sanitize_callback' => function($value) {
 						return $this->sanitize_directory_path($value, $this->config->get_default('log_directory'));
 					},
@@ -896,14 +920,14 @@ class Settings {
 		foreach ( $fields as $field_id => $field ) {
 			$fields[ $field_id ] = wp_parse_args(
 				$field, [
-					'id'         => $field_id,
-					'label'      => '',
-					'cb_label'   => '',
-					'type'       => 'text',
-					'class'      => '',
-					'section_id' => '',
-					'desc'       => '',
-					'std'        => '',
+					'id'            => $field_id,
+					'label'         => '',
+					'cb_label'      => '',
+					'type'          => 'text',
+					'class'         => '',
+					'section_id'    => '',
+					'desc'          => '',
+					'std'           => '',
 				]
 			);
 		}
@@ -978,7 +1002,7 @@ class Settings {
 				break;
 			case 'multicheck':
 				$field_options = '';
-				if ( isset($field['options']) ) {
+				if ( isset($field['options']) && is_array($field['options']) ) {
 					foreach ( $field['options'] as $key => $label ) {
 						$field_options = sprintf( '%8$s<label><input type="checkbox" id="%3$s_%1$s_%2$s" name="%3$s[%1$s][]" value="%2$s"%4$s %5$s/> %6$s</label>%7$s',
 							esc_attr( $field['id'] ), // 1
@@ -1000,7 +1024,7 @@ class Settings {
 				break;
 			case 'radio':
 				$field_options = '';
-				if ( isset($field['options']) ) {
+				if ( isset($field['options']) && is_array($field['options']) ) {
 					foreach ( $field['options'] as $key => $label ) {
 						$field_options = sprintf( '%8$s<label><input type="radio" id="%3$s_%1$s_%2$s" name="%3$s[%1$s]" value="%2$s"%4$s %5$s/> %6$s</label>%7$s',
 							esc_attr( $field['id'] ), // 1
@@ -1018,7 +1042,7 @@ class Settings {
 				break;
 			case 'select':
 				$field_options = '';
-				if ( isset($field['options']) ) {
+				if ( isset($field['options']) && is_array($field['options']) ) {
 					foreach ( $field['options'] as $key => $label ) {
 						$field_options = sprintf( '%4$s<option value="%1$s"%2$s>%3$s</option>',
 							esc_attr( $key ), // 1
