@@ -310,7 +310,7 @@ class Frontend {
 	 */
 	function login_enqueue_scripts() {
 		if ( $this->recaptcha_version  == 'v2_checkbox' && $this->config->get_option( 'v2_checkbox_add_css' ) && $this->config->get_option( 'v2_checkbox_size' ) != 'compact' ) {
-			wp_enqueue_style( $this->config->get_prefix().'-login', plugins_url( '/', $this->config->get_file() ) . 'assets/css/loginform.css', [], $this->config->get_current_version() );
+			wp_enqueue_style( $this->config->get_prefix().'-login', plugins_url( '/assets/css/loginform.css', $this->config->get_file() ), [], $this->config->get_current_version() );
 		}
 	}
 
@@ -843,7 +843,7 @@ SCRIPT;
 	 * @return void
 	 */
 	function form_field() {
-		echo $this->form_field_return();
+		echo $this->captcha_form_field();
 	}
 
 	/**
@@ -900,9 +900,7 @@ SCRIPT;
 	 */
 	function login_form_return( $field = '' ) {
 		$this->current_form = 'login';
-		$field = $this->form_field_return( $field );
-
-		return $field;
+		return $this->form_field_return($field);
 	}
 	
 	/**
@@ -927,13 +925,14 @@ SCRIPT;
 	 * @link https://developer.wordpress.org/reference/hooks/signup_blogform/
 	 *
 	 * @since 1.0.0
-	 * @param mixed $errors 
+	 * @param WP_Error $errors 
 	 *
 	 * @return void
 	 */
 	function ms_form_field( $errors ) {
-		if ( $errmsg = $errors->get_error_message( $this->error_code ) ) {
-			echo '<p class="error">' . $errmsg . '</p>';
+		$errmsg = $errors->get_error_message( $this->error_code );
+		if ( !empty($errmsg) ) {
+			printf('<p class="error">%s</p>', $errmsg);
 		}
 		$this->current_form = 'ms_user_signup';
 		$this->form_field();
