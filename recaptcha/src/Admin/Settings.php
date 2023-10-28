@@ -373,9 +373,10 @@ class Settings {
 					'v3'            => __( 'v3', 'cd-recaptcha' ),
 				],
 				'desc'          => sprintf(
-					__( 'Select your reCAPTCHA version. Make sure to use keys for your selected version. %s.', 'cd-recaptcha' ),
-					sprintf( '<a href="https://developers.google.com/recaptcha/docs/versions" target="_blank">%s</a>',
-						__( 'Read more about the versions', 'cd-recaptcha' )
+					__( 'Select your reCAPTCHA version. Make sure to use keys for your selected version. %s', 'cd-recaptcha' ),
+					sprintf( '<a href="https://developers.google.com/recaptcha/docs/versions" target="_blank">%s<span class="screen-reader-text"> %s</span></a>',
+						__( 'Read more about the versions', 'cd-recaptcha' ),
+						translate('(opens in a new tab)')
 					)
 				),
 			],
@@ -385,9 +386,10 @@ class Settings {
 				'class'         => 'hidden show-field-for-v2_checkbox',
 				'field_class'   => 'regular-text',
 				'desc'          => sprintf(
-					__( 'The public site key is used to load the widget. %s.', 'cd-recaptcha' ), 
-					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
-						__( 'Keys can be obtained here', 'cd-recaptcha' )
+					__( 'The public site key is used to load the widget. %s', 'cd-recaptcha' ), 
+					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s<span class="screen-reader-text"> %s</span></a>', 
+						__( 'Keys can be obtained here', 'cd-recaptcha' ),
+						translate('(opens in a new tab)')
 					)
 				),
 			],
@@ -398,9 +400,10 @@ class Settings {
 				'class'         => 'hidden show-field-for-v2_checkbox',
 				'field_class'   => 'regular-text',
 				'desc'          => sprintf(
-					__( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s.', 'cd-recaptcha' ), 
-					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
-						__( 'Keys can be obtained here', 'cd-recaptcha' )
+					__( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s', 'cd-recaptcha' ), 
+					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s<span class="screen-reader-text"> %s</span></a>', 
+						__( 'Keys can be obtained here', 'cd-recaptcha' ),
+						translate('(opens in a new tab)')
 					)
 				),
 			],
@@ -410,9 +413,10 @@ class Settings {
 				'class'         => 'hidden show-field-for-v2_invisible',
 				'field_class'   => 'regular-text',
 				'desc'          => sprintf(
-					__( 'The public site key is used to load the widget. %s.', 'cd-recaptcha' ), 
-					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
-						__( 'Keys can be obtained here', 'cd-recaptcha' )
+					__( 'The public site key is used to load the widget. %s', 'cd-recaptcha' ), 
+					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s<span class="screen-reader-text"> %s</span></a>', 
+						__( 'Keys can be obtained here', 'cd-recaptcha' ),
+						translate('(opens in a new tab)')
 					)
 				),
 			],
@@ -423,11 +427,12 @@ class Settings {
 				'class'         => 'hidden show-field-for-v2_invisible',
 				'field_class'   => 'regular-text',
 				'desc'		 => sprintf(
-					__( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s.', 'cd-recaptcha' ), 
-						sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
-							__( 'Keys can be obtained here', 'cd-recaptcha' )
-						)
-					),
+					__( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s', 'cd-recaptcha' ), 
+					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s<span class="screen-reader-text"> %s</span></a>', 
+						__( 'Keys can be obtained here', 'cd-recaptcha' ),
+						translate('(opens in a new tab)')
+					)
+				),
 			],
 			'v3_site_key' => [
 				'label'         => __( 'Site Key', 'cd-recaptcha' ),
@@ -435,9 +440,10 @@ class Settings {
 				'class'         => 'hidden show-field-for-v3',
 				'field_class'   => 'regular-text',
 				'desc'          => sprintf(
-					__( 'The public site key is used to load the widget. %s.', 'cd-recaptcha' ), 
-					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
-						__( 'Keys can be obtained here', 'cd-recaptcha' )
+					__( 'The public site key is used to load the widget. %s', 'cd-recaptcha' ), 
+					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s<span class="screen-reader-text"> %s</span></a>', 
+						__( 'Keys can be obtained here', 'cd-recaptcha' ),
+						translate('(opens in a new tab)')
 					)
 				),
 			],
@@ -448,9 +454,10 @@ class Settings {
 				'class'         => 'hidden show-field-for-v3',
 				'field_class'   => 'regular-text',
 				'desc'          => sprintf(
-					__( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s.', 'cd-recaptcha' ), 
-					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s</a>', 
-						__( 'Keys can be obtained here', 'cd-recaptcha' )
+					__( 'The private secret key is for communication between your site and the reCAPTCHA verification server. %s', 'cd-recaptcha' ), 
+					sprintf( '<a href="https://www.google.com/recaptcha" target="_blank">%s<span class="screen-reader-text"> %s</span></a>', 
+						__( 'Keys can be obtained here', 'cd-recaptcha' ),
+						translate('(opens in a new tab)')
 					)
 				),
 			],
@@ -496,18 +503,21 @@ class Settings {
 				'desc'          => sprintf(
 					/* translators: 1: recaptcha.net 2: google.com */
 					__( 'The domain to fetch the script from, and to use when verifying requests. Use %1$s when %2$s is not accessible.', 'cd-recaptcha' ),
-						'<samp>recaptcha.net</samp>',
-						'<samp>google.com</samp>'
-					),
+					'<samp>recaptcha.net</samp>',
+					'<samp>google.com</samp>'
+				),
 			],
 			'verify_origin' => [
 				'label'         => __( 'Verify origin of the solutions', 'cd-recaptcha' ),
 				'section_id'    => 'general',
 				'type'          => 'checkbox',
 				'desc'          => sprintf(
-					__( 'This is only required if you have chosen not to have Google do this verification. %s.', 'cd-recaptcha' ),
-						sprintf( '<a href="https://developers.google.com/recaptcha/docs/domain_validation" target="_blank">%s</a>', __( 'Read more about domain validation', 'cd-recaptcha' ) )
-					),
+					__( 'This is only required if you have chosen not to have Google do this verification. %s', 'cd-recaptcha' ),
+					sprintf( '<a href="https://developers.google.com/recaptcha/docs/domain_validation" target="_blank">%s<span class="screen-reader-text"> %s</span></a>', 
+						__( 'Read more about domain validation', 'cd-recaptcha' ),
+						translate('(opens in a new tab)')
+					)
+				),
 			],
 			'require_remote_ip' => [
 				'label'         => __( 'Require the client\'s IP address', 'cd-recaptcha' ),
@@ -520,9 +530,10 @@ class Settings {
 				'section_id'    => 'general',
 				'field_class'   => 'small-text',
 				'desc'          => sprintf(
-					__( 'Language of the widget. Leave it blank to auto-detect the language. %s.', 'cd-recaptcha' ),
-					sprintf('<a href="https://developers.google.com/recaptcha/docs/language" target="_blank">%s</a>',
-						__('Read more about language codes', 'cd-recaptcha' )
+					__( 'Language of the widget. Leave it blank to auto-detect the language. %s', 'cd-recaptcha' ),
+					sprintf('<a href="https://developers.google.com/recaptcha/docs/language" target="_blank">%s<span class="screen-reader-text"> %s</span></a>',
+						__('Read more about language codes', 'cd-recaptcha' ),
+						translate('(opens in a new tab)')
 					)
 				),
 			],
@@ -555,9 +566,9 @@ class Settings {
 				'desc'       => sprintf(
 					/* translators: 1: Automatic, 2: Compact, 3: Normal */
 					__( 'Size of the widget. Select %1$s to automatically set the size to %2$s if the area is too narrow for %3$s.', 'cd-recaptcha' ),
-						sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) ),
-						sprintf( '<i>%s</i>', __( 'Compact', 'cd-recaptcha' ) ),
-						sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) )
+					sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) ),
+					sprintf( '<i>%s</i>', __( 'Compact', 'cd-recaptcha' ) ),
+					sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) )
 				),
 			],
 			'v2_checkbox_add_css' => [
@@ -569,9 +580,9 @@ class Settings {
 				'desc'          => sprintf(
 					/* translators: 1: Normal, 2: Automatic */
 					__( 'This stylesheet increases the width of the container element that holds the login form. This is to fit in the widget better. Only applicable if you have selected %1$s or %2$s as size.', 'cd-recaptcha' ),
-						sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) ),
-						sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
-					),
+					sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) ),
+					sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
+				),
 			],
 			'badge' => [
 				'label'         => __( 'Placement', 'cd-recaptcha' ),
@@ -739,9 +750,10 @@ class Settings {
 			$fields['disable_sidebar_login_js'] = [
 				'label'         => sprintf(
 					__( 'Disable the AJAX JavaScript from the plugin %s', 'cd-recaptcha' ),
-					sprintf('<a href="%ssidebar-login" target="_blank">%s</a>',
+					sprintf('<a href="%ssidebar-login" target="_blank">%s<span class="screen-reader-text"> %s</span></a>',
 						translate('https://wordpress.org/plugins/'),
-						__('Sidebar Login', 'cd-recaptcha')
+						__('Sidebar Login', 'cd-recaptcha'),
+						translate('(opens in a new tab)')
 					)
 				),
 				'section_id'    => 'forms',
@@ -784,8 +796,11 @@ class Settings {
 							'<code>/wp-content</code>',
 							sprintf( '<strong>%s</strong>', __( 'Path to log directory', 'cd-recaptcha' ) )
 						),
-						sprintf( __( 'The text format used is %s.', 'cd-recaptcha' ), 
-							sprintf('<a href="https://jsonlines.org" target="_blank">%s</a>', __( 'JSON Lines' , 'cd-recaptcha' ) )
+						sprintf( __( 'The text format used is %s', 'cd-recaptcha' ), 
+							sprintf('<a href="https://jsonlines.org" target="_blank">%s<span class="screen-reader-text"> %s</span></a>',
+								__( 'JSON Lines' , 'cd-recaptcha' ),
+								translate('(opens in a new tab)')
+							)
 						)
 					),
 				],
@@ -808,8 +823,9 @@ class Settings {
 					],
 					'desc'          => sprintf(
 						__( 'Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ),
-						sprintf( '<a href="https://www.iso.org/standard/40874.html" target="_blank">%s</a>',
-							__( 'ISO 8601' , 'cd-recaptcha')
+						sprintf( '<a href="https://www.iso.org/standard/40874.html" target="_blank">%s<span class="screen-reader-text"> %s</span></a>',
+							__( 'ISO 8601' , 'cd-recaptcha'),
+							translate('(opens in a new tab)')
 						)
 					),
 				],
@@ -827,12 +843,13 @@ class Settings {
 							'<code>true</code>'
 						),
 						/* translators: 1: Separate debug log, 2: PHP has been set up to do it */
-						sprintf( __( 'Important to note that if debug logging in WordPress is off, you should enable the setting "%1$s". If not, the the messages will be logged where %2$s.', 'cd-recaptcha' ),
+						sprintf( __( 'Important to note that if debug logging in WordPress is off, you should enable the setting "%1$s". If not, the the messages will be logged where %2$s', 'cd-recaptcha' ),
 							sprintf( '<strong>%s</strong>',
 								__( 'Separate debug log', 'cd-recaptcha' )
 							),
-							sprintf( '<a href="https://www.php.net/manual/en/errorfunc.configuration.php#ini.error-log" target="_blank">%s</a>',
-								__( 'PHP has been set up to do it', 'cd-recaptcha' )
+							sprintf( '<a href="https://www.php.net/manual/en/errorfunc.configuration.php#ini.error-log" target="_blank">%s<span class="screen-reader-text"> %s</span></a>',
+								__( 'PHP has been set up to do it', 'cd-recaptcha' ),
+								translate('(opens in a new tab)')
 							)
 						)
 					),
@@ -842,7 +859,7 @@ class Settings {
 					'section_id'    => 'logging',
 					'type'          => 'checkbox',
 					'desc'          => sprintf(
-						'%s</p><p class="description">%s</p><p class="description">%s</p><p class="description">%s.',
+						'%s</p><p class="description">%s</p><p class="description">%s</p><p class="description">%s',
 						sprintf( __( 'When debug logging in WordPress is enabled, the log is by default written to %s.' , 'cd-recaptcha' ), '<code>/wp-content/debug.log</code>' ),
 						__( 'By enabling this option, this plugin\'s debug log will be written to a separate file in the same directory.' , 'cd-recaptcha' ),
 						sprintf( __( 'However, this directory can be changed either by specifying a different file with %s (example: "%s") or by specifying your own directory using the setting "%s".' , 'cd-recaptcha' ),
@@ -852,7 +869,10 @@ class Settings {
 							),
 							sprintf( '<strong>%s</strong>', __( 'Path to log directory', 'cd-recaptcha' ) ) 
 						),
-						sprintf('<a href="https://wordpress.org/documentation/article/debugging-in-wordpress/" target="_blank">%s</a>',__('Read more about debugging in WordPress', 'cd-recaptcha'))
+						sprintf('<a href="https://wordpress.org/documentation/article/debugging-in-wordpress/" target="_blank">%s<span class="screen-reader-text"> %s</span></a>',
+							__('Read more about debugging in WordPress', 'cd-recaptcha'),
+							translate('(opens in a new tab)')
+						)
 					),
 				],
 				'debug_log_rotate_interval' => [ 
@@ -871,8 +891,10 @@ class Settings {
 						'%s %s',
 						__( 'Only applicable if you have chosen to have a separate debug log.', 'cd-recaptcha' ),
 						sprintf(__( 'Uses UTC/GMT time with a %s date format.', 'cd-recaptcha' ),
-							sprintf('<a href="https://www.iso.org/standard/40874.html" target="_blank">%s</a>',
-							__( 'ISO 8601' , 'cd-recaptcha'))
+							sprintf('<a href="https://www.iso.org/standard/40874.html" target="_blank">%s<span class="screen-reader-text"> %s</span></a>',
+								__( 'ISO 8601' , 'cd-recaptcha'),
+								translate('(opens in a new tab)')
+							)
 						)
 					),
 				],

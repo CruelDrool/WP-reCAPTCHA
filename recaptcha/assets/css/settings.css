@@ -58,3 +58,24 @@ code.code-pre {
 	box-shadow: none;
 	transform: none;
 }
+
+form a[target="_blank"] {
+	white-space: nowrap;
+}
+
+form a[target="_blank"]:after {
+	margin-left: 2px;
+	display: inline-block;
+	font-family: "dashicons";
+	content: "\f504";
+	content: "\f504" / "";
+	line-height: 0;
+	font-size: 20px;
+	position: relative;
+	top: 4px;
+	font-weight: normal;
+}
+
+form a[target="_blank"]:after, form a[target="_blank"]:hover:after {
+	text-decoration:none;
+}
