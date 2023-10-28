@@ -606,12 +606,12 @@ class Frontend {
 	function v2_checkbox_script() {
 		?>
 		<script>
-			var <?php echo $this->onload_callback_name ?> = function() {<?php
-				echo $this->javascript_set_theme(); ?> 
+			var <?= $this->onload_callback_name ?> = function() {<?=
+				$this->javascript_set_theme() ?> 
 
 				for ( var i = 0; i < document.forms.length; i++ ) {
 					var form = document.forms[i];
-					var captcha_div = form.querySelector( '.<?php echo $this->captcha_div_class ?>' );
+					var captcha_div = form.querySelector( '.<?= $this->captcha_div_class ?>' );
 
 					if ( captcha_div === null )
 						continue;
@@ -621,12 +621,12 @@ class Frontend {
 					if ($size == 'auto' ) : ?> 
 					var size = ( captcha_div.parentNode.offsetWidth < 302 && captcha_div.parentNode.offsetWidth != 0 || document.body.scrollWidth < 302 ) ? 'compact' : 'normal';
 					<?php else : ?> 
-					var size = '<?php echo esc_js( $size ); ?>';
+					var size = '<?= esc_js( $size ) ?>';
 					<?php endif; ?>
 
 					( function( form ) {
 						var widget_id = grecaptcha.render( captcha_div,{
-							'sitekey' : '<?php echo esc_js( trim( $this->config->get_option( 'v2_checkbox_site_key' ) ) ); ?>',
+							'sitekey' : '<?= esc_js( trim( $this->config->get_option( 'v2_checkbox_site_key' ) ) ) ?>',
 							'size'  : size,
 							'theme' : theme,
 						});
@@ -634,7 +634,7 @@ class Frontend {
 				}
 			};
 		</script>
-		<script src="<?php echo $this->get_api_script_url(); ?>" async defer></script>
+		<script src="<?= $this->get_api_script_url() ?>" async defer></script>
 		<?php
 	}
 
@@ -648,19 +648,19 @@ class Frontend {
 	function v2_invisible_script() {
 		?>
 		<script>
-			var <?php echo $this->onload_callback_name ?> = function() {<?php
+			var <?= $this->onload_callback_name ?> = function() {<?php
 				echo $this->javascript_set_theme();
 
 				$badge = $this->config->get_option( 'badge' );
 				if ($badge == 'auto') : ?> 
 				var badge = document.dir == 'rtl' ? 'bottomleft' : 'bottomright';
 				<?php else : ?> 
-				var badge = '<?php echo esc_js( $badge ); ?>';
+				var badge = '<?= esc_js( $badge ) ?>';
 				<?php endif; ?>
 
 				for ( var i = 0; i < document.forms.length; i++ ) {
 					var form = document.forms[i];
-					var captcha_div = form.querySelector( '.<?php echo $this->captcha_div_class ?>' );
+					var captcha_div = form.querySelector( '.<?= $this->captcha_div_class ?>' );
 
 					if ( captcha_div === null )
 						continue;
@@ -669,7 +669,7 @@ class Frontend {
 
 					( function( form ) {
 						var widget_id = grecaptcha.render( captcha_div,{
-							'sitekey' : '<?php echo esc_js( trim( $this->config->get_option( 'v2_invisible_site_key' ) ) ); ?>',
+							'sitekey' : '<?= esc_js( trim( $this->config->get_option( 'v2_invisible_site_key' ) ) ) ?>',
 							'size'  : 'invisible',
 							'theme' : theme,
 							'badge' : badge,
@@ -694,7 +694,7 @@ class Frontend {
 				}
 			};
 		</script>
-		<script src="<?php echo $this->get_api_script_url(); ?>" async defer></script>
+		<script src="<?= $this->get_api_script_url() ?>" async defer></script>
 		<?php
 	}
 
@@ -708,19 +708,19 @@ class Frontend {
 	function v3_script_form_pages() {
 		?>
 		<script>
-			var <?php echo $this->onload_callback_name ?> = function() {<?php
+			var <?= $this->onload_callback_name ?> = function() {<?php
 				echo $this->javascript_set_theme();
 
 				$badge = $this->config->get_option( 'badge' );
 				if ($badge == 'auto') : ?> 
 				var badge = document.dir == 'rtl' ? 'bottomleft' : 'bottomright';
 				<?php else : ?> 
-				var badge = '<?php echo esc_js( $badge ); ?>';
+				var badge = '<?= esc_js( $badge ) ?>';
 				<?php endif; ?>
 
 				for ( var i = 0; i < document.forms.length; i++ ) {
 					var form = document.forms[i];
-					var captcha_div = form.querySelector( '.<?php echo $this->captcha_div_class ?>' );
+					var captcha_div = form.querySelector( '.<?= $this->captcha_div_class ?>' );
 
 					if ( captcha_div === null )
 						continue;
@@ -729,7 +729,7 @@ class Frontend {
 
 					( function( form ) {
 						var widget_id = grecaptcha.render( captcha_div,{
-							'sitekey' : '<?php echo esc_js( trim( $this->config->get_option( 'v3_site_key' ) ) ); ?>',
+							'sitekey' : '<?= esc_js( trim( $this->config->get_option( 'v3_site_key' ) ) ) ?>',
 							'size'  : 'invisible',
 							'theme' : theme,
 							'badge' : badge,
@@ -756,7 +756,7 @@ class Frontend {
 				}
 			};
 		</script>
-		<script src="<?php echo $this->get_api_script_url(); ?>" async defer></script>
+		<script src="<?= $this->get_api_script_url() ?>" async defer></script>
 		<?php
 	}
 
@@ -769,28 +769,28 @@ class Frontend {
 	 */
 	function v3_script_all_pages() {
 		?>
-		<div id="<?php echo $this->captcha_div_class ?>"></div>
+		<div id="<?= $this->captcha_div_class ?>"></div>
 		<script>
-			var <?php echo $this->onload_callback_name ?> = function() {<?php
+			var <?= $this->onload_callback_name ?> = function() {<?php
 				echo $this->javascript_set_theme();
 
 				$badge = $this->config->get_option( 'badge' );
 				if ($badge == 'auto') : ?> 
 				var badge = document.dir == 'rtl' ? 'bottomleft' : 'bottomright';
 				<?php else : ?> 
-				var badge = '<?php echo esc_js( $badge ); ?>';
+				var badge = '<?= esc_js( $badge ) ?>';
 				<?php endif; ?>
 
-				var captcha_div = document.getElementById("<?php echo $this->captcha_div_class ?>");
+				var captcha_div = document.getElementById("<?= $this->captcha_div_class ?>");
 				grecaptcha.render(captcha_div, {
-					'sitekey' : '<?php echo esc_js( trim( $this->config->get_option( 'v3_site_key' ) ) ); ?>',
+					'sitekey' : '<?= esc_js( trim( $this->config->get_option( 'v3_site_key' ) ) ) ?>',
 					'size'  : 'invisible',
 					'theme' : theme,
 					'badge' : badge,
 				});
 			};
 		</script>
-		<script src="<?php echo $this->get_api_script_url(); ?>" async defer></script>
+		<script src="<?= $this->get_api_script_url() ?>" async defer></script>
 		<?php
 	}
 
