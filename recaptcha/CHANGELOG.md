@@ -1,4 +1,17 @@
 # Changelog
+## [1.1.2] - xxxx-xx-xx
+### Changed
+- Discovered an issue where the sanitization of the settings was happening when calling `update_option()` (`update_site_option()` when network activated on multisite) and not before. This lead to default values some times being stored in the database. The idea is to keep the stored settings free of default values.
+	- Fixed it so that sanitization is done first before saving.
+- Did some clean up of the settings page.
+	- Setting "Load on ..." changed to "Load on all pages".
+	- Section "Other" has been removed. The settings have been moved up to "General".
+	- Threshold values changed from input type `select` (dropdown) to `number`.
+	- Option "Secret Key" changed to input type `password`, with a toggle button to view the value.
+	- Log rotations changed from input type `select` (dropdown) to `radio` to better display the different date formats.
+	- Added link to article about domain validation.
+- Fix a small update mess up from 1.1.1.
+- Various code clean ups
 
 ## [1.1.1] - 2023-10-01
 ### Changed
