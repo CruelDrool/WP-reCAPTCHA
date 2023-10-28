@@ -9,9 +9,12 @@
 	- Threshold values changed from input type `select` (dropdown) to `number`.
 	- Option "Secret Key" changed to input type `password`, with a toggle button to view the value.
 	- Log rotations changed from input type `select` (dropdown) to `radio` to better display the different date formats.
-	- Added link to article about domain validation.
+	- Added link to an article about domain validation.
+	- Made textboxes using CSS class `.regular-text` a bit wider; from 25em to 28em.
+	- Added icon and screen reader text to links that open in a new tab.
 - Fix a small update mess up from 1.1.1.
-- Various code clean ups
+- Various code clean ups.
+- Translations updated.
 
 ## [1.1.1] - 2023-10-01
 ### Changed
