@@ -494,8 +494,8 @@ class Settings {
 				'label'      => __( 'Verify origin of the solutions', 'cd-recaptcha' ),
 				'section_id' => 'general',
 				'type'       => 'checkbox',
-				'desc'		 => sprintf( __( '%s This is only required if you have chosen not to have Google do this verification.', 'cd-recaptcha' ), 
-									sprintf( '<strong>%s</strong>', __( 'NB!', 'cd-recaptcha' ) )
+				'desc'		 => sprintf( __( 'This is only required if you have chosen not to have Google do this verification. %s.', 'cd-recaptcha' ),
+									sprintf( '<a href="https://developers.google.com/recaptcha/docs/domain_validation" target="_blank">%s</a>', __( 'Read more about domain validation', 'cd-recaptcha' ) )
 								),
 			],
 			'require_remote_ip'     => [
