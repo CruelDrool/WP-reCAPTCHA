@@ -1,5 +1,5 @@
 # Changelog
-## [1.1.2] - xxxx-xx-xx
+## [1.1.2] - 2023-10-28
 ### Changed
 - Discovered an issue where the sanitization of the settings was happening when calling `update_option()` (`update_site_option()` when network activated on multisite) and not before. This lead to default values some times being stored in the database. The idea is to keep the stored settings free of default values.
 	- Fixed it so that sanitization is done first before saving.
