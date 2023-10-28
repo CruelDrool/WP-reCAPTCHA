@@ -124,9 +124,14 @@ class Plugin {
 					$options['v2_checkbox_add_css'] = false;
 			}
 
-			if (version_compare( $prev_version, "1.1.1", '<' )) {
+			if (version_compare( $prev_version, "1.1.1", '<' ) && is_main_site() && is_multisite()) {
 				$options['action_ms_user_signup'] = $this->config->get_option('action_multisite_signup', 'multisite_signup');
 				$options['threshold_ms_user_signup'] = $this->config->get_option('threshold_multisite_signup', 0.5);
+			}
+
+			if ( $prev_version == '1.1.1' && !( is_main_site() && is_multisite() ) ) {
+				// Fixing a mess up from 1.1.1 update code.
+				$this->config->delete_option('action_ms_user_signup', false);
 			}
 
 			if (version_compare( $prev_version, "1.1.2", '<' )) {
