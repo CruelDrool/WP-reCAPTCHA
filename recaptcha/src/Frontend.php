@@ -191,18 +191,17 @@ class Frontend {
 	 * @return string
 	 */
 	private function get_api_script_url() {
-		$queries = http_build_query(
-			[
-				'hl'		=> trim( $this->config->get_option( 'language' ) ),
-				'onload'	=> $this->onload_callback_name,
-				'render'	=> 'explicit'
-			],'','&');
-		
-		
+		$query_data = [
+			'hl'		=> trim( $this->config->get_option( 'language' ) ),
+			'onload'	=> $this->onload_callback_name,
+			'render'	=> 'explicit'
+		];
+
 		$url = sprintf('%s?%s',
 			sprintf(self::API_URL_FORMAT, $this->config->get_domain(), '.js'),
-			$queries
-			);
+			http_build_query($query_data, '', '&')
+		);
+
 		return $url; 
 	}
 
