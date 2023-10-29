@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Emgergeny stop: in the unlikely event that the need should arise, stop the execution of this plugin's code.
  */
-if (file_exists(__DIR__ . '/disable')) {
+if ( is_file(__DIR__ . '/disable') ) {
 	return;
 }
 
