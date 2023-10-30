@@ -129,14 +129,15 @@ class Plugin {
 				$options['threshold_ms_user_signup'] = $this->config->get_option('threshold_multisite_signup', 0.5);
 			}
 
-			if ( $prev_version == '1.1.1' && !( is_main_site() && is_multisite() ) ) {
-				// Fixing a mess up from 1.1.1 update code.
-				$this->config->delete_option('action_ms_user_signup', false);
-			}
-
 			if (version_compare( $prev_version, "1.1.2", '<' )) {
 				if ($this->config->get_option('v3_script_load', 'all_pages') == 'form_pages') {
 					$options['v3_load_all_pages'] = false;
+				}
+			}
+			if (version_compare( $prev_version, "1.1.3", '<' )) {
+				if ( !( is_main_site() && is_multisite() ) ) {
+					// Fixing a mess up from the old 1.1.1 update code.
+					$this->config->delete_option(['action_ms_user_signup', 'threshold_ms_user_signup'], false);
 				}
 			}
 
