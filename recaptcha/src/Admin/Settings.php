@@ -169,6 +169,13 @@ class Settings {
 					translate( 'Visit plugin site' )
 				);
 			}
+
+			if ( extension_loaded("curl") ) {
+				$plugin_meta[] = sprintf('<a href="%s" class="thickbox open-plugin-details-modal">%s</a>',
+					plugins_url( '/changelog.php?TB_iframe=true&amp;width=600&amp;height=550', $this->config->get_file() ),
+					__( 'View changelog', 'cd-recaptcha' )
+				);
+			}
 			
 			$url = '';
 			if ( $this->config->get_is_active_for_network() && current_user_can('manage_network_options')) {
