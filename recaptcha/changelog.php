@@ -1,5 +1,15 @@
+<?php
+define('THEME', 'dark');
+define('FONT_SIZE_NORMAL', 16);
+define('FONT_SIZE_CONTENT', 16);
+define('BLOCK_MARGIN_TOP', 24);
+define('BLOCK_MARGIN_BOTTOM', 16);
+define('SLIDER_MIN', 10);
+define('SLIDER_MAX', 26);
+define('SLIDER_STEP', 1);
+?>
 <!DOCTYPE html>
-<html lang="en-gb" class="theme-dark">
+<html lang="en-gb" class="theme-<?= THEME ?>">
 	<head>
 		<title>Changelog</title>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -9,6 +19,8 @@
 				--base-text-weight-normal: 400;
 				--base-text-weight-medium: 500;
 				--base-text-weight-semibold: 600;
+				--base-text-size-normal: <?= FONT_SIZE_NORMAL?>px;
+				--base-text-line-height-normal: 1.5em;
 			}
 
 			html.theme-light {
@@ -51,15 +63,15 @@
 			body {
 				background: var(--color-canvas-default);
 				font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-				font-size: 16px;
-				line-height: 1.5em;
+				font-size: var(--base-text-size-normal);
+				line-height: var(--base-text-line-height-normal);
 				color: var(--color-fg-default);
 			}
 
 			a {
 				color: var(--color-accent-fg);
 				text-decoration: underline;
-				text-underline-offset: 0.2rem;
+				text-underline-offset: 0.2em;
 			}
 
 			a:focus {
@@ -70,43 +82,36 @@
 			h1, h2, h3, h4, h5, h6 {
 				line-height: 1.25em;
 				font-weight: var(--base-text-weight-semibold);
-				margin-top: 24px;
-				margin-bottom: 16px;
 			}
 
 			h1, h2 {
 				padding-bottom: 0.3em;
 				border-bottom: 1px solid var(--color-border-muted);
 			}
-
-			h1 {
-				font-size: 2em;
+<?php
+foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
+	printf('
+			h%s {
+				font-size: %sem;
+				margin-top: %sem;
+				margin-bottom: %sem;
 			}
-
-			h2 {
-				font-size: 1.5em;
-			}
-
-			h3 {
-				font-size: 1.25em;
-			}
-
-			h4 {
-				font-size: 1em;
-			}
-
-			h5 {
-				font-size: .875em;
-			}
+',
+		$index + 1,
+		$size,
+		BLOCK_MARGIN_TOP / (FONT_SIZE_NORMAL * $size),
+		BLOCK_MARGIN_BOTTOM  / (FONT_SIZE_NORMAL * $size)
+	);
+}
+?>
 
 			h6 {
-				font-size: .85em;
 				color: var(--color-fg-muted);
 			}
 
 			p, blockquote, ul, ol, dl, table, pre, details {
 				margin-top: 0;
-    			margin-bottom: 16px;
+    			margin-bottom: <?= BLOCK_MARGIN_BOTTOM / FONT_SIZE_NORMAL ?>em;
 			}
 
 			b, strong {
@@ -117,7 +122,7 @@
 				padding-left: 2em;
 			}
 
-			ol ol, ul ul {
+			ul ul, ul ol, ol ol, ol ul {
 				margin-top: 0;
 				margin-bottom: 0;
 			}
@@ -125,21 +130,22 @@
 			code {
 				padding: 0.2em 0.4em;
 				margin: 0;
-				font-size: 85%;
+				font-size: .85em;
 				white-space: break-spaces;
 				background-color: var(--color-neutral-muted);
 				border-radius: 6px;
 			}
 
 			pre {
-				padding: 16px;
+				padding: <?= 16 / (FONT_SIZE_NORMAL * .85) ?>em;
 				overflow: auto;
-				font-size: 85%;
+				font-size: .85em;
 				line-height: 1.45;
 				color: var(--color-fg-default);
 				background-color: var(--color-canvas-subtle);
 				border-radius: 6px;
 				word-wrap: normal;
+				margin-bottom: <?= BLOCK_MARGIN_BOTTOM / (FONT_SIZE_NORMAL * .85) ?>em;
 			}
 
 			pre code {
@@ -174,12 +180,12 @@
 				background-color: var(--color-canvas-subtle);
 			}
 
-			.markdown-body table th {
+			table th {
 				font-weight: var(--base-text-weight-semibold);
 			}
 
 			table th, table td {
-				padding: 6px 13px;
+				padding: <?= 6 / FONT_SIZE_NORMAL ?>em <?= 13 / FONT_SIZE_NORMAL ?>em;
 				border: 1px solid var(--color-border-default);
 			}
 
@@ -204,7 +210,7 @@
 				margin-top: 0;
 			}
 			#wrapper {
-				padding: 32px;
+				padding: 5px 32px 32px;
 				margin: 0 auto;
 				max-width: 1012px;
 			}
@@ -212,9 +218,6 @@
 			#themes {
 				margin: 0 auto;
 				width: fit-content;
-				margin-bottom: 16px;
-				font-size: 16px !important;
-				line-height: 1.5em;
 			}
 
 			#themes label {
@@ -225,18 +228,22 @@
 				margin: 0 5px 0 0;
 			}
 
-			article > :first-child {
+			#content {
+				clear: both;
+				font-size: <?= FONT_SIZE_CONTENT ?>px;
+				line-height: var(--base-text-line-height-normal);
+			}
+
+			#content > :first-child {
 				margin-top: 0;
 			}
 
-			article > :last-child {
+			#content > :last-child {
 				margin-bottom: 0;
 			}
 
 			#slider-container {
 				float: right;
-				line-height: 1.5em;
-				font-size: 16px !important;
 				display: flex;
 				align-items: center;
 				flex-direction: column;
@@ -253,6 +260,11 @@
 				font-size: 12px;
 			}
 
+			#slider-container span {
+				line-height: 1.3em;
+				opacity: .8;
+			}
+
 			input[type="range"] {
 				margin: 0;
 				-webkit-appearance: none;
@@ -264,6 +276,7 @@
 				--slider-thumb-color: var(--color-accent-fg);
 				--slider-thumb-box-shadow: 0px 0px 2px 1px var(--color-accent-fg);
 				--slider-track-height: 10px;
+				--slider-track-border-radius: 5px;
 				--slider-thumb-height: 20px;
 				--slider-thumb-border-radius: 50%;
 			}
@@ -271,13 +284,13 @@
 			input[type="range"]::-webkit-slider-runnable-track {
 				background: var(--slider-background);
 				height: var(--slider-track-height);
-				border-radius: 5px;
+				border-radius: var(--slider-track-border-radius);
 			}
 
 			input[type="range"]::-moz-range-track {
 				background: var(--slider-background);
 				height: var(--slider-track-height);
-				border-radius: 5px;
+				border-radius: var(--slider-track-border-radius);
 			}
 
 			input[type="range"]::-webkit-slider-thumb{
@@ -313,66 +326,40 @@
 			} */
 
 		</style>
+		<script>
+			function swap_theme (value) {
+				document.documentElement.classList='theme-' + value;
+			}
+
+			function update_font_size(value) {
+				value = value +'px';
+				document.getElementById('content').style.fontSize = value;
+				document.getElementById('slider-container').getElementsByTagName('span')[0].innerHTML = value;
+			}
+		</script>
 	</head>
 	<body>
-		<div id="wrapper">
-			
-			<main>
+		<div id="wrapper">	
+			<header>
 				<div id="slider-container">
-					<span></span>
+					<span><?= FONT_SIZE_CONTENT ?>px</span>
 					<div>
-						<span></span>
-						<input type="range" step="1">
-						<span></span>
+						<span><?= SLIDER_MIN ?>px</span>
+						<input type="range" step="<?= SLIDER_STEP ?>" min="<?= SLIDER_MIN ?>" max="<?= SLIDER_MAX ?>" value="<?= FONT_SIZE_CONTENT ?>" oninput="update_font_size(this.value)">
+						<span><?= SLIDER_MAX ?>px</span>
 					</div>
 				</div>
 				<div id="themes">
-					<label><input type="radio" name="theme" value="dark" onclick="swap_theme(this.value)">Dark</label>
-					<label><input type="radio" name="theme" value="light" onclick="swap_theme(this.value)">Light</label>
-					<label><input type="radio" name="theme" value="light-grey" onclick="swap_theme(this.value)">Light grey</label>
+					<label><input type="radio" name="theme" value="dark" onclick="swap_theme(this.value)"<?= THEME == 'dark' ? ' checked' : ''?>>Dark</label>
+					<label><input type="radio" name="theme" value="light" onclick="swap_theme(this.value)"<?= THEME == 'light' ? ' checked' : ''?>>Light</label>
+					<label><input type="radio" name="theme" value="light-grey" onclick="swap_theme(this.value)"<?= THEME == 'light-grey' ? ' checked' : ''?>>Light grey</label>
 				</div>
-<script>
-var swap_theme = function(theme) {
-	document.documentElement.classList='theme-' + theme;
-};
-
-( function () {
-	var container = document.getElementById('slider-container');
-	var span_current_size = container.getElementsByTagName('span')[0];
-	var span_min_size = container.getElementsByTagName('span')[1];
-	var span_max_size = container.getElementsByTagName('span')[2];
-	var slider = container.getElementsByTagName('input')[0];
-
-	var current = getComputedStyle(document.body).getPropertyValue('font-size');
-	span_current_size.innerHTML = current;
-
-	current = parseInt(current.match(/(\d{1,2})px/)[1], 10);
-	slider.value = current;
-
-	slider.min = current - current/2;
-	slider.max = current + current/2;
-
-	span_min_size.innerHTML = slider.min + 'px';
-	span_max_size.innerHTML = slider.max + 'px';
-
-	slider.oninput=function() {
-		var value = this.value +'px';
-		document.body.style.fontSize = value;
-		span_current_size.innerHTML = value
-	};
-
-	document.getElementById('themes').querySelectorAll('input').forEach(function(element) {
-		var value = 'theme-' + element.value
-		if ( value ==  document.documentElement.classList[0]) {
-			element.checked = true;
-		}
-	});
-} )();
-</script>
-				<article>
+			</header>
+			<main id="content">
 <?php
-$url = 'https://github.com/CruelDrool/WP-reCAPTCHA/blob/main/recaptcha/CHANGELOG.md';
+
 $options = [
+	CURLOPT_URL            => 'https://github.com/CruelDrool/WP-reCAPTCHA/blob/main/recaptcha/CHANGELOG.md',
 	CURLOPT_HEADER         => false,
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_SSL_VERIFYHOST => 2,
@@ -385,22 +372,15 @@ $options = [
 /* 
 Check for SSl root certificates on Windows
 */
-$ssl_certs = true;
 if ( strtolower(substr(php_uname('s'),0,3)) == 'win' && empty(ini_get('curl.cainfo')) && empty(ini_get('openssl.cafile')) ) {
 	$cafile = "{$_SERVER['DOCUMENT_ROOT']}/wp-includes/certificates/ca-bundle.crt";
 	if ( is_file($cafile) ) {
 		$options[CURLOPT_CAINFO] = $cafile;
 	} else {
-		$ssl_certs = false;
+		$options[CURLOPT_URL] = substr_replace($options[CURLOPT_URL], 'http', 0, 5);
 		//echo "<p>PHP on Windows warning: Not using SSL to connect. <code>curl.cainfo</code> or <code>openssl.cafile</code> not set and unable to find WordPress' own <code>ca-bundle.crt</code>.</p>";
 	}
 }
-
-if ( !$ssl_certs ) {
-	$url = substr_replace($url, 'http', 0, 5);
-}
-
-$options[CURLOPT_URL] = $url;
 
 /* 
 Set User-Agent
@@ -437,15 +417,15 @@ if ( $result !== false && $response_code === 200 ) {
 	$data = $result;
 } else {
 	printf( '<p>Was unable to retrieve data from <a href="%1$s" target="_blank">%1$s</a></p><p>Response code: %2$s<br>Error code: %3$s<br>Error message: %4$s</p>',
-		$url, // 1
+		$options[CURLOPT_URL], // 1
 		$response_code, // 2
 		$error_code, // 3
 		$error_msg // 4
 	);
 }
 
-$html = '';
 if ( !empty($data) ) {
+	$html = '';
 	$data = json_decode($data, true);
 	if (is_array($data)) {
 		if ( isset($data['payload']['blob']['richText']) ) {
@@ -466,12 +446,9 @@ if ( !empty($data) ) {
 		echo $html;
 	}
 } else {
-	printf('<p>Empty data retrieved from <a href="%1$s" target="_blank">%1$s</a></p>', $url);
+	printf('<p>Empty data retrieved from <a href="%1$s" target="_blank">%1$s</a></p>', $options[CURLOPT_URL]);
 }
-
-
 ?>
-				</article>
 			</main>
 		</div>
 	</body>
