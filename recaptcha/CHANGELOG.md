@@ -1,4 +1,10 @@
 # Changelog
+##  [1.1.3] - xxxx-xx-xx
+### Changed
+- Replaced `file_exists()` with `is_file()` for the emergency stop.
+- Fixed the fix from [db0296c](https://github.com/CruelDrool/WP-reCAPTCHA/commit/db0296c875310f99f71c1eaa8dba22d55c273d1a)
+- Added the ability to view the changelog from [GitHub.com](https://github.com). Link is on the plugin meta row on the "Plugins" page.
+
 ## [1.1.2] - 2023-10-28
 ### Changed
 - Discovered an issue where the sanitization of the settings was happening when calling `update_option()` (`update_site_option()` when network activated on multisite) and not before. This lead to default values some times being stored in the database. The idea is to keep the stored settings free of default values.
