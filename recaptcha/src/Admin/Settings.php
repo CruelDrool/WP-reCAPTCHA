@@ -168,13 +168,13 @@ class Settings {
 					sprintf( translate( 'Visit plugin site for %s' ), $plugin_data['Name'] ),
 					translate( 'Visit plugin site' )
 				);
-			}
 
-			if ( extension_loaded("curl") ) {
-				$plugin_meta[] = sprintf('<a href="%s" class="thickbox open-plugin-details-modal">%s</a>',
-					plugins_url( '/changelog.php?TB_iframe=true&amp;width=600&amp;height=550', $this->config->get_file() ),
-					__( 'View changelog', 'cd-recaptcha' )
-				);
+				if ( extension_loaded("curl") ) {
+					$plugin_meta[] = sprintf('<a href="%s" class="thickbox open-plugin-details-modal">%s</a>',
+						plugins_url( '/changelog.php?TB_iframe=true&amp;width=600&amp;height=550', $this->config->get_file() ),
+						__( 'View changelog', 'cd-recaptcha' )
+					);
+				}
 			}
 			
 			$url = '';
