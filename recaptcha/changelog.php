@@ -746,7 +746,11 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 
 				#adjust-font-size,
 				#refresh-cache {
-					width: 161px;
+					width: 180px;
+				}
+
+				#refresh-cache {
+					min-width: fit-content;
 				}
 				
 				#adjust-font-size-input-container-js {
@@ -796,7 +800,7 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 				var button_innerHTML = button.innerHTML;
 				var content = document.getElementById('content');
 
-				button.innerHTML = 'Refreshing...';
+				button.innerHTML = '<?= __('Refreshing...', 'cd-recaptcha' ) ?>';
 				content.classList.add('loading');
 
 				var post = new FormData();
@@ -835,23 +839,23 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 							<span id="current-font-size"><?= $font_size ?>px</span>
 						</div>
 						<div id="adjust-font-size-input-container-no-js" class="remove-if-js">
-							<label>Font size: <input type="number" name="font_size" step="<?= ADJUST_FONT_STEP ?>" min="<?= ADJUST_FONT_MIN ?>" max="<?= ADJUST_FONT_MAX ?>" value="<?= $font_size ?>" placeholder="<?= $font_size ?>"><span data-type="px"></span></label>
+							<label><?= __('Font size', 'cd-recaptcha' ) ?>: <input type="number" name="font_size" step="<?= ADJUST_FONT_STEP ?>" min="<?= ADJUST_FONT_MIN ?>" max="<?= ADJUST_FONT_MAX ?>" value="<?= $font_size ?>" placeholder="<?= $font_size ?>"><span data-type="px"></span></label>
 						</div>
 					</div>
 					<div id="theme-select">
 						<div>
-							<label class="inline-label"><input type="radio" name="theme" value="dark" onclick="swap_theme(this.value)"<?= $theme == 'dark' ? ' checked' : ''?>>Dark</label>
-							<label class="inline-label"><input type="radio" name="theme" value="light" onclick="swap_theme(this.value)"<?= $theme == 'light' ? ' checked' : ''?>>Light</label>
-							<label class="inline-label"><input type="radio" name="theme" value="light-grey" onclick="swap_theme(this.value)"<?= $theme == 'light-grey' ? ' checked' : ''?>>Light grey</label>
+							<label class="inline-label"><input type="radio" name="theme" value="dark" onclick="swap_theme(this.value)"<?= $theme == 'dark' ? ' checked' : ''?>><?= __('Dark', 'cd-recaptcha' ) ?></label>
+							<label class="inline-label"><input type="radio" name="theme" value="light" onclick="swap_theme(this.value)"<?= $theme == 'light' ? ' checked' : ''?>><?= __('Light', 'cd-recaptcha' ) ?></label>
+							<label class="inline-label"><input type="radio" name="theme" value="light-grey" onclick="swap_theme(this.value)"<?= $theme == 'light-grey' ? ' checked' : ''?>><?= __('Light grey', 'cd-recaptcha' ) ?></label>
 						</div>
 					</div>
 					<div id="refresh-cache">
 						<div id="refresh-cache-button-container-js" class="hide-if-no-js">
-							<button class="btn" type="button" onclick="refresh_cache(this)">Refresh cache</button>
+							<button class="btn" type="button" onclick="refresh_cache(this)"><?= __('Refresh cache', 'cd-recaptcha' ) ?></button>
 						</div>
 						<div id="refresh-cache-button-container-no-js" class="remove-if-js">
-							<label><input type="checkbox" name="refresh_cache" value="">Refresh cache</label>
-							<button type="submit" class="btn">Submit</button>
+							<label><input type="checkbox" name="refresh_cache" value=""><?= __('Refresh cache', 'cd-recaptcha' ) ?></label>
+							<button type="submit" class="btn"><?= translate('Submit' ) ?></button>
 						</div>
 					</div>
 				<form>
