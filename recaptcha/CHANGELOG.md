@@ -1,5 +1,5 @@
 # Changelog
-##  [1.1.3] - xxxx-xx-xx
+##  [1.1.3] - 2023-11-06
 ### Changed
 - Replaced `file_exists()` with `is_file()` for the emergency stop.
 - Fixed the fix from [db0296c](https://github.com/CruelDrool/WP-reCAPTCHA/commit/db0296c875310f99f71c1eaa8dba22d55c273d1a)
