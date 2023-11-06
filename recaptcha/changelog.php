@@ -160,7 +160,7 @@ if ( $json_request ) {
 
 	$query = http_build_query($query_data, '', '&');
 
-	wp_redirect("{$_SERVER['PHP_SELF']}?{$query}", 303);
+	wp_redirect("{$_SERVER['SCRIPT_NAME']}?{$query}", 303);
 	exit;	
 }
 
@@ -181,6 +181,22 @@ if ( $json_request ) {
 				--base-text-line-height-normal: 1.5;
 				--base-text-font-family-default: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
 				--base-text-underline-offset-default: 0.2em;
+
+				--slider-width: 100px;
+				--slider-height: 24px;
+				--slider-margin: 0;
+				--slider-background: var(--color-border-default);
+				--slider-thumb-color: var(--color-accent-fg);
+				--slider-thumb-box-shadow: 0px 0px 2px 1px var(--color-accent-fg);
+				--slider-track-height: 10px;
+				--slider-track-border-radius: 5px;
+				--slider-thumb-height: 30px;
+				--slider-thumb-border-radius: 50%;
+
+				--wrapper-padding-tiny: 4px;
+				--wrapper-padding-small: 8px;
+				--wrapper-padding-medium: 16px;
+				--wrapper-padding-large: 32px;
 			}
 
 			* {
@@ -197,6 +213,7 @@ if ( $json_request ) {
 				--color-fg-default: rgb(31, 35, 40);
 				--color-fg-muted: rgb(101, 109, 118);
 				--color-neutral-muted: rgba(175, 184, 193, 0.2);
+				--color-primer-shadow-inset: inset 0 1px 0 rgba(208,215,222,0.2);
 
 				--color-btn-text: rgb(36, 41, 47);
 				--color-btn-bg: rgb(246, 248, 250);
@@ -208,8 +225,7 @@ if ( $json_request ) {
 				--color-btn-active-bg: hsla(220,14%,93%,1);
 				--color-btn-active-border: rgba(31,35,40,0.15);
 				--color-btn-selected-bg: hsla(220,14%,94%,1);
-				--color-btn-counter-bg: rgba(31,35,40,0.08);
-				--color-primer-shadow-inset: inset 0 1px 0 rgba(208,215,222,0.2);
+				--color-btn-counter-bg: rgba(31,35,40,0.08);	
 			}
 			
 			html[data-theme="light-grey"] {
@@ -455,14 +471,20 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 				color: inherit;
 			}
 
+			input + span[data-type]:before {
+				font-weight: normal;
+				cursor: default;
+				content: attr(data-type);
+			}
+
 			input[type="radio"], input[type="checkbox"] {
 				margin: 0 5px 0 0;
 			}
 
 			input[type="number"] {
-				width: 70px;
+				width: 80px;
 				background: var(--color-canvas-default);
-				padding: 5px 3px 5px 12px;
+				padding: 5px 12px;
 				border-radius: 6px;
 				border: 1px solid var(--color-border-default);
 				box-shadow: var(--color-primer-shadow-inset);
@@ -492,19 +514,12 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 			}
 
 			input[type="range"] {
-				margin: 0;
+				margin: var(--slider-margin);
 				-webkit-appearance: none;
 				appearance: none;
 				background: transparent;
-				width: 100px;
-				height: 24px;
-				--slider-background: var(--color-border-default);
-				--slider-thumb-color: var(--color-accent-fg);
-				--slider-thumb-box-shadow: 0px 0px 2px 1px var(--color-accent-fg);
-				--slider-track-height: 10px;
-				--slider-track-border-radius: 5px;
-				--slider-thumb-height: 20px;
-				--slider-thumb-border-radius: 50%;
+				width: var(--slider-width);
+				height: var(--slider-height);
 			}
 
 			input[type="range"]::-webkit-slider-runnable-track {
@@ -525,7 +540,7 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 				background-color: var(--slider-thumb-color);
 				height: var(--slider-thumb-height);
 				width: var(--slider-thumb-height);
-				margin-top: calc(calc(var(--slider-track-height) / 2 )  - calc(var(--slider-thumb-height) / 2));
+				margin-top: calc(calc(var(--slider-track-height) / 2 ) - calc(var(--slider-thumb-height) / 2));
 				border-radius: var(--slider-thumb-border-radius);
 			}
 
@@ -599,10 +614,6 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 			}
 
 			#wrapper {
-				--wrapper-padding-tiny: 4px;
-				--wrapper-padding-small: 8px;
-				--wrapper-padding-medium: 16px;
-				--wrapper-padding-large: 32px;
 				padding: var(--wrapper-padding-medium) var(--wrapper-padding-tiny) var(--wrapper-padding-large);
 				margin: 0 auto;
 				box-sizing: content-box;
@@ -651,106 +662,110 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 
 			#form {
 				display: grid;
-				justify-content: center;
-				row-gap: 10px;
+				width: 100%;
 			}
 
-			#current-font-size {
-				pointer-events: none;
-				user-select: none;
+			#form label {
+				white-space: nowrap;
+			}
+			
+			#form,
+			#refresh-cache-button-container-no-js {
+				row-gap: 15px;
+			}
+
+			#adjust-font-size,
+			#theme-select,
+			#refresh-cache {
+				text-align: center;
 			}
 
 			#adjust-font-size-input-container-js {
-				display: flex;
-				align-items: center;
-				flex-direction: column;
+				width: 85%;
+				display: inline-grid;
+				justify-items: center;
+				row-gap: 10px;
 			}
 
-			#adjust-font-size-input-container-js input[type="range"]:before,
-			#adjust-font-size-input-container-js input[type="range"]:after, #current-font-size {
+			#adjust-font-size-input-container-js > div {
+				display: flex;
+				align-items: center;
+				flex-direction: row;
+				column-gap: 5px;
+			}
+
+			#adjust-font-size-input-container-js > div,
+			#adjust-font-size-input-container-js > div > input[type="range"] {
+				width: 100%;
+			}
+
+			#adjust-font-size-input-container-js span {
+				pointer-events: none;
+				user-select: none;
 				line-height: 1;
 				opacity: .8;
 				font-size: 0.75em;
 				font-weight: var(--base-text-weight-semibold);
 			}
 
-			#adjust-font-size-input-container-js input[type="range"]:before,
-			#adjust-font-size-input-container-js input[type="range"]:after {
+			#adjust-font-size-input-container-no-js,
+			#theme-select > div,
+			#refresh-cache-button-container-js {
 				display: inline-block;
-				height: fit-content;
-				width: fit-content;
-				position: relative;
-				bottom: 1px;
-			}
-
-			#adjust-font-size-input-container-js input[type="range"]:before {
-				margin-right: 5px;
-				content: "<?= ADJUST_FONT_MIN ?>px";
-			}
-
-			#adjust-font-size-input-container-js input[type="range"]:after {
-				margin-left: 5px;
-				content: "<?= ADJUST_FONT_MAX ?>px";
-			}
-
-			#adjust-font-size-input-container-js input[type="range"] {
-				width: 161px;
-			}
-
-			#adjust-font-size > div, #theme-select > div, #refresh-cache > div  {
-				width: fit-content;
-				margin-right: auto;
-				margin-left: auto;
-			}
-
-			#adjust-font-size-input-container-no-js input[type="number"] + span:before {
-				position: absolute;
-				pointer-events: none;
-				user-select: none;
-				font-weight: normal;
-				margin-left: -41px;
-				line-height: 33px;
-				content: "px";
-				display: inline-block;
-				width: 0;
-				height: 0;
 			}
 
 			#refresh-cache-button-container-no-js {
-				width: fit-content;
 				text-align: center;
-				display: grid;
+				display: inline-grid;
 				justify-items: center;
-				row-gap: 5px;
+			}
+
+
+			@media only screen and (min-width: 400px) {
+				#adjust-font-size-input-container-js {
+					width: 70%;
+				}
+			}
+
+			@media only screen and (min-width: 500px) {
+				#adjust-font-size-input-container-js {
+					width: 60%;
+				}
 			}
 
 			@media only screen and (min-width: 590px) {
+				:root {
+					--slider-thumb-height: 20px;
+				}
+
 				#form {
 					display: flex;
 					justify-content: space-between;
 					align-items: flex-start;
-					row-gap: unset;
 				}
 
-				#adjust-font-size, #refresh-cache {
-					width: 30%;
+				#adjust-font-size,
+				#refresh-cache {
+					width: 161px;
+				}
+				
+				#adjust-font-size-input-container-js {
+					row-gap: 0;
+					width: 100%;
+					
 				}
 
-				#theme-select  {
-					width: 70%;
-					margin: unset;
+				#adjust-font-size {
+					text-align: left;
 				}
 
-				#adjust-font-size > div {
-					float: left;
-				}
-
-				#refresh-cache > div {
-					float: right;
+				#refresh-cache {
+					text-align: right;
 				}
 
 				#refresh-cache-button-container-no-js {
 					justify-items: end;
+					row-gap: 5px;
 				}
 			}
 		</style>
@@ -760,7 +775,6 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 					params = new URLSearchParams(document.location.search)
 					params.delete(param);
 					params.append(param, value);
-					params.sort();
 					var new_url = window.location.origin + window.location.pathname + `?${params.toString()}`;
 					window.history.replaceState({path:new_url},'',new_url);
 				}
@@ -789,7 +803,7 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 				post.append( 'json', '' );
 				post.append( 'refresh_cache', '' );
 				try {
-					const response = await fetch("<?= $_SERVER['PHP_SELF'] ?>",
+					const response = await fetch("<?= $_SERVER['SCRIPT_NAME'] ?>",
 					{
 						method: "POST",
 						body: post
@@ -813,11 +827,15 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 				<form id="form" action="" method="post">
 					<div id="adjust-font-size">
 						<div  id="adjust-font-size-input-container-js" class="hide-if-no-js">
-							<input type="range" step="<?= ADJUST_FONT_STEP ?>" min="<?= ADJUST_FONT_MIN ?>" max="<?= ADJUST_FONT_MAX ?>" value="<?= $font_size ?>" oninput="update_font_size(this.value)" name="font_size">
+							<div>
+								<span><?= ADJUST_FONT_MIN ?>px</span>
+								<input type="range" step="<?= ADJUST_FONT_STEP ?>" min="<?= ADJUST_FONT_MIN ?>" max="<?= ADJUST_FONT_MAX ?>" value="<?= $font_size ?>" oninput="update_font_size(this.value)" name="font_size">
+								<span><?= ADJUST_FONT_MAX ?>px</span>
+							</div>
 							<span id="current-font-size"><?= $font_size ?>px</span>
 						</div>
 						<div id="adjust-font-size-input-container-no-js" class="remove-if-js">
-							<label>Font size: <input type="number" name="font_size" step="<?= ADJUST_FONT_STEP ?>" min="<?= ADJUST_FONT_MIN ?>" max="<?= ADJUST_FONT_MAX ?>" value="<?= $font_size ?>"><span></span></label>
+							<label>Font size: <input type="number" name="font_size" step="<?= ADJUST_FONT_STEP ?>" min="<?= ADJUST_FONT_MIN ?>" max="<?= ADJUST_FONT_MAX ?>" value="<?= $font_size ?>" placeholder="<?= $font_size ?>"><span data-type="px"></span></label>
 						</div>
 					</div>
 					<div id="theme-select">
