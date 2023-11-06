@@ -3,7 +3,9 @@
 ### Changed
 - Replaced `file_exists()` with `is_file()` for the emergency stop.
 - Fixed the fix from [db0296c](https://github.com/CruelDrool/WP-reCAPTCHA/commit/db0296c875310f99f71c1eaa8dba22d55c273d1a)
-- Added the ability to view the changelog from [GitHub.com](https://github.com). Link is on the plugin meta row on the "Plugins" page.
+
+### Added
+- Ability to view the changelog from [GitHub.com](https://github.com). The link is on the plugin's meta row on the "Plugins" page.
 
 ## [1.1.2] - 2023-10-28
 ### Changed
