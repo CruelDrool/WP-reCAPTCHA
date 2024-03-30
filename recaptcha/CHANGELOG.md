@@ -1,5 +1,13 @@
 # Changelog
-##  [1.1.3] - 2023-11-06
+
+## [1.1.4] - 2024-03-30
+### Changed
+- Updated the "View changelog" page script.
+	- Added HTTP header "Accept" to the cURL request to ensure that JSON data is retrieved.
+	- Updated the regular expressions that clean up the HTML from GitHub.
+	- Updated the CSS colour schemes.
+
+## [1.1.3] - 2023-11-06
 ### Changed
 - Replaced `file_exists()` with `is_file()` for the emergency stop.
 - Fixed the fix from [db0296c](https://github.com/CruelDrool/WP-reCAPTCHA/commit/db0296c875310f99f71c1eaa8dba22d55c273d1a)
