@@ -85,6 +85,7 @@ if ( !empty($cached_html) ) {
 			CURLOPT_USERAGENT      => sprintf("WordPress/%s; %s", $wp_version, home_url( '/' )),
 			CURLOPT_CONNECTTIMEOUT => $timeout,
 			CURLOPT_TIMEOUT        => $timeout,
+			CURLOPT_HTTPHEADER     => ["Accept: application/json"],
 		];
 	
 		// Check for SSl root certificates on Windows
@@ -130,7 +131,8 @@ if ( !empty($cached_html) ) {
 
 				if (!empty($html)) {
 					$html = preg_replace('/<article[a-z"=\- 0-9\.#]*>(.*)<\x2farticle>/is','${1}', $html);
-					$html = preg_replace('/<(h1|h2|h3)[a-z"=\- 0-9\.#]*><a[a-z"=\- 0-9\.#:\x2f]*>(.*)<svg[a-z"=\- 0-9\.#]*><path[a-z"=\- 0-9\.#]*><\x2fpath><\x2fsvg><\x2fa><\x2f(h1|h2|h3)>/mi','<${1}>${2}</${1}>', $html);
+					$html = preg_replace('/<div[a-z"=\- 0-9\.#]*>(.*)<\\/div>/mi','${1}', $html);
+					$html = preg_replace('/<(h1|h2|h3)[a-z"=\- 0-9\.#]*>(.*)<\x2f(h1|h2|h3)><a[a-z"=\- 0-9\.#:\x2f\x5b\x5d!]*><svg[a-z"=\- 0-9\.#]*><path[a-z"=\- 0-9\.#]*><\x2fpath><\x2fsvg><\x2fa>/mi','<${1}>${2}</${1}>', $html);
 					$html = preg_replace('/<([a-z]+)\x20+[a-z]+\x20?=\x20?"[a-z\- 0-9\.#]*">/mi','<${1}>', $html);
 					$html = preg_replace('/<a ([a-z"=\- 0-9\.#:\x2f]*)>/mi','<a ${1} target="_blank">', $html);
 
@@ -205,77 +207,68 @@ if ( $json_request ) {
 
 			html[data-theme="light"] {
 				--color-accent-fg: rgb(9, 105, 218);
-				--color-accent-muted: rgba(84,174,255,0.4);
+				--color-accent-muted: rgba(9, 105, 218, 0.2);
 				--color-border-default: rgb(208, 215, 222);
-				--color-border-muted: rgb(216, 222, 228);
+				--color-border-muted: rgba(208, 215, 222, 0.7);
 				--color-canvas-default: rgb(255, 255, 255);
 				--color-canvas-subtle: rgb(246, 248, 250);
 				--color-fg-default: rgb(31, 35, 40);
-				--color-fg-muted: rgb(101, 109, 118);
+				--color-fg-muted: rgb(99, 108, 118);
 				--color-neutral-muted: rgba(175, 184, 193, 0.2);
-				--color-primer-shadow-inset: inset 0 1px 0 rgba(208,215,222,0.2);
+				--color-primer-shadow-inset: inset 0px 1px 0px 0px rgba(31, 35, 40, 0.04);
 
 				--color-btn-text: rgb(36, 41, 47);
 				--color-btn-bg: rgb(246, 248, 250);
-				--color-btn-border: rgba(31,35,40,0.15);
-				--color-btn-shadow: 0 1px 0 rgba(31,35,40,0.04);
-				--color-btn-inset-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
-				--color-btn-hover-bg: rgb(243, 244, 246);
-				--color-btn-hover-border: rgba(31,35,40,0.15);
-				--color-btn-active-bg: hsla(220,14%,93%,1);
-				--color-btn-active-border: rgba(31,35,40,0.15);
-				--color-btn-selected-bg: hsla(220,14%,94%,1);
-				--color-btn-counter-bg: rgba(31,35,40,0.08);	
+				--color-btn-border: rgb(208, 215, 222);
+				--color-btn-shadow: 0px 1px 0px 0px rgba(31, 35, 40, 0.04);
+				--color-btn-hover-bg: rgb(238, 241, 244);
+				--color-btn-hover-border: rgb(208, 215, 222);
+				--color-btn-active-bg: rgb(231, 235, 239);
+				--color-btn-active-border: rgb(208, 215, 222);
 			}
 			
 			html[data-theme="light-grey"] {
 				--color-accent-fg: rgb(34, 113, 177);
-				--color-accent-muted: rgba(84,174,255,0.4);
+				--color-accent-muted: rgba(9, 105, 218, 0.2);
 				--color-border-default: rgb(208, 215, 222);
 				--color-border-muted: rgb(220, 220, 220);
 				--color-canvas-default: rgb(240, 240, 241);
-				--color-canvas-subtle: rgb(230 230 231);
+				--color-canvas-subtle: rgb(230, 230, 231);
 				--color-fg-default: rgb(60, 67, 74);
-				--color-fg-muted: rgb(101, 109, 118);
+				--color-fg-muted: rgb(99, 108, 118);
 				--color-neutral-muted: rgba(0, 0, 0, 0.07);
-				--color-primer-shadow-inset: inset 0 1px 0 rgba(208,215,222,0.2);
+				--color-primer-shadow-inset: inset 0px 1px 0px 0px rgba(31, 35, 40, 0.04);
 
 				--color-btn-text: rgb(36, 41, 47);
 				--color-btn-bg: rgb(228, 230, 232);
-				--color-btn-border: rgba(31,35,40,0.15);
-				--color-btn-shadow: 0 1px 0 rgba(31,35,40,0.04);
-				--color-btn-inset-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+				--color-btn-border: rgb(208, 215, 222);
+				--color-btn-shadow: 0px 1px 0px 0px rgba(31, 35, 40, 0.04);
 				--color-btn-hover-bg: rgb(223, 224, 226);
-				--color-btn-hover-border: rgba(31,35,40,0.15);
+				--color-btn-hover-border: rgb(208, 215, 222);
 				--color-btn-active-bg: rgb(216, 218, 220);
-				--color-btn-active-border: rgba(31,35,40,0.15);
-				--color-btn-selected-bg: hsla(220,14%,94%,1);
-				--color-btn-counter-bg: rgba(31,35,40,0.08);
+				--color-btn-active-border: rgb(208, 215, 222);
 			}
 
 			html[data-theme="dark"] {
-				--color-accent-fg: rgb(47, 129, 247);
-				--color-accent-muted: rgba(56,139,253,0.4);
+				--color-accent-fg: rgb(68, 147, 248);
+				--color-accent-muted: rgba(31, 111, 235, 0.7);
 				--color-border-default: rgb(48, 54, 61);
-				--color-border-muted: rgb(33, 38, 45);
+				--color-border-muted: rgba(48, 54, 61, 0.7);
 				--color-canvas-default: rgb(13, 17, 23);
 				--color-canvas-subtle: rgb(22, 27, 34);
 				--color-fg-default: rgb(230, 237, 243);
-				--color-fg-muted: rgb(125, 133, 144);
+				--color-fg-muted: rgb(132, 141, 151);
 				--color-neutral-muted: rgba(110, 118, 129, 0.4);
-				--color-primer-shadow-inset: 0 0 transparent;
+				--color-primer-shadow-inset: inset 0px 1px 0px 0px rgba(1, 4, 9, 0.24);
 
 				--color-btn-text: rgb(201, 209, 217);
 				--color-btn-bg: rgb(33, 38, 45);
-				--color-btn-border: rgba(240, 246, 252, 0.1);
-				--color-btn-shadow: 0 0 transparent;
-				--color-btn-inset-shadow: 0 0 transparent;
-				--color-btn-hover-bg: rgb(48, 54, 61);
-				--color-btn-hover-border: rgb(139, 148, 158);
-				--color-btn-active-bg: hsla(212,12%,18%,1);
-				--color-btn-active-border: rgb(110, 118, 129);
-				--color-btn-selected-bg: rgb(22, 27, 34);
-				--color-btn-counter-bg: rgb(48, 54, 61);
+				--color-btn-border: rgb(48, 54, 61);
+				--color-btn-shadow: 0 rgb(0, 0, 0);
+				--color-btn-hover-bg: rgb(41, 46, 54);
+				--color-btn-hover-border: rgb(48, 54, 61);
+				--color-btn-active-bg: rgb(49, 54, 62);
+				--color-btn-active-border: rgb(48, 54, 61);
 			}
 
 			::selection {
@@ -377,13 +370,12 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 
 			tt, code, samp {
 				font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
-				font-size: 12px;
+				font-size: .85em;
 			}
 
-			code {
+			code, tt {
 				padding: 0.2em 0.4em;
 				margin: 0;
-				font-size: .85em;
 				white-space: break-spaces;
 				background-color: var(--color-neutral-muted);
 				border-radius: <?= 6 / (FONT_SIZE_BASE * .85) ?>em;
@@ -569,7 +561,7 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 			.btn {
 				color: var(--color-btn-text);
 				background-color: var(--color-btn-bg);
-				box-shadow: var(--color-btn-shadow),var(--color-btn-inset-shadow);
+				box-shadow: var(--color-btn-shadow);
 				transition: 80ms cubic-bezier(0.33, 1, 0.68, 1);
 				transition-property: color,background-color,box-shadow,border-color;
 				display: inline-block;
