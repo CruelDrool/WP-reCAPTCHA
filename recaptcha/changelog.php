@@ -250,6 +250,7 @@ if ( $json_request ) {
 			}
 
 			html[data-theme="dark"] {
+				color-scheme: dark;
 				--color-accent-fg: rgb(68, 147, 248);
 				--color-accent-muted: rgba(31, 111, 235, 0.7);
 				--color-border-default: rgb(48, 54, 61);
