@@ -37,7 +37,7 @@ if ( $json_request && ( !is_user_logged_in() || !current_user_can( $required_cap
 		wp_die( translate( 'Sorry, you are not allowed to access this page.' ) );
 	}
 
-	define( 'DEFAULT_THEME', 'light-grey' );
+	define( 'DEFAULT_THEME', 'light' );
 	define( 'FONT_SIZE_BASE', 16 );
 	define( 'FONT_SIZE_CONTENT', 16 );
 	define( 'BLOCK_MARGIN_TOP', 24 );
@@ -45,7 +45,7 @@ if ( $json_request && ( !is_user_logged_in() || !current_user_can( $required_cap
 	define( 'ADJUST_FONT_MIN', 10 );
 	define( 'ADJUST_FONT_MAX', 26 );
 	define( 'ADJUST_FONT_STEP', 1 );
-	$theme = esc_html(!empty($_GET['theme']) ? $_GET['theme'] : DEFAULT_THEME);
+	$theme = esc_html(!empty($_GET['theme']) ? $_GET['theme'] : '');
 	$font_size = esc_html(!empty($_GET['font_size']) ? $_GET['font_size'] : FONT_SIZE_CONTENT);
 }
 
@@ -168,7 +168,7 @@ if ( $json_request ) {
 
 ?>
 <!DOCTYPE html>
-<html lang="en-gb" data-theme="<?= $theme ?>">
+<html lang="en-gb" data-theme="<?= !empty($theme) ? $theme : DEFAULT_THEME ?>">
 	<head>
 		<title>Changelog</title>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -205,29 +205,12 @@ if ( $json_request ) {
 				box-sizing: border-box;
 			}
 
+<?php if ( DEFAULT_THEME == 'light' ) : ?>
+			html[data-theme=""],
+			html:not([data-theme]),
+<?php endif; ?>
 			html[data-theme="light"] {
-				--color-accent-fg: rgb(9, 105, 218);
-				--color-accent-muted: rgba(9, 105, 218, 0.2);
-				--color-border-default: rgb(208, 215, 222);
-				--color-border-muted: rgba(208, 215, 222, 0.7);
-				--color-canvas-default: rgb(255, 255, 255);
-				--color-canvas-subtle: rgb(246, 248, 250);
-				--color-fg-default: rgb(31, 35, 40);
-				--color-fg-muted: rgb(99, 108, 118);
-				--color-neutral-muted: rgba(175, 184, 193, 0.2);
-				--color-primer-shadow-inset: inset 0px 1px 0px 0px rgba(31, 35, 40, 0.04);
-
-				--color-btn-text: rgb(36, 41, 47);
-				--color-btn-bg: rgb(246, 248, 250);
-				--color-btn-border: rgb(208, 215, 222);
-				--color-btn-shadow: 0px 1px 0px 0px rgba(31, 35, 40, 0.04);
-				--color-btn-hover-bg: rgb(238, 241, 244);
-				--color-btn-hover-border: rgb(208, 215, 222);
-				--color-btn-active-bg: rgb(231, 235, 239);
-				--color-btn-active-border: rgb(208, 215, 222);
-			}
-			
-			html[data-theme="light-grey"] {
+				color-scheme: light;
 				--color-accent-fg: rgb(34, 113, 177);
 				--color-accent-muted: rgba(9, 105, 218, 0.2);
 				--color-border-default: rgb(208, 215, 222);
@@ -239,7 +222,7 @@ if ( $json_request ) {
 				--color-neutral-muted: rgba(0, 0, 0, 0.07);
 				--color-primer-shadow-inset: inset 0px 1px 0px 0px rgba(31, 35, 40, 0.04);
 
-				--color-btn-text: rgb(36, 41, 47);
+				--color-btn-text: var(--color-fg-default);
 				--color-btn-bg: rgb(228, 230, 232);
 				--color-btn-border: rgb(208, 215, 222);
 				--color-btn-shadow: 0px 1px 0px 0px rgba(31, 35, 40, 0.04);
@@ -249,27 +232,31 @@ if ( $json_request ) {
 				--color-btn-active-border: rgb(208, 215, 222);
 			}
 
+<?php if ( DEFAULT_THEME == 'dark' ) : ?>
+			html[data-theme=""],
+			html:not([data-theme]),
+<?php endif; ?>
 			html[data-theme="dark"] {
 				color-scheme: dark;
 				--color-accent-fg: rgb(68, 147, 248);
 				--color-accent-muted: rgba(31, 111, 235, 0.7);
-				--color-border-default: rgb(48, 54, 61);
-				--color-border-muted: rgba(48, 54, 61, 0.7);
+				--color-border-default: rgb(61, 68, 77);
+				--color-border-muted: rgba(61, 68, 77, 0.7);
 				--color-canvas-default: rgb(13, 17, 23);
-				--color-canvas-subtle: rgb(22, 27, 34);
-				--color-fg-default: rgb(230, 237, 243);
-				--color-fg-muted: rgb(132, 141, 151);
-				--color-neutral-muted: rgba(110, 118, 129, 0.4);
+				--color-canvas-subtle: rgb(21, 27, 35);
+				--color-fg-default: rgb(240, 246, 252);
+				--color-fg-muted: rgb(145, 152, 161);
+				--color-neutral-muted: rgba(101, 108, 118, 0.2);
 				--color-primer-shadow-inset: inset 0px 1px 0px 0px rgba(1, 4, 9, 0.24);
 
-				--color-btn-text: rgb(201, 209, 217);
-				--color-btn-bg: rgb(33, 38, 45);
-				--color-btn-border: rgb(48, 54, 61);
+				--color-btn-text: var(--color-fg-default);
+				--color-btn-bg: rgb(33, 40, 48);
+				--color-btn-border: rgb(61, 68, 77);
 				--color-btn-shadow: 0 rgb(0, 0, 0);
-				--color-btn-hover-bg: rgb(41, 46, 54);
-				--color-btn-hover-border: rgb(48, 54, 61);
-				--color-btn-active-bg: rgb(49, 54, 62);
-				--color-btn-active-border: rgb(48, 54, 61);
+				--color-btn-hover-bg: rgb(38, 44, 54);
+				--color-btn-hover-border: rgb(61, 68, 77);
+				--color-btn-active-bg: rgb(42, 49, 60);
+				--color-btn-active-border: rgb(61, 68, 77);
 			}
 
 			::selection {
@@ -837,9 +824,8 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 					</div>
 					<div id="theme-select">
 						<div>
-							<label class="inline-label"><input type="radio" name="theme" value="dark" onclick="swap_theme(this.value)"<?= $theme == 'dark' ? ' checked' : ''?>><?= __('Dark', 'cd-recaptcha' ) ?></label>
-							<label class="inline-label"><input type="radio" name="theme" value="light" onclick="swap_theme(this.value)"<?= $theme == 'light' ? ' checked' : ''?>><?= __('Light', 'cd-recaptcha' ) ?></label>
-							<label class="inline-label"><input type="radio" name="theme" value="light-grey" onclick="swap_theme(this.value)"<?= $theme == 'light-grey' ? ' checked' : ''?>><?= __('Light grey', 'cd-recaptcha' ) ?></label>
+							<label class="inline-label"><input type="radio" name="theme" id="theme-light" value="light" onclick="swap_theme(this.value)"<?= ( empty($theme) && DEFAULT_THEME == 'light' ) || $theme == 'light' ? ' checked' : ''?>><?= __('Light', 'cd-recaptcha' ) ?></label>
+							<label class="inline-label"><input type="radio" name="theme" id="theme-dark" value="dark" onclick="swap_theme(this.value)"<?= ( empty($theme) && DEFAULT_THEME == 'dark' ) || $theme == 'dark' ? ' checked' : ''?>><?= __('Dark', 'cd-recaptcha' ) ?></label>
 						</div>
 					</div>
 					<div id="refresh-cache">
@@ -874,6 +860,11 @@ foreach ([2, 1.5, 1.25, 1, .875, .85] as $index => $size) {
 			document.querySelectorAll('.hide-if-js').forEach(function(element){
 				element.style.display = 'none';
 			});
+<?php if (empty($theme)) : ?>
+
+			let theme = window?.matchMedia?.('(prefers-color-scheme: dark)')?.matches ? 'dark' : 'light';
+			document.getElementById('theme-' + theme).click();
+<?php endif; ?>
 		} )();
 	</script>
 	</body>
