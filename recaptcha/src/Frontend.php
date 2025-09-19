@@ -1151,9 +1151,25 @@ SCRIPT;
 	 */
 	function comment_verify( $approved ) {
 		$this->current_form = 'comment';
-		if ( ! $this->verify() ) {
-			return new WP_Error( $this->error_code, $this->get_error_msg(), 403 );
+
+		// Hacky way to avoid running twice due to changes introduced in WordPress 6.7.
+		static $var; 
+
+		if ( is_null($var) ) {
+			$this->debug_log(5, sprintf('%s: static variable is null. Function called for the first time', __FUNCTION__));
+
+			$var = 0; // Any non-null value.
+
+			if ( ! $this->verify() ) {
+				$this->debug_log(5, sprintf('%s: rejected comment', __FUNCTION__));
+				$approved = new WP_Error( $this->error_code, $this->get_error_msg(), 403 );
+			} else {
+				$this->debug_log(5, sprintf('%s: approved comment', __FUNCTION__));
+			}
+		} else {
+			$this->debug_log(5, sprintf('%s: static variable is not null. Function called more than once.', __FUNCTION__));
 		}
+
 		return $approved;
 	}
 }
