@@ -70,7 +70,7 @@ class Config {
 	 */
 	private const DEFAULTS = [
 		'version'                       => '',
-		'recaptcha_version'             => 'v2_checkbox',
+		'recaptcha_version'             => 'ent_standard',
 		'recaptcha_domain'              => self::DOMAINS['GOOGLE'],
 		'recaptcha_log'                 => false,
 		'recaptcha_log_rotate_interval' => 'monthly',
@@ -84,6 +84,13 @@ class Config {
 		'theme'                         => 'light',
 		'language'                      => '',
 		'badge'                         => 'bottomright',
+		'gcp_project_id'                => '',
+		'gcp_api_key'                   => '',
+		'ent_standard_site_key'         => '',
+		'ent_checkbox_site_key'         => '',
+		'ent_policy_based_site_key'     => '',
+		'ent_checkbox_size'             => 'normal',
+		'ent_checkbox_add_css'          => true,
 		'v2_checkbox_site_key'          => '',
 		'v2_checkbox_secret_key'        => '',
 		'v2_invisible_site_key'         => '',
@@ -92,7 +99,7 @@ class Config {
 		'v3_secret_key'                 => '',
 		'v2_checkbox_size'              => 'normal',
 		'v2_checkbox_add_css'           => true,
-		'v3_load_all_pages'             => true,
+		'load_analytics_footer_script'  => true,
 		'loggedin_hide'                 => true,
 		'verify_origin'                 => false,
 		'require_remote_ip'             => true,
@@ -196,12 +203,15 @@ class Config {
 	 */
 	function get_default_error_msg($version) {
 		switch($version) {
+			case 'ent_checkbox':
 			case 'v2_checkbox':
 			case 'v2_invisible':
 				$string = __( 'The CAPTCHA solution you provided was incorrect.', 'cd-recaptcha');
 				break;
+			case 'ent_standard':
+			case 'ent_policy_based':
 			case 'v3':
-				$string = __( 'reCAPTCHA v3 returns a score based on your interaction with this site. Your score did not meet our threshold requirement set for this particular action.', 'cd-recaptcha');
+				$string = __( 'reCAPTCHA calculates a score based on your interaction with this site. Your score did not meet our threshold requirement set for this particular action.', 'cd-recaptcha');
 				break;
 			default:
 				$string = '';
@@ -306,7 +316,10 @@ class Config {
 	 * @return bool True if a successful update, false otherwise.
 	 */
 	function save_options() {
-		$exceptions = ['v2_checkbox_error_message', 'v2_invisible_error_message', 'v3_error_message'];
+		$exceptions = [
+			'ent_standard_error_message', 'ent_policy_based_error_message','ent_checkbox_error_message',
+			'v2_checkbox_error_message', 'v2_invisible_error_message', 'v3_error_message',
+		];
 
 		foreach( $this->options as $key => $value) {
 			if ( (!isset(self::DEFAULTS[$key]) && !in_array($key, $exceptions)) || $value == $this->get_default($key) ) {
