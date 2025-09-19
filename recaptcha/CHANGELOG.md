@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.1.5] - 2025-09-19
+### Changed
+- Fixed comment approval bug introduced in WordPress 6.7 where the function to check comment submissions gets called twice even though the comment is already approved by this plugin. This bug meant that the reCAPTHA token would be also be verified twice and leading to errors about duplicates, which lead to a rejected comment.
+
 ## [1.1.4] - 2024-03-30
 ### Changed
 - Updated the "View changelog" page script.
