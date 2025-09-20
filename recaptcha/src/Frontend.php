@@ -267,7 +267,7 @@ class Frontend {
 
 		if ( $this->is_form_enabled( 'reset_password' ) ) {
 			add_action( 'resetpass_form', [ $this, 'resetpass_form_field' ], 99 );
-			add_filter( 'validate_password_reset', [ $this, 'reset_password_verify' ], 10, 2 );
+			add_action( 'validate_password_reset', [ $this, 'reset_password_verify' ], 10, 2 );
 		}
 
 		if ( $this->is_form_enabled( 'comment' ) && ( ! is_admin() || ! current_user_can( 'moderate_comments' ) ) ) {
