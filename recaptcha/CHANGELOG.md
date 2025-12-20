@@ -1,9 +1,21 @@
 # Changelog
 
-## [1.1.5] - 2025-09-19
+## [1.1.6] - xxxx-xx-xx
+
 ### Changed
+- Action hook was hooked as a filter hook. Wasn't causing any issues, though.
+- Updated the "View changelog" page script.
+	- Function `curl_close()` has done nothing since PHP 8.0 and has been deprecated in PHP 8.5.
+
+## [1.1.5] - 2025-09-19
+
+### Fixed
 - Fixed comment approval bug introduced in WordPress 6.7 where the function to check comment submissions gets called twice even though the comment is already approved by this plugin. This bug meant that the reCAPTHA token would be also be verified twice and leading to errors about duplicates, which lead to a rejected comment.
+
+### Added
 - Added levels to the minimum debug level selection.
+
+### Changed
 - Updated the "View changelog" page script.
 	- Renamed theme "Light grey" to "Light". Removed the old "Light" theme.
 	- Reordered theme selection.
