@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.6] - xxxx-xx-xx
+## [1.1.6] - 2025-12-20
 
 ### Changed
 - Action hook was hooked as a filter hook. Wasn't causing any issues, though.
