@@ -105,7 +105,6 @@ if ( !empty($cached_html) ) {
 		$response_code = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 
 		if (is_resource($ch)) {
-			error_log("Curl handle is a resource.");
 			curl_close($ch);
 		}
 
