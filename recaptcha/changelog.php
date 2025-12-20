@@ -103,7 +103,11 @@ if ( !empty($cached_html) ) {
 		$error_code = curl_errno($ch);
 		$error_msg = curl_error($ch);
 		$response_code = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-		curl_close($ch);
+
+		if (is_resource($ch)) {
+			error_log("Curl handle is a resource.");
+			curl_close($ch);
+		}
 
 		$url_link = sprintf('<a href="%1$s" target="_blank">%1$s</a>', $options[CURLOPT_URL]);
 		if ( $result === false || $response_code !== 200 ) {
