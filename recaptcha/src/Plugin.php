@@ -140,7 +140,11 @@ class Plugin {
 					$this->config->delete_option(['action_ms_user_signup', 'threshold_ms_user_signup'], false);
 				}
 			}
-
+ /*
+			if (version_compare( $prev_version, "x.y.z", '<' )) {
+				$options['load_analytics_footer_script'] = $this->config->get_option('v3_load_all_pages', true)
+			}
+*/
 		}
 
 		if ( version_compare( $current_version, $prev_version, '!=' ) ) {
