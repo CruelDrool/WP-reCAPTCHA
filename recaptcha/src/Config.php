@@ -70,7 +70,7 @@ class Config {
 	 */
 	private const DEFAULTS = [
 		'version'                       => '',
-		'recaptcha_version'             => 'ent_standard',
+		'recaptcha_version'             => 'ent_score',
 		'recaptcha_domain'              => self::DOMAINS['GOOGLE'],
 		'recaptcha_log'                 => false,
 		'recaptcha_log_rotate_interval' => 'monthly',
@@ -86,7 +86,7 @@ class Config {
 		'badge'                         => 'bottomright',
 		'gcp_project_id'                => '',
 		'gcp_api_key'                   => '',
-		'ent_standard_site_key'         => '',
+		'ent_score_site_key'         => '',
 		'ent_checkbox_site_key'         => '',
 		'ent_policy_based_site_key'     => '',
 		'ent_checkbox_size'             => 'normal',
@@ -212,7 +212,7 @@ class Config {
 			case 'v2_invisible':
 				$string = __( 'The CAPTCHA solution you provided was incorrect.', 'cd-recaptcha');
 				break;
-			case 'ent_standard':
+			case 'ent_score':
 			case 'ent_policy_based':
 			case 'v3':
 				$string = __( 'reCAPTCHA calculates a score based on your interaction with this site. Your score did not meet our threshold requirement set for this particular action.', 'cd-recaptcha');
@@ -321,7 +321,7 @@ class Config {
 	 */
 	function save_options() {
 		$exceptions = [
-			'ent_standard_error_message', 'ent_policy_based_error_message','ent_checkbox_error_message',
+			'ent_score_error_message', 'ent_policy_based_error_message','ent_checkbox_error_message',
 			'v2_checkbox_error_message', 'v2_invisible_error_message', 'v3_error_message',
 		];
 

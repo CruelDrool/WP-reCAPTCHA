@@ -421,7 +421,7 @@ class Frontend {
 			'event' => [
 				'token'   => $response_token, // Required
 				'siteKey' => $this->config->get_option($this->recaptcha_version . '_site_key'), // Required
-				'expectedAction' => in_array($this->recaptcha_version, ['ent_standard', 'ent_policy_based']) ? $this->config->get_option('action_'.$this->current_form) : '', // Optional. Can be empty. Seems only useful for Standard and Policy-based challenges. However, it does nothing to affect the validity of the token, so have to verify oneself later.
+				'expectedAction' => in_array($this->recaptcha_version, ['ent_score', 'ent_policy_based']) ? $this->config->get_option('action_'.$this->current_form) : '', // Optional. Can be empty. Seems only useful for Score and Policy-based challenges. However, it does nothing to affect the validity of the token, so have to verify oneself later.
 				'userIpAddress' => $this->config->get_option('submit_remote_ip') && $remote_ip !== false ? $remote_ip : '', // Optional. Can be empty.
 				'userAgent' => $this->config->get_option('submit_user_agent') && isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '', // Optional. Can be empty.
 				'requestedUri'   => $this->config->get_option('submit_request_uri') && isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '', // Optional. Can be empty.
@@ -487,7 +487,7 @@ class Frontend {
 
 		if ( $hostname_match )  {		
 			if ( $token_properties['valid'] == true ) {
-				if ( $this->recaptcha_version == 'ent_standard' ) {
+				if ( $this->recaptcha_version == 'ent_score' ) {
 					$threshold = $this->config->get_option( 'threshold_'.$this->current_form );
 					$expected_action = $this->config->get_option('action_'.$this->current_form);
 
@@ -752,7 +752,7 @@ class Frontend {
 			$this->config->get_prefix(),
 			self::$captcha_count,
 			// Hidden field so that the v3's grecaptcha.execute() knows what action it is doing for this field.
-			in_array($this->recaptcha_version, ['v3', 'ent_standard', 'ent_policy_based']) ?  sprintf('<input type="hidden" name="recaptcha_action" value="%s" />', $this->config->get_option('action_'.$this->current_form)) : '',
+			in_array($this->recaptcha_version, ['v3', 'ent_score', 'ent_policy_based']) ?  sprintf('<input type="hidden" name="recaptcha_action" value="%s" />', $this->config->get_option('action_'.$this->current_form)) : '',
 			$this->captcha_div_class
 		);
 
@@ -772,7 +772,7 @@ class Frontend {
 			switch( $this->recaptcha_version ) {
 				case 'v3':
 				case 'v2_invisible':
-				case 'ent_standard':
+				case 'ent_score':
 				case 'ent_policy_based':
 					$this->score_based_footer_script();
 					break;
@@ -781,7 +781,7 @@ class Frontend {
 					$this->checkbox_footer_script();
 					break;
 			}
-		} elseif ( in_array($this->recaptcha_version, ['v3', 'v2_invisible', 'ent_standard', 'ent_policy_based']) && $this->config->get_option( 'load_analytics_footer_script' ) ) {
+		} elseif ( in_array($this->recaptcha_version, ['v3', 'v2_invisible', 'ent_score', 'ent_policy_based']) && $this->config->get_option( 'load_analytics_footer_script' ) ) {
 			$this->analytics_footer_script();
 		}
 	}
