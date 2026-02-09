@@ -742,12 +742,26 @@ class Settings {
 				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
 				// 'desc'          => __( '', 'cd-recaptcha' ),
 			],
+			'submit_user_id'    => [
+				'label'         => __( 'Submit user ID', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+				// 'desc'          => __( '', 'cd-recaptcha' ),
+			],
 			'submit_username' => [
 				'label'         => __( 'Submit username', 'cd-recaptcha' ),
 				'section_id'    => 'general',
 				'type'          => 'checkbox',
 				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
-				'desc'          => __( 'Used for logins, registrations, and lost/reset password.', 'cd-recaptcha' ),
+				// 'desc'          => __( '', 'cd-recaptcha' ),
+			],
+			'submit_user_email' => [
+				'label'         => __( 'Submit user e-mail', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+				// 'desc'          => __( '', 'cd-recaptcha' ),
 			],
 			// Forms
 			'enabled_forms'     => [

@@ -300,7 +300,7 @@ class Frontend {
 				add_filter( 'comment_form_field_comment', [ $this, 'comment_form_field_return' ], 99 );
 			}
 			
-			add_filter( 'pre_comment_approved', [ $this, 'comment_verify' ], 99 );
+			add_filter( 'pre_comment_approved', [ $this, 'comment_verify' ], 99, 2 );
 		}
 		
 		add_action( 'wp_footer', [$this, 'footer_script'], 99999 );
@@ -378,13 +378,15 @@ class Frontend {
 	 * Verifies a reCAPTCHA response token using the Enterprise REST API.
 	 *
 	 * @since 1.0.0
-	 * @since x.y.z Added parameter $username.
+	 * @since x.y.z Added parameters $user_id, $username and $user_email.
 	 * 
-	 * @param string $username Optional. Not used for any verification purposes.
+	 * @param string $user_id Optional. Additional submission data.
+	 * @param string $username Optional. Additional submission data.
+	 * @param string $user_email Optional. Additional submission data.
 	 *
 	 * @return bool
 	 */
-	function verify( $username = '' ) {
+	function verify($user_id = 0, $username = '', $user_email = '' ) {
 		if ( $this->is_legacy_version() ) {
 			return $this->verify_legacy();
 		}
@@ -429,10 +431,33 @@ class Frontend {
 			],
 		];
 
-		if ( $this->config->get_option('submit_username') && in_array($this->current_form, ['login', 'registration' ,'ms_user_signup', 'lost_password', 'reset_password']) ) {
-			// "userInfo" needs to an array. Cannot be empty.
-			// "accountId" can be any stable user identication. Using username since WordPress disallows changing usernames.
-			$payload['event']['userInfo'] = ['accountId' => $username];
+		if ( $this->config->get_option('submit_user_id') || $this->config->get_option('submit_username') || $this->config->get_option('submit_user_email') ) {
+
+			// Optional. "userInfo" (assoc. array). Cannot be empty. Allowed keys: createAccountTime (string), accountId (string), userIds (array)
+
+			// "accountId" (string) can be any stable user identification: user ID, a username, or just empty.
+			// "userIds" (array). Can be empty. Entries have to be an associative array containing one of these keys: username, email, phoneNumber.
+
+			$user_id = $this->config->get_option('submit_user_id') && $user_id > 0 ? strval($user_id) : '';
+
+			$user_info = ['accountId' => $user_id ];
+			
+			if ( $this->config->get_option('submit_username') || $this->config->get_option('submit_user_email') ) {
+				$user_ids = [];
+
+				if ( !empty($username) && $this->config->get_option('submit_username') ) {
+					$user_ids[] = ['username' => $username];
+				}
+
+				if ( !empty($user_email) && $this->config->get_option('submit_user_email') ) {
+					$user_ids[] = ['email' => $user_email];
+				}
+
+				
+				$user_info['userIds'] = $user_ids;
+			}
+
+			$payload['event']['userInfo'] = $user_info;
 		}
 
 		$verify_url = sprintf('https://recaptchaenterprise.googleapis.com/v1/projects/%s/assessments?key=%s', $this->config->get_option('gcp_project_id'), $this->config->get_option('gcp_api_key'));
@@ -1182,13 +1207,18 @@ SCRIPT;
 
 			$this->current_form = 'login';
 
+			$user_email = '';
+			$user_id = 0;
+
 			// In case e-mail address was used as username.
 			if ($user instanceof WP_User) {
+				$user_id = $user->ID;
 				// The supplied $username is always sanitized by sanitize_user(). Using field "nice_name" instead of "user_login" for consistency.
 				$username = $user->user_nicename;
+				$user_email = $user->user_email;
 			}
 
-			if ( ! $this->verify( $username )) {
+			if ( ! $this->verify( $user_id, $username, $user_email )) {
 				if ($user instanceof WP_Error) {
 					// There were errors before us, so let's just add to the pile.
 					$user->add($this->error_code, $this->get_error_msg());
@@ -1216,7 +1246,7 @@ SCRIPT;
 	 */
 	function registration_verify( $errors, $sanitized_user_login, $user_email ) {
 		$this->current_form = 'registration';
-		if ( ! $this->verify( $sanitized_user_login ) ) {
+		if ( ! $this->verify( 0, $sanitized_user_login, $user_email ) ) {
 			$errors->add( $this->error_code, $this->get_error_msg() );
 		}
 
@@ -1237,7 +1267,7 @@ SCRIPT;
 		// Only verify guests during the "validate user signup" stage because we don't load a CAPTCHA during the "validate blog signup" stage.
 		if ( isset( $_POST['stage'] ) && $_POST['stage'] === 'validate-user-signup' ) {
 			$this->current_form = 'ms_user_signup';
-			if ( ! $this->verify( $result['user_name'] ?? '' ) ) {
+			if ( ! $this->verify( 0, $result['user_name'] ?? '', $result['user_email'] ?? '' ) ) {
 				$result['errors']->add( $this->error_code, $this->get_error_msg(false) );
 			}
 		}
@@ -1259,13 +1289,18 @@ SCRIPT;
 		$this->current_form = 'ms_user_signup';
 
 		$user = $result['user'];
+
+		$user_id = 0;
 		$username = '';
+		$user_email = '';
 
 		if ($user instanceof WP_User) {
 			$username = $user->user_nicename;
+			$user_email = $user->user_email;
+			$user_id = $user->ID;
 		}
 
-		if ( ! $this->verify( $username ) ) {
+		if ( ! $this->verify( $user_id, $username, $user_email ) ) {
 			$result['errors']->add( $this->error_code, $this->get_error_msg(false) );
 		}
 
@@ -1286,13 +1321,17 @@ SCRIPT;
 	function lostpassword_verify( $errors, $user_data ) {
 		$this->current_form = 'lost_password';
 
+		$user_id = 0;
 		$username = '';
+		$user_email = '';
 
 		if ($user_data instanceof WP_User) {
 			$username = $user_data->user_nicename;
+			$user_email = $user_data->user_email;
+			$user_id = $user_data->ID;
 		}
 
-		if ( ! $this->verify( $username ) ) {
+		if ( ! $this->verify( $user_id, $username, $user_email ) ) {
 			$errors->add( $this->error_code, $this->get_error_msg() );
 		}
 	}
@@ -1312,13 +1351,17 @@ SCRIPT;
 		if ( count($_POST) ) {
 			$this->current_form = 'reset_password';
 
+			$user_id = 0;
 			$username = '';
+			$user_email = '';
 
 			if ($user instanceof WP_User) {
 				$username = $user->user_nicename;
+				$user_email = $user->user_email;
+				$user_id = $user->ID;
 			}
 
-			if ( ! $this->verify( $username ) ) {
+			if ( ! $this->verify( $user_id, $username, $user_email ) ) {
 				$errors->add( $this->error_code, $this->get_error_msg() );
 			}
 		}
@@ -1331,10 +1374,11 @@ SCRIPT;
 	 *
 	 * @since 1.0.0
 	 * @param int|string|WP_Error $approved 
+	 * @param array $comment_data
 	 *
 	 * @return int|string|WP_Error
 	 */
-	function comment_verify( $approved ) {
+	function comment_verify( $approved, $comment_data ) {
 		$this->current_form = 'comment';
 
 		// Hacky way to avoid running twice due to changes introduced in WordPress 6.7.
@@ -1345,7 +1389,11 @@ SCRIPT;
 
 			$var = 0; // Any non-null value.
 
-			if ( ! $this->verify() ) {
+			$user_id = $comment_data['user_id'] ?? 0;
+			$username = $comment_data['comment_author'] ?? '';
+			$user_email = $comment_data['comment_author_email'] ?? '';
+
+			if ( ! $this->verify( $user_id, $username, $user_email ) ) {
 				$this->debug_log(5, sprintf('%s: rejected comment', __FUNCTION__));
 				$approved = new WP_Error( $this->error_code, $this->get_error_msg(), 403 );
 			} else {
