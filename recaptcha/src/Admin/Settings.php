@@ -769,7 +769,7 @@ class Settings {
 				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
 				// 'desc'          => __( '', 'cd-recaptcha' ),
 			],
-			'submit_username' => [
+			'submit_user_login' => [
 				'label'         => __( 'Username', 'cd-recaptcha' ),
 				'section_id'    => 'data_submisisons',
 				'type'          => 'checkbox',
@@ -778,6 +778,13 @@ class Settings {
 			],
 			'submit_user_email' => [
 				'label'         => __( 'User e-mail', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+				// 'desc'          => __( '', 'cd-recaptcha' ),
+			],
+			'submit_user_registered' => [
+				'label'         => __( 'User registered date', 'cd-recaptcha' ),
 				'section_id'    => 'data_submisisons',
 				'type'          => 'checkbox',
 				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',

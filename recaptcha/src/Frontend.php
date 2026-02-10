@@ -49,7 +49,6 @@ class Frontend {
 	 * @var string 
 	 */
 	private const API_URL_FORMAT_LEGACY = 'https://www.%s/recaptcha/api%s';
-	
 
 	/**
 	 * @since 1.0.0
@@ -68,6 +67,12 @@ class Frontend {
 	 * @var string
 	 */
 	private $error_code;
+
+	/**
+	 * @since x.y.z
+	 * @var array
+	 */
+	private $user_info = ['user_id' => 0, 'user_login' => '', 'user_email' => '', 'user_registered' => ''];
 			
 	/**
 	 * Constructor
@@ -378,15 +383,10 @@ class Frontend {
 	 * Verifies a reCAPTCHA response token using the Enterprise REST API.
 	 *
 	 * @since 1.0.0
-	 * @since x.y.z Added parameters $user_id, $username and $user_email.
-	 * 
-	 * @param string $user_id Optional. Additional submission data.
-	 * @param string $username Optional. Additional submission data.
-	 * @param string $user_email Optional. Additional submission data.
 	 *
 	 * @return bool
 	 */
-	function verify($user_id = 0, $username = '', $user_email = '' ) {
+	function verify() {
 		if ( $this->is_legacy_version() ) {
 			return $this->verify_legacy();
 		}
@@ -421,47 +421,50 @@ class Frontend {
 		
 		$payload = [
 			'event' => [
-				'token'   => $response_token, // Required
-				'siteKey' => $this->config->get_option($this->recaptcha_version . '_site_key'), // Required
+				'token'          => $response_token, // Required
+				'siteKey'        => $this->config->get_option($this->recaptcha_version . '_site_key'), // Required
 				'expectedAction' => in_array($this->recaptcha_version, ['ent_score', 'ent_policy_based']) ? $this->config->get_option('action_'.$this->current_form) : '', // Optional. Can be empty. Seems only useful for Score and Policy-based challenges. However, it does nothing to affect the validity of the token, so have to verify oneself later.
-				'userIpAddress' => $this->config->get_option('submit_remote_ip') && $remote_ip !== false ? $remote_ip : '', // Optional. Can be empty.
-				'userAgent' => $this->config->get_option('submit_user_agent') && isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '', // Optional. Can be empty.
+				'userIpAddress'  => $this->config->get_option('submit_remote_ip') && $remote_ip !== false ? $remote_ip : '', // Optional. Can be empty.
+				'userAgent'      => $this->config->get_option('submit_user_agent') && isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '', // Optional. Can be empty.
 				'requestedUri'   => $this->config->get_option('submit_request_uri') && isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '', // Optional. Can be empty.
-				'headers' => $headers, // Optional. HTTP header information about the request. Needs to be an array. The array can be empty.
+				'headers'        => $headers, // Optional. HTTP header information about the request. Needs to be an array. The array can be empty.
 			],
 		];
 
-		if ( $this->config->get_option('submit_user_id') || $this->config->get_option('submit_username') || $this->config->get_option('submit_user_email') ) {
+		if ( $this->config->get_option('submit_user_id') || $this->config->get_option('submit_user_login') || $this->config->get_option('submit_user_email') ) {
 
 			// Optional. "userInfo" (assoc. array). Cannot be empty. Allowed keys: createAccountTime (string), accountId (string), userIds (array)
 
 			// "accountId" (string) can be any stable user identification: user ID, a username, or just empty.
 			// "userIds" (array). Can be empty. Entries have to be an associative array containing one of these keys: username, email, phoneNumber.
+			// "createAccountTime" (string). Cannot be empty because needs to be a certain timestamp format (RFC 3339) in the UTC (Z) timezone.
 
-			$user_id = $this->config->get_option('submit_user_id') && $user_id > 0 ? strval($user_id) : '';
+			$user_id = $this->config->get_option('submit_user_id') && $this->user_info['user_id'] > 0 ? strval($this->user_info['user_id']) : '';
 
 			$user_info = ['accountId' => $user_id ];
-			
-			if ( $this->config->get_option('submit_username') || $this->config->get_option('submit_user_email') ) {
-				$user_ids = [];
 
-				if ( !empty($username) && $this->config->get_option('submit_username') ) {
-					$user_ids[] = ['username' => $username];
-				}
-
-				if ( !empty($user_email) && $this->config->get_option('submit_user_email') ) {
-					$user_ids[] = ['email' => $user_email];
-				}
-
-				
-				$user_info['userIds'] = $user_ids;
+			if ( !empty($this->user_info['user_registered']) && $this->config->get_option('submit_user_registered') ) {
+				$user_info['createAccountTime'] = \DateTime::createFromFormat('Y-m-d H:i:s', $this->user_info['user_registered'])->format('Y-m-d\TH:i:s\Z');
 			}
+
+			// "userIds" will be a part of the returned JSON data when "accountId" is submitted. So no point in trying to avoid sending an empty array.
+			$user_ids = [];
+
+			if ( !empty($this->user_info['user_login']) && $this->config->get_option('submit_user_login') ) {
+				$user_ids[] = ['username' => $this->user_info['user_login']];
+			}
+
+			if ( !empty($this->user_info['user_email']) && $this->config->get_option('submit_user_email') ) {
+				$user_ids[] = ['email' => $this->user_info['user_email']];
+			}
+			
+			$user_info['userIds'] = $user_ids;
 
 			$payload['event']['userInfo'] = $user_info;
 		}
 
 		$verify_url = sprintf('https://recaptchaenterprise.googleapis.com/v1/projects/%s/assessments?key=%s', $this->config->get_option('gcp_project_id'), $this->config->get_option('gcp_api_key'));
-		
+
 		// Make a POST request to the Google reCAPTCHA Enterprise server
 		$response = wp_remote_post($verify_url,	[
 			'timeout' => 10,
@@ -510,7 +513,7 @@ class Frontend {
 		$debug_level = 4;
 		$hostname_match = $this->config->get_option('verify_origin') ? ($token_properties['hostname'] ?? '') === $_SERVER['SERVER_NAME'] : true;
 
-		if ( $hostname_match )  {		
+		if ( $hostname_match )  {
 			if ( $token_properties['valid'] == true ) {
 				if ( $this->recaptcha_version == 'ent_score' ) {
 					$threshold = $this->config->get_option( 'threshold_'.$this->current_form );
@@ -700,7 +703,7 @@ class Frontend {
 	 * @since 1.0.6
 	 * @since 1.0.7 Removed parameter $version.
 	 * @since 1.1.0 $remoteip renamed to $remote_ip and can now be false.
-	 * @since x.y.z Removed parameter $remoteip.
+	 * @since x.y.z Removed parameter $remote_ip.
 	 * @param array $result 
 	 *
 	 * @return void
@@ -1206,19 +1209,17 @@ SCRIPT;
 		if ( count($_POST) ) {
 
 			$this->current_form = 'login';
-
-			$user_email = '';
-			$user_id = 0;
+			$this->user_info['user_login'] = $username;
 
 			// In case e-mail address was used as username.
 			if ($user instanceof WP_User) {
-				$user_id = $user->ID;
-				// The supplied $username is always sanitized by sanitize_user(). Using field "nice_name" instead of "user_login" for consistency.
-				$username = $user->user_nicename;
-				$user_email = $user->user_email;
+				$this->user_info['user_id'] = $user->ID;
+				$this->user_info['user_login'] = $user->user_login;
+				$this->user_info['user_email'] = $user->user_email;
+				$this->user_info['user_registered'] = $user->user_registered;
 			}
 
-			if ( ! $this->verify( $user_id, $username, $user_email )) {
+			if ( ! $this->verify()) {
 				if ($user instanceof WP_Error) {
 					// There were errors before us, so let's just add to the pile.
 					$user->add($this->error_code, $this->get_error_msg());
@@ -1246,7 +1247,11 @@ SCRIPT;
 	 */
 	function registration_verify( $errors, $sanitized_user_login, $user_email ) {
 		$this->current_form = 'registration';
-		if ( ! $this->verify( 0, $sanitized_user_login, $user_email ) ) {
+
+		$this->user_info['user_login'] = $sanitized_user_login;
+		$this->user_info['user_email'] = $user_email;
+
+		if ( ! $this->verify() ) {
 			$errors->add( $this->error_code, $this->get_error_msg() );
 		}
 
@@ -1267,7 +1272,9 @@ SCRIPT;
 		// Only verify guests during the "validate user signup" stage because we don't load a CAPTCHA during the "validate blog signup" stage.
 		if ( isset( $_POST['stage'] ) && $_POST['stage'] === 'validate-user-signup' ) {
 			$this->current_form = 'ms_user_signup';
-			if ( ! $this->verify( 0, $result['user_name'] ?? '', $result['user_email'] ?? '' ) ) {
+			$this->user_info['user_login'] = $result['user_name'] ?? '';
+			$this->user_info['user_email'] = $result['user_email'] ?? '';
+			if ( ! $this->verify() ) {
 				$result['errors']->add( $this->error_code, $this->get_error_msg(false) );
 			}
 		}
@@ -1290,17 +1297,14 @@ SCRIPT;
 
 		$user = $result['user'];
 
-		$user_id = 0;
-		$username = '';
-		$user_email = '';
-
 		if ($user instanceof WP_User) {
-			$username = $user->user_nicename;
-			$user_email = $user->user_email;
-			$user_id = $user->ID;
+			$this->user_info['user_id'] = $user->ID;
+			$this->user_info['user_login'] = $user->user_login;
+			$this->user_info['user_email'] = $user->user_email;
+			$this->user_info['user_registered'] = $user->user_registered;
 		}
 
-		if ( ! $this->verify( $user_id, $username, $user_email ) ) {
+		if ( ! $this->verify() ) {
 			$result['errors']->add( $this->error_code, $this->get_error_msg(false) );
 		}
 
@@ -1321,17 +1325,14 @@ SCRIPT;
 	function lostpassword_verify( $errors, $user_data ) {
 		$this->current_form = 'lost_password';
 
-		$user_id = 0;
-		$username = '';
-		$user_email = '';
-
 		if ($user_data instanceof WP_User) {
-			$username = $user_data->user_nicename;
-			$user_email = $user_data->user_email;
-			$user_id = $user_data->ID;
+			$this->user_info['user_id'] = $user_data->ID;
+			$this->user_info['user_login'] = $user_data->user_login;
+			$this->user_info['user_email'] = $user_data->user_email;
+			$this->user_info['user_registered'] = $user_data->user_registered;
 		}
 
-		if ( ! $this->verify( $user_id, $username, $user_email ) ) {
+		if ( ! $this->verify() ) {
 			$errors->add( $this->error_code, $this->get_error_msg() );
 		}
 	}
@@ -1351,17 +1352,14 @@ SCRIPT;
 		if ( count($_POST) ) {
 			$this->current_form = 'reset_password';
 
-			$user_id = 0;
-			$username = '';
-			$user_email = '';
-
 			if ($user instanceof WP_User) {
-				$username = $user->user_nicename;
-				$user_email = $user->user_email;
-				$user_id = $user->ID;
+				$this->user_info['user_id'] = $user->ID;
+				$this->user_info['user_login'] = $user->user_login;
+				$this->user_info['user_email'] = $user->user_email;
+				$this->user_info['user_registered'] = $user->user_registered;
 			}
 
-			if ( ! $this->verify( $user_id, $username, $user_email ) ) {
+			if ( ! $this->verify() ) {
 				$errors->add( $this->error_code, $this->get_error_msg() );
 			}
 		}
@@ -1389,11 +1387,17 @@ SCRIPT;
 
 			$var = 0; // Any non-null value.
 
-			$user_id = $comment_data['user_id'] ?? 0;
-			$username = $comment_data['comment_author'] ?? '';
-			$user_email = $comment_data['comment_author_email'] ?? '';
+			$this->user_info['user_id'] = $comment_data['user_id'] ?? 0;
+			$this->user_info['user_email'] = $comment_data['comment_author_email'] ?? '';
 
-			if ( ! $this->verify( $user_id, $username, $user_email ) ) {
+			if ( $this->user_info['user_id'] > 0 ) {
+				$user = get_userdata($this->user_info['user_id']);
+				$this->user_info['user_login'] = $user->user_login;
+				$this->user_info['user_registered'] = $user->user_registered;
+			}
+
+
+			if ( ! $this->verify() ) {
 				$this->debug_log(5, sprintf('%s: rejected comment', __FUNCTION__));
 				$approved = new WP_Error( $this->error_code, $this->get_error_msg(), 403 );
 			} else {
