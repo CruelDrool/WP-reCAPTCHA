@@ -1,5 +1,37 @@
 # Changelog
 
+## [x.y.z] - xxxx-xx-xx
+
+### Added
+- New versions:
+	- Score challenge (enterprise)
+	- Checkbox challenge (enterprise)
+	- Policy-based challenge (enterprise)
+- New settings category: Data submissions
+- New options:
+	- Google Cloud Project ID (General).
+	- Google Cloud API key (General).
+	- Load on non-form pages (General).
+	- Client's IP address (Data submissions).
+	- Client's user agent (Data submissions).
+	- Client's HTTP headers (Data submissions).
+	- Request URI (Data submissions).
+	- User ID (Data submissions).
+	- Username (Data submissions).
+	- User e-mail (Data submissions).
+	- User registered date (Data submissions).
+
+### Changed
+
+- The v2 and v3 versions marked as legacy.
+- The footer scripts have been updated.
+
+### Removed
+
+- Removed options:
+	- Require the client's IP address.
+	- Load on all pages.
+
 ## [1.1.6] - 2025-12-20
 
 ### Changed
