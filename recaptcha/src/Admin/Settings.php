@@ -314,19 +314,25 @@ class Settings {
 					// printf( __( 'Get reCAPTCHA keys from <a href="%s" target="_blank" rel="noopener noreferrer">Google</a>. Make sure to get keys for your selected version.', 'cd-recaptcha' ), 'https://www.google.com/recaptcha/admin' );
 				// },
 			],
+			'data_submisisons' => [
+				'section_title' => __( 'Data submissions', 'cd-recaptcha' ),
+				'section_callback' => function() {
+					printf('<p>%s</p>', __( 'Additional data to submit to the reCAPTCHA verification server.', 'cd-recaptcha' ));
+				},
+			],
 			'forms' => [
 				'section_title' => __( 'Forms', 'cd-recaptcha' ),
 			],
 			'actions' => [
-				'section_title' => sprintf('<span class="hidden show-field-for-v3">%s</span>',__( 'Actions', 'cd-recaptcha' ) ),
+				'section_title' => sprintf('<span class="hidden show-field-for-v3 show-field-for-ent_score show-field-for-ent_policy_based">%s</span>',__( 'Actions', 'cd-recaptcha' ) ),
 				'section_callback' => function() {
-					printf('<p class="hidden show-field-for-v3">%s</p>', __( 'Action names may only contain alphanumeric characters, underscores, and forward slashes.', 'cd-recaptcha' ));
+					printf('<p class="hidden show-field-for-v3 show-field-for-ent_score show-field-for-ent_policy_based">%s</p>', __( 'Action names may only contain alphanumeric characters, underscores, and forward slashes.', 'cd-recaptcha' ));
 				},
 			],
 			'thresholds' => [
-				'section_title' => sprintf('<span class="hidden show-field-for-v3">%s</span>',__( 'Thresholds', 'cd-recaptcha' ) ),
+				'section_title' => sprintf('<span class="hidden show-field-for-v3 show-field-for-ent_score">%s</span>',__( 'Thresholds', 'cd-recaptcha' ) ),
 				'section_callback' => function() {
-					printf('<p class="hidden show-field-for-v3">%s</p>',
+					printf('<p class="hidden show-field-for-v3 show-field-for-ent_score">%s</p>',
 						/* translators: 1: 1.0, 2: 0.0 */
 						sprintf(__( 'reCAPTCHA v3 returns a score (%1$s is very likely a good interaction, %2$s is very likely a bot).', 'cd-recaptcha' ), 
 							sprintf( '<samp>%s</samp>', number_format_i18n(1.0, 1) ),
@@ -375,17 +381,97 @@ class Settings {
 				'type'          => 'select',
 				'std'           => $this->config->get_default('recaptcha_version'),
 				'options'       => [
-					'v2_checkbox'   => __( 'v2 "I\'m not a robot"', 'cd-recaptcha' ),
-					'v2_invisible'  => __( 'v2 Invisible', 'cd-recaptcha' ),
-					'v3'            => __( 'v3', 'cd-recaptcha' ),
+					'ent_score'        => __( 'Score challenge (enterprise)', 'cd-recaptcha' ),
+					'ent_checkbox'     => __( 'Checkbox challenge (enterprise)', 'cd-recaptcha' ),
+					'ent_policy_based' => __( 'Policy-based challenge (enterprise)', 'cd-recaptcha' ),
+					'v2_checkbox'      => sprintf('%s (%s)', __( 'v2 "I\'m not a robot"', 'cd-recaptcha' ), __( 'legacy', 'cd-recaptcha' ) ),
+					'v2_invisible'     => sprintf('%s (%s)', __( 'v2 Invisible', 'cd-recaptcha' ), __( 'legacy', 'cd-recaptcha' ) ),
+					'v3'               => sprintf('%s (%s)', __( 'v3', 'cd-recaptcha' ), __( 'legacy', 'cd-recaptcha' ) ),
 				],
 				'desc'          => sprintf(
 					__( 'Select your reCAPTCHA version. Make sure to use keys for your selected version. %s', 'cd-recaptcha' ),
-					sprintf( '<a href="https://developers.google.com/recaptcha/docs/versions" target="_blank">%s<span class="screen-reader-text"> %s</span></a>',
+					sprintf( '<a href="https://developers.google.com/recaptcha/docs/versions" target="_blank" class="hidden show-field-for-v2_checkbox show-field-for-v2_invisible show-field-for-v3">%s<span class="screen-reader-text"> %s</span></a>',
 						__( 'Read more about the versions', 'cd-recaptcha' ),
 						translate('(opens in a new tab)')
 					)
 				),
+			],
+			'gcp_project_id' => [
+				'label'         => __( 'Google Cloud Project ID', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'class'         => 'hidden show-field-for-ent_checkbox show-field-for-ent_policy_based show-field-for-ent_score',
+				'field_class'   => 'regular-text',
+				'desc'          => sprintf(
+					__('Note that this is not the project name. %s', 'cd-recaptcha'),
+					sprintf('<a href="https://docs.cloud.google.com/resource-manager/docs/creating-managing-projects" target="_blank">%s<span class="screen-reader-text"> %s</span></a>',
+						__('Read more about creating and managing projects', 'cd-recaptcha'),
+						translate('(opens in a new tab)')
+					)
+				),
+			],
+			'gcp_api_key' => [
+				'label'         => __( 'Google Cloud API key', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'password',
+				'class'         => 'hidden show-field-for-ent_checkbox show-field-for-ent_policy_based show-field-for-ent_score',
+				'field_class'   => 'regular-text',
+				'desc'          => sprintf(
+					__( 'It\'s recommended to set up the API key in such way that it is restricted to only access the reCAPTCHA Enterprise API. Do not have a key that can access everything! %s' , 'cd-recaptcha' ),
+					sprintf( '<a href="https://console.cloud.google.com/apis/credentials" target="_blank">%s<span class="screen-reader-text"> %s</span></a>', 
+						__( 'API keys can be created in your Google Cloud Platform Console', 'cd-recaptcha' ),
+						translate('(opens in a new tab)')
+					)
+				),
+			],
+			'ent_score_site_key' => [
+				'label'         => __( 'Site Key', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'class'         => 'hidden show-field-for-ent_score',
+				'field_class'   => 'regular-text',
+				'desc'          => sprintf(
+					__( 'The public site key is used to load the widget. %s', 'cd-recaptcha' ), 
+					sprintf( '<a href="https://console.cloud.google.com/security/recaptcha" target="_blank">%s<span class="screen-reader-text"> %s</span></a>', 
+						__( 'Keys can be created in your Google Cloud Platform Console', 'cd-recaptcha' ),
+						translate('(opens in a new tab)')
+					)
+				),
+			],
+			'ent_checkbox_site_key' => [
+				'label'         => __( 'Site Key', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'class'         => 'hidden show-field-for-ent_checkbox',
+				'field_class'   => 'regular-text',
+			],
+			'ent_policy_based_site_key' => [
+				'label'         => __( 'Site Key', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'class'         => 'hidden show-field-for-ent_policy_based',
+				'field_class'   => 'regular-text',
+			],
+			'ent_score_error_message' => [
+				'label'         => __( 'Error message', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'textarea',
+				'placeholder'   => $this->config->get_default_error_msg('ent_score'),
+				'desc'          => __( 'In this textbox, you can type in a custom error message. Leave it empty to use the default one.' , 'cd-recaptcha'),
+				'class'         => 'hidden show-field-for-ent_score',
+				'field_class'   => 'regular-text',
+			],
+			'ent_checkbox_error_message' => [
+				'label'         => __( 'Error message', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'textarea',
+				'placeholder'   => $this->config->get_default_error_msg('ent_checkbox'),
+				'class'         => 'hidden show-field-for-ent_checkbox',
+				'field_class'   => 'regular-text',
+			],
+			'ent_policy_based_error_message' => [
+				'label'         => __( 'Error message', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'textarea',
+				'placeholder'   => $this->config->get_default_error_msg('ent_policy_based'),
+				'class'         => 'hidden show-field-for-ent_policy_based',
+				'field_class'   => 'regular-text',
 			],
 			'v2_checkbox_site_key' => [
 				'label'         => __( 'Site Key', 'cd-recaptcha' ),
@@ -508,10 +594,17 @@ class Settings {
 				'std'           => $this->config->get_default('recaptcha_domain'),
 				'options'       => $domains,
 				'desc'          => sprintf(
+					'<span class="hidden show-field-for-v2_checkbox show-field-for-v2_invisible show-field-for-v3">%s</span><span class="hidden show-field-for-ent_checkbox show-field-for-ent_policy_based show-field-for-ent_score">%s</span>',
 					/* translators: 1: recaptcha.net 2: google.com */
-					__( 'The domain to fetch the script from, and to use when verifying requests. Use %1$s when %2$s is not accessible.', 'cd-recaptcha' ),
-					'<samp>recaptcha.net</samp>',
-					'<samp>google.com</samp>'
+					sprintf(__( 'The domain to fetch the script from, and to use when verifying requests. Use %1$s when %2$s is not accessible.', 'cd-recaptcha' ),
+						'<samp>recaptcha.net</samp>',
+						'<samp>google.com</samp>'
+					),
+					/* translators: 1: recaptcha.net 2: google.com */
+					sprintf(__( 'The domain to fetch the script from. Use %1$s when %2$s is not accessible.', 'cd-recaptcha' ),
+						'<samp>recaptcha.net</samp>',
+						'<samp>google.com</samp>'
+					)
 				),
 			],
 			'verify_origin' => [
@@ -525,12 +618,6 @@ class Settings {
 						translate('(opens in a new tab)')
 					)
 				),
-			],
-			'require_remote_ip' => [
-				'label'         => __( 'Require the client\'s IP address', 'cd-recaptcha' ),
-				'section_id'    => 'general',
-				'type'          => 'checkbox',
-				'desc'          => __( 'Require that the client\'s IP address has been determined before submitting data to the reCAPTCHA server. An undetermined IP address will be treated as a failed CAPTCHA attempt.', 'cd-recaptcha' ),
 			],
 			'language' => [
 				'label'         => __( 'Language code', 'cd-recaptcha' ),
@@ -556,6 +643,38 @@ class Settings {
 				],
 				'desc'          => sprintf(
 					__( 'Color theme of the widget. Select %s to set the theme based on the brightness of the page\'s background color.', 'cd-recaptcha' ),
+					sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
+				),
+			],
+			'ent_checkbox_size' => [
+				'label'         => __( 'Size', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'select',
+				'class'         => 'hidden show-field-for-ent_checkbox',
+				'std'           => $this->config->get_default('v2_checkbox_size'),
+				'options'       => [
+					'normal'        => __( 'Normal', 'cd-recaptcha' ),
+					'compact'       => __( 'Compact', 'cd-recaptcha' ),
+					'auto'          => __( 'Automatic', 'cd-recaptcha' ),
+				],
+				'desc'       => sprintf(
+					/* translators: 1: Automatic, 2: Compact, 3: Normal */
+					__( 'Size of the widget. Select %1$s to automatically set the size to %2$s if the area is too narrow for %3$s.', 'cd-recaptcha' ),
+					sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) ),
+					sprintf( '<i>%s</i>', __( 'Compact', 'cd-recaptcha' ) ),
+					sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) )
+				),
+			],
+			'ent_checkbox_add_css' => [
+				'label'         => __( 'Add stylesheet (CSS)', 'cd-recaptcha' ),
+				'section_id'    => 'general',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_checkbox',
+				'cb_label'      => __( "Add this plugin's stylesheet to the login page.", 'cd-recaptcha' ),
+				'desc'          => sprintf(
+					/* translators: 1: Normal, 2: Automatic */
+					__( 'This stylesheet increases the width of the container element that holds the login form. This is to fit in the widget better. Only applicable if you have selected %1$s or %2$s as size.', 'cd-recaptcha' ),
+					sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) ),
 					sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
 				),
 			],
@@ -595,7 +714,7 @@ class Settings {
 				'label'         => __( 'Placement', 'cd-recaptcha' ),
 				'section_id'    => 'general',
 				'type'          => 'select',
-				'class'         => 'hidden show-field-for-v2_invisible show-field-for-v3',
+				'class'         => 'hidden show-field-for-v2_invisible show-field-for-v3 show-field-for-ent_policy_based show-field-for-ent_score',
 				'std'           => $this->config->get_default('badge'),
 				'options'       => [
 					'bottomright'   => __( 'Bottom Right', 'cd-recaptcha' ),
@@ -608,12 +727,68 @@ class Settings {
 					sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
 				),
 			],
-			'v3_load_all_pages' => [
-				'label'         => __( 'Load on all pages', 'cd-recaptcha' ),
+			'load_analytics_footer_script' => [
+				'label'         => __( 'Load on non-form pages', 'cd-recaptcha' ),
 				'section_id'    => 'general',
 				'type'          => 'checkbox',
-				'class'         => 'hidden show-field-for-v3',
-				'desc'          => __( 'For analytics purposes, it\'s recommended to load the widget in the background of all pages.', 'cd-recaptcha' ),
+				'class'         => 'hidden show-field-for-v2_invisible show-field-for-v3 show-field-for-ent_score show-field-for-ent_policy_based',
+				'desc'          => __( 'For analytics purposes, it\'s recommended to load the widget on non-form pages.', 'cd-recaptcha' ),
+			],
+			// Data submissions
+			'submit_remote_ip' => [
+				'label'         => __( 'Client\'s IP address', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				// 'desc'          => __( '', 'cd-recaptcha' ),
+			],
+			'submit_user_agent' => [
+				'label'         => __( 'Client\'s user agent', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+				// 'desc'          => __( '', 'cd-recaptcha' ),
+			],
+			'submit_headers' => [
+				'label'         => __( 'Client\'s HTTP headers', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+				// 'desc'          => __( '', 'cd-recaptcha' ),
+			],
+			'submit_request_uri' => [
+				'label'         => __( 'Request URI', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+				// 'desc'          => __( '', 'cd-recaptcha' ),
+			],
+			'submit_user_id'    => [
+				'label'         => __( 'User ID', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+				// 'desc'          => __( '', 'cd-recaptcha' ),
+			],
+			'submit_user_login' => [
+				'label'         => __( 'Username', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+				// 'desc'          => __( '', 'cd-recaptcha' ),
+			],
+			'submit_user_email' => [
+				'label'         => __( 'User e-mail', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+				// 'desc'          => __( '', 'cd-recaptcha' ),
+			],
+			'submit_user_registered' => [
+				'label'         => __( 'User registered date', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+				// 'desc'          => __( '', 'cd-recaptcha' ),
 			],
 			// Forms
 			'enabled_forms'     => [
@@ -633,7 +808,7 @@ class Settings {
 			'action_login' => [
 				'label'             => __( 'Login', 'cd-recaptcha' ),
 				'section_id'        => 'actions',
-				'class'             => 'hidden show-field-for-v3',
+				'class'             => 'hidden show-field-for-v3 show-field-for-ent_score show-field-for-ent_policy_based',
 				'placeholder'       => $this->config->get_default('action_login'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_login'));
@@ -642,7 +817,7 @@ class Settings {
 			'action_registration' => [
 				'label'             => __( 'Registration', 'cd-recaptcha' ),
 				'section_id'        => 'actions',
-				'class'             => 'hidden show-field-for-v3',
+				'class'             => 'hidden show-field-for-v3 show-field-for-ent_score show-field-for-ent_policy_based',
 				'placeholder'       => $this->config->get_default('action_registration'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_registration'));
@@ -651,7 +826,7 @@ class Settings {
 			'action_ms_user_signup' => [
 				'label'             => __( 'Multisite User Signup', 'cd-recaptcha' ),
 				'section_id'        => 'actions',
-				'class'             => 'hidden show-field-for-v3',
+				'class'             => 'hidden show-field-for-v3 show-field-for-ent_score show-field-for-ent_policy_based',
 				'placeholder'       => $this->config->get_default('action_ms_user_signup'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_ms_user_signup'));
@@ -660,7 +835,7 @@ class Settings {
 			'action_lost_password' => [
 				'label'             => __( 'Lost Password', 'cd-recaptcha' ),
 				'section_id'        => 'actions',
-				'class'             => 'hidden show-field-for-v3',
+				'class'             => 'hidden show-field-for-v3 show-field-for-ent_score show-field-for-ent_policy_based',
 				'placeholder'       => $this->config->get_default('action_lost_password'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_lost_password'));
@@ -669,7 +844,7 @@ class Settings {
 			'action_reset_password' => [
 				'label'             => __( 'Reset Password', 'cd-recaptcha' ),
 				'section_id'        => 'actions',
-				'class'             => 'hidden show-field-for-v3',
+				'class'             => 'hidden show-field-for-v3 show-field-for-ent_score show-field-for-ent_policy_based',
 				'placeholder'       => $this->config->get_default('action_reset_password'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_reset_password'));
@@ -678,7 +853,7 @@ class Settings {
 			'action_comment' => [
 				'label'             => __( 'Comment', 'cd-recaptcha' ),
 				'section_id'        => 'actions',
-				'class'             => 'hidden show-field-for-v3',
+				'class'             => 'hidden show-field-for-v3 show-field-for-ent_score show-field-for-ent_policy_based',
 				'placeholder'       => $this->config->get_default('action_comment'),
 				'sanitize_callback' => function($value) {
 					return $this->sanitize_action_name($value, $this->config->get_default('action_comment'));
@@ -689,7 +864,7 @@ class Settings {
 				'label'             => __( 'Login', 'cd-recaptcha' ),
 				'section_id'        => 'thresholds',
 				'type'              => 'number',
-				'class'             => 'hidden show-field-for-v3',
+				'class'             => 'hidden show-field-for-v3 show-field-for-ent_score',
 				'field_class'       => 'small-text',
 				'min'               => 0.0,
 				'max'               => 1.0,
@@ -700,7 +875,7 @@ class Settings {
 				'label'             => __( 'Registration', 'cd-recaptcha' ),
 				'section_id'        => 'thresholds',
 				'type'              => 'number',
-				'class'             => 'hidden show-field-for-v3',
+				'class'             => 'hidden show-field-for-v3 show-field-for-ent_score',
 				'field_class'       => 'small-text',
 				'min'               => 0.0,
 				'max'               => 1.0,
@@ -711,7 +886,7 @@ class Settings {
 				'label'             => __( 'Multisite User Signup', 'cd-recaptcha' ),
 				'section_id'        => 'thresholds',
 				'type'              => 'number',
-				'class'             => 'hidden show-field-for-v3',
+				'class'             => 'hidden show-field-for-v3 show-field-for-ent_score',
 				'field_class'       => 'small-text',
 				'min'               => 0.0,
 				'max'               => 1.0,
@@ -722,7 +897,7 @@ class Settings {
 				'label'             => __( 'Lost Password', 'cd-recaptcha' ),
 				'section_id'        => 'thresholds',
 				'type'              => 'number',
-				'class'             => 'hidden show-field-for-v3',
+				'class'             => 'hidden show-field-for-v3 show-field-for-ent_score',
 				'field_class'       => 'small-text',
 				'min'               => 0.0,
 				'max'               => 1.0,
@@ -733,7 +908,7 @@ class Settings {
 				'label'             => __( 'Reset Password', 'cd-recaptcha' ),
 				'section_id'        => 'thresholds',
 				'type'              => 'number',
-				'class'             => 'hidden show-field-for-v3',
+				'class'             => 'hidden show-field-for-v3 show-field-for-ent_score',
 				'field_class'       => 'small-text',
 				'min'               => 0.0,
 				'max'               => 1.0,
@@ -744,7 +919,7 @@ class Settings {
 				'label'             => __( 'Comment', 'cd-recaptcha' ),
 				'section_id'        => 'thresholds',
 				'type'              => 'number',
-				'class'             => 'hidden show-field-for-v3',
+				'class'             => 'hidden show-field-for-v3 show-field-for-ent_score',
 				'field_class'       => 'small-text',
 				'min'               => 0.0,
 				'max'               => 1.0,
@@ -752,6 +927,9 @@ class Settings {
 				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
 			],
 		];
+
+		 $fields['ent_checkbox_site_key']['desc'] = $fields['ent_policy_based_site_key']['desc'] = $fields['ent_score_site_key']['desc'];
+		 $fields['ent_checkbox_error_message']['desc'] = $fields['ent_policy_based_error_message']['desc'] = $fields['ent_score_error_message']['desc'];
 
 		if ( file_exists(WP_PLUGIN_DIR . '/sidebar-login') ) {
 			$fields['disable_sidebar_login_js'] = [
@@ -815,6 +993,7 @@ class Settings {
 					'label'        => __( 'Add the client\'s IP address to the JSON response data', 'cd-recaptcha' ),
 					'section_id'   => 'logging',
 					'type'         => 'checkbox',
+					'class'        => 'hidden show-field-for-v2_checkbox show-field-for-v2_invisible show-field-for-v3',
 				],
 				'recaptcha_log_rotate_interval' => [ 
 					'label'         => __( 'reCAPTCHA log\'s rotate interval', 'cd-recaptcha' ),

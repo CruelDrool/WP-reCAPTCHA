@@ -45,10 +45,10 @@ class Frontend {
 	private $current_form;
 	
 	/**
-	 * @since 1.0.0
+	 * @since x.y.z
 	 * @var string 
 	 */
-	private const API_URL_FORMAT = 'https://www.%s/recaptcha/api%s';
+	private const API_URL_FORMAT_LEGACY = 'https://www.%s/recaptcha/api%s';
 
 	/**
 	 * @since 1.0.0
@@ -67,6 +67,12 @@ class Frontend {
 	 * @var string
 	 */
 	private $error_code;
+
+	/**
+	 * @since x.y.z
+	 * @var array
+	 */
+	private $user_info = ['user_id' => 0, 'user_login' => '', 'user_email' => '', 'user_registered' => ''];
 			
 	/**
 	 * Constructor
@@ -171,6 +177,18 @@ class Frontend {
 			error_log($output);
 		}
 	}
+
+	/**
+	 * Simple check for if the version is a legacy version.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	private function is_legacy_version() {
+		return 	( in_array($this->recaptcha_version, ['v2_checkbox', 'v2_invisible', 'v3']) );
+	}
+
 	
 	/**
 	 * Checks if both Site Key and Secret Key are non-empty. Does not check if they are actually valid keys.
@@ -180,7 +198,11 @@ class Frontend {
 	 * @return bool
 	 */
 	private function is_available() {
-		return ( !empty($this->config->get_option($this->recaptcha_version.'_site_key')) && !empty($this->config->get_option($this->recaptcha_version.'_secret_key')) );
+		if ( $this->is_legacy_version() ) {
+			return ( !empty($this->config->get_option($this->recaptcha_version.'_site_key')) && !empty($this->config->get_option($this->recaptcha_version.'_secret_key')) );
+		}
+
+		return ( !empty($this->config->get_option('gcp_project_id')) && !empty($this->config->get_option('gcp_api_key')) && !empty($this->config->get_option($this->recaptcha_version.'_site_key')) );
 	}
 
 	/**
@@ -197,8 +219,14 @@ class Frontend {
 			'render'	=> 'explicit'
 		];
 
+		$url_format = "https://www.%s/recaptcha/enterprise%s";
+
+		if ( $this->is_legacy_version() ) {
+			$url_format = self::API_URL_FORMAT_LEGACY;
+		}
+
 		$url = sprintf('%s?%s',
-			sprintf(self::API_URL_FORMAT, $this->config->get_domain(), '.js'),
+			sprintf($url_format, $this->config->get_domain(), '.js'),
 			http_build_query($query_data, '', '&')
 		);
 
@@ -262,7 +290,7 @@ class Frontend {
 
 		if ( $this->is_form_enabled( 'lost_password' ) ) {
 			add_action( 'lostpassword_form', [ $this, 'lostpassword_form_field' ], 99 );
-			add_action( 'lostpassword_post', [ $this, 'lostpassword_verify' ] );
+			add_action( 'lostpassword_post', [ $this, 'lostpassword_verify' ], 10, 2 );
 		}
 
 		if ( $this->is_form_enabled( 'reset_password' ) ) {
@@ -277,7 +305,7 @@ class Frontend {
 				add_filter( 'comment_form_field_comment', [ $this, 'comment_form_field_return' ], 99 );
 			}
 			
-			add_filter( 'pre_comment_approved', [ $this, 'comment_verify' ], 99 );
+			add_filter( 'pre_comment_approved', [ $this, 'comment_verify' ], 99, 2 );
 		}
 		
 		add_action( 'wp_footer', [$this, 'footer_script'], 99999 );
@@ -308,7 +336,7 @@ class Frontend {
 	 * @return void
 	 */
 	function login_enqueue_scripts() {
-		if ( $this->recaptcha_version  == 'v2_checkbox' && $this->config->get_option( 'v2_checkbox_add_css' ) && $this->config->get_option( 'v2_checkbox_size' ) != 'compact' ) {
+		if ( in_array($this->recaptcha_version, ['v2_checkbox', 'ent_checkbox']) && $this->config->get_option( $this->recaptcha_version . '_add_css' ) && $this->config->get_option( $this->recaptcha_version . '_size' ) != 'compact' ) {
 			wp_enqueue_style( $this->config->get_prefix().'-login', plugins_url( '/assets/css/loginform.css', $this->config->get_file() ), [], $this->config->get_current_version() );
 		}
 	}
@@ -352,17 +380,26 @@ class Frontend {
 	}
 
 	/**
-	 * Verifies a reCAPTCHA response token.
+	 * Verifies a reCAPTCHA response token using the Enterprise REST API.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return bool
 	 */
 	function verify() {
+		if ( $this->is_legacy_version() ) {
+			return $this->verify_legacy();
+		}
+		
 		$remote_ip = $this->get_remote_ip();
+
+		if ( $remote_ip === false ) {
+			$this->debug_log(3, 'Was unable to determine remote IP');
+		}
+
 		$response_token = $_POST['g-recaptcha-response'] ?? '';
 
-		// No user response token. Possible when the JavaScript was removed using the browser's developer tools interface.
+		// No user response token. Bots usually submit no token.
 		if ( empty($response_token) ) {
 			$this->debug_log(3,
 				sprintf('No response token submitted. Form: %s. Server name: %s. IP address: %s',
@@ -374,19 +411,196 @@ class Frontend {
 			return false;
 		}
 
-		if ( $this->config->get_option('require_remote_ip') && $remote_ip === false ) {
-			$this->debug_log(3, 'Required by settings to determine the remote IP, but was unable to do so');
+		$headers = [];
+
+		if ( $this->config->get_option('submit_headers') ) {
+			foreach ( apache_request_headers() as $key => $value) {
+				$headers[] = "{$key}: {$value}";
+			}
+		}
+		
+		$payload = [
+			'event' => [
+				'token'          => $response_token, // Required
+				'siteKey'        => $this->config->get_option($this->recaptcha_version . '_site_key'), // Required
+				'expectedAction' => in_array($this->recaptcha_version, ['ent_score', 'ent_policy_based']) ? $this->config->get_option('action_'.$this->current_form) : '', // Optional. Can be empty. Seems only useful for Score and Policy-based challenges. However, it does nothing to affect the validity of the token, so have to verify oneself later.
+				'userIpAddress'  => $this->config->get_option('submit_remote_ip') && $remote_ip !== false ? $remote_ip : '', // Optional. Can be empty.
+				'userAgent'      => $this->config->get_option('submit_user_agent') && isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '', // Optional. Can be empty.
+				'requestedUri'   => $this->config->get_option('submit_request_uri') && isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '', // Optional. Can be empty.
+				'headers'        => $headers, // Optional. HTTP header information about the request. Needs to be an array. The array can be empty.
+			],
+		];
+
+		if ( $this->config->get_option('submit_user_id') || $this->config->get_option('submit_user_login') || $this->config->get_option('submit_user_email') ) {
+
+			// Optional. "userInfo" (assoc. array). Cannot be empty. Allowed keys: createAccountTime (string), accountId (string), userIds (array)
+
+			// "accountId" (string) can be any stable user identification: user ID, a username, or just empty.
+			// "userIds" (array). Can be empty. Entries have to be an associative array containing one of these keys: username, email, phoneNumber.
+			// "createAccountTime" (string). Cannot be empty because needs to be a certain timestamp format (RFC 3339) in the UTC (Z) timezone.
+
+			$user_id = $this->config->get_option('submit_user_id') && $this->user_info['user_id'] > 0 ? strval($this->user_info['user_id']) : '';
+
+			$user_info = ['accountId' => $user_id ];
+
+			if ( !empty($this->user_info['user_registered']) && $this->config->get_option('submit_user_registered') ) {
+				$user_info['createAccountTime'] = \DateTime::createFromFormat('Y-m-d H:i:s', $this->user_info['user_registered'])->format('Y-m-d\TH:i:s\Z');
+			}
+
+			// "userIds" will be a part of the returned JSON data when "accountId" is submitted. So no point in trying to avoid sending an empty array.
+			$user_ids = [];
+
+			if ( !empty($this->user_info['user_login']) && $this->config->get_option('submit_user_login') ) {
+				$user_ids[] = ['username' => $this->user_info['user_login']];
+			}
+
+			if ( !empty($this->user_info['user_email']) && $this->config->get_option('submit_user_email') ) {
+				$user_ids[] = ['email' => $this->user_info['user_email']];
+			}
+			
+			$user_info['userIds'] = $user_ids;
+
+			$payload['event']['userInfo'] = $user_info;
+		}
+
+		$verify_url = sprintf('https://recaptchaenterprise.googleapis.com/v1/projects/%s/assessments?key=%s', $this->config->get_option('gcp_project_id'), $this->config->get_option('gcp_api_key'));
+
+		// Make a POST request to the Google reCAPTCHA Enterprise server
+		$response = wp_remote_post($verify_url,	[
+			'timeout' => 10,
+			'headers' => ['Content-Type' => 'application/json'],
+			'body' => json_encode($payload),
+		]);
+
+		if ( $response instanceof WP_Error ) {
+			$this->debug_log(1, 'Connecting to the verification server failed', $response);
 			return false;
 		}
 
-		$verify_url = sprintf(self::API_URL_FORMAT, $this->config->get_domain(), '/siteverify');
+		if ( !isset($response['body']) ) {
+			$this->debug_log(1, 'Expected array key "body" missing in the response data');
+			return false;
+		}
+
+		$result = json_decode( $response['body'], true );
+
+		if ( !is_array($result) ) {
+			$this->debug_log(1, 'The verification server returned invalid/empty JSON data');
+			return false;
+		}
+
+		$this->recaptcha_log($result);
+
+		if ( !empty($result['error']) ) {
+			$this->debug_log(1, sprintf("The returned JSON data contains array key \"error\":\n%s", print_r($result['error'], true)));
+			return false;
+		}
+
+		if ( !isset( $result['riskAnalysis'] ) ) {
+			$this->debug_log(1, 'Expected array key "riskAnalysis" missing in the JSON data');
+			return false;
+		}
+
+		if ( !isset( $result['tokenProperties'] ) ) {
+			$this->debug_log(1, 'Expected array key "tokenProperties" missing in the JSON data');
+			return false;
+		}
+
+		$risk_analysis = $result['riskAnalysis'];
+		$token_properties = $result['tokenProperties'];
+		$is_success = false;
+		$debug_message = '';
+		$debug_level = 4;
+		$hostname_match = $this->config->get_option('verify_origin') ? ($token_properties['hostname'] ?? '') === $_SERVER['SERVER_NAME'] : true;
+
+		if ( $hostname_match )  {
+			if ( $token_properties['valid'] == true ) {
+				if ( $this->recaptcha_version == 'ent_score' ) {
+					$threshold = $this->config->get_option( 'threshold_'.$this->current_form );
+					$expected_action = $this->config->get_option('action_'.$this->current_form);
+
+					$score = $risk_analysis['score'] ?? 0.0;
+					$action = $token_properties['action'] ?? '';
+					
+					$is_success = $score >= $threshold && $action === $expected_action;
+
+					$errors = [];
+					if ( $score < $threshold ) {
+						$errors[] = 'score was below the threshold';
+					}
+					if ( $action !== $expected_action ) {
+						$errors[] = 'action was not the expected action';
+					}
+					$errors = ucfirst(implode(', ', $errors));
+					$debug_message =
+						sprintf('%sAction: "%s"; expected action: "%s". Score: %s; threshold: %.1f',
+							!empty($errors) ? "{$errors}. " : '',
+							$action,
+							$expected_action,
+							$score,
+							$threshold
+						);
+				} else {
+					// When the value of $risk_analysis['challenge'] is "FAILED", then the value of $token_properties['valid'] is false at the same time.
+					$is_success = true;
+				}
+			} else {
+				$debug_message = sprintf('Token not valid. invalidReason: %s. challenge: %s', $token_properties['invalidReason'], $risk_analysis['challenge']);
+			}
+		} else {
+			// This message can only occur if option 'verify_origin' is enabled.
+			$debug_level = 3; // Notice. Bump to Warning?
+			$debug_message = sprintf('Hostname mismatch. Origin hostname: "%s". Expected: "%s"', $token_properties['hostname'] ?? '', $_SERVER['SERVER_NAME']);
+		}
+
+		$this->debug_log($debug_level,
+			sprintf('%s verification result: %s%s. IP address: %s',
+				$this->recaptcha_version,
+				$is_success ? 'success' : 'no success',
+				!empty($debug_message) ? ". {$debug_message}" : '',
+				$remote_ip !== false ? $remote_ip : '0.0.0.0'
+			)
+		);
+
+		return $is_success;
+	}
+
+	/**
+	 * Verifies a reCAPTCHA response token using the legacy SiteVerify API.
+	 *
+	 * @since x.y.z
+	 *
+	 * @return bool
+	 */
+	private function verify_legacy() {
+		$remote_ip = $this->get_remote_ip();
+
+		if ( $remote_ip === false ) {
+			$this->debug_log(3, 'Was unable to determine remote IP');
+		}
+
+		$response_token = $_POST['g-recaptcha-response'] ?? '';
+
+		// No user response token. Bots usually submit no token.
+		if ( empty($response_token) ) {
+			$this->debug_log(3,
+				sprintf('No response token submitted. Form: %s. Server name: %s. IP address: %s',
+					$this->current_form,
+					$_SERVER['SERVER_NAME'],
+					$remote_ip !== false ? $remote_ip : '0.0.0.0'
+				)
+			);
+			return false;
+		}
+
+		$verify_url = sprintf(self::API_URL_FORMAT_LEGACY, $this->config->get_domain(), '/siteverify');
 
 		$post_params = [
 			'secret'   => $this->config->get_option($this->recaptcha_version.'_secret_key'),
 			'response' => $response_token,
 		];
 
-		if ( $remote_ip !== false ) {
+		if ( $this->config->get_option('submit_remote_ip') && $remote_ip !== false ) {
 			$post_params['remoteip'] = $remote_ip;
 		}
 
@@ -410,7 +624,11 @@ class Frontend {
 			return false;
 		}
 
-		$this->recaptcha_log($result, $remote_ip);
+		if ( $this->config->get_option('recaptcha_log_ip') ) {
+			$result['remoteip'] = $remote_ip !== false ? $remote_ip : '0.0.0.0';
+		}
+
+		$this->recaptcha_log($result);
 
 		if ( !empty($result['error-codes']) ) {
 			$this->debug_log(1, sprintf('The returned JSON data contained error codes: %s', implode(', ', $result['error-codes'])));
@@ -462,7 +680,7 @@ class Frontend {
 				$debug_message = $this->recaptcha_version == 'v3' ? 'Array key "success" was not equal to true' : '';
 			}
 		} else {
-			// This message can only occur if 'verify_origin' is set to true.
+			// This message can only occur if option 'verify_origin' is enabled.
 			$debug_level = 3; // Notice. Bump to Warning?
 			$debug_message = sprintf('Hostname mismatch. Origin hostname: "%s". Expected: "%s"', $result['hostname'] ?? '', $_SERVER['SERVER_NAME']);
 		}
@@ -485,12 +703,12 @@ class Frontend {
 	 * @since 1.0.6
 	 * @since 1.0.7 Removed parameter $version.
 	 * @since 1.1.0 $remoteip renamed to $remote_ip and can now be false.
+	 * @since x.y.z Removed parameter $remote_ip.
 	 * @param array $result 
-	 * @param false|string $remote_ip 
 	 *
 	 * @return void
 	 */
-	private function recaptcha_log($result, $remote_ip = false){
+	private function recaptcha_log($result){
 		if ( !( $this->config->get_is_active_for_network() || is_main_site() ) ) {
 			return;
 		}
@@ -507,10 +725,6 @@ class Frontend {
 		}
 
 		if ( file_exists($dir) && is_writable($dir)) {
-			
-			if ($this->config->get_option('recaptcha_log_ip')) {
-				$result['remoteip'] = $remote_ip !== false ? $remote_ip : '0.0.0.0';
-			}
 
 			$date = $this->config->get_log_rotate_interval('recaptcha');
 			$file = sprintf('%s%srecaptcha_%s_log%s.jsonl',
@@ -566,7 +780,7 @@ class Frontend {
 			$this->config->get_prefix(),
 			self::$captcha_count,
 			// Hidden field so that the v3's grecaptcha.execute() knows what action it is doing for this field.
-			$this->recaptcha_version == 'v3' ?  sprintf('<input type="hidden" name="recaptcha_action" value="%s" />', $this->config->get_option('action_'.$this->current_form)) : '',
+			in_array($this->recaptcha_version, ['v3', 'ent_score', 'ent_policy_based']) ?  sprintf('<input type="hidden" name="recaptcha_action" value="%s" />', $this->config->get_option('action_'.$this->current_form)) : '',
 			$this->captcha_div_class
 		);
 
@@ -583,68 +797,33 @@ class Frontend {
 	function footer_script() {
 
 		if ( self::$captcha_count > 0 ) {
-			if ( $this->recaptcha_version === 'v2_checkbox' ) {
-				$this->v2_checkbox_script();
-			} elseif ( $this->recaptcha_version === 'v2_invisible' ) {
-				$this->v2_invisible_script();
-			} elseif ( $this->recaptcha_version === 'v3' ) {
-				$this->v3_script_form_pages();
+			switch( $this->recaptcha_version ) {
+				case 'v3':
+				case 'v2_invisible':
+				case 'ent_score':
+				case 'ent_policy_based':
+					$this->score_based_footer_script();
+					break;
+				case 'v2_checkbox':
+				case 'ent_checkbox':
+					$this->checkbox_footer_script();
+					break;
 			}
-		} elseif ( $this->recaptcha_version === 'v3' && $this->config->get_option( 'v3_load_all_pages' ) ) {
-			$this->v3_script_all_pages();
+		} elseif ( in_array($this->recaptcha_version, ['v3', 'v2_invisible', 'ent_score', 'ent_policy_based']) && $this->config->get_option( 'load_analytics_footer_script' ) ) {
+			$this->analytics_footer_script();
 		}
 	}
 
 	/**
-	 * "v2 Checkbox" footer script.
+	 * Footer script for score based challenges.
+	 * 
+	 * Also supports v2 Invisible, since the scripts are so similar.
 	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	function v2_checkbox_script() {
-		?>
-		<script>
-			var <?= $this->onload_callback_name ?> = function() {<?=
-				$this->javascript_set_theme() ?> 
-
-				for ( var i = 0; i < document.forms.length; i++ ) {
-					var form = document.forms[i];
-					var captcha_div = form.querySelector( '.<?= $this->captcha_div_class ?>' );
-
-					if ( captcha_div === null )
-						continue;
-
-					captcha_div.innerHTML = '';<?php
-					$size = $this->config->get_option( 'v2_checkbox_size' );
-					if ($size == 'auto' ) : ?> 
-					var size = ( captcha_div.parentNode.offsetWidth < 302 && captcha_div.parentNode.offsetWidth != 0 || document.body.scrollWidth < 302 ) ? 'compact' : 'normal';
-					<?php else : ?> 
-					var size = '<?= esc_js( $size ) ?>';
-					<?php endif; ?>
-
-					( function( form ) {
-						var widget_id = grecaptcha.render( captcha_div,{
-							'sitekey' : '<?= esc_js( trim( $this->config->get_option( 'v2_checkbox_site_key' ) ) ) ?>',
-							'size'  : size,
-							'theme' : theme,
-						});
-					})(form);
-				}
-			};
-		</script>
-		<script src="<?= $this->get_api_script_url() ?>" async defer></script>
-		<?php
-	}
-
-	/**
-	 * "v2 Invisible" footer script.
-	 *
-	 * @since 1.0.0
+	 * @since x.y.z
 	 *
 	 * @return void
 	 */
-	function v2_invisible_script() {
+	function score_based_footer_script() {
 		?>
 		<script>
 			var <?= $this->onload_callback_name ?> = function() {<?php
@@ -657,6 +836,12 @@ class Frontend {
 				var badge = '<?= esc_js( $badge ) ?>';
 				<?php endif; ?>
 
+				var greCAPTCHA = grecaptcha;
+
+				if ( grecaptcha.enterprise) { 
+					greCAPTCHA = grecaptcha.enterprise;
+				}
+
 				for ( var i = 0; i < document.forms.length; i++ ) {
 					var form = document.forms[i];
 					var captcha_div = form.querySelector( '.<?= $this->captcha_div_class ?>' );
@@ -667,8 +852,8 @@ class Frontend {
 					captcha_div.innerHTML = '';
 
 					( function( form ) {
-						var widget_id = grecaptcha.render( captcha_div,{
-							'sitekey' : '<?= esc_js( trim( $this->config->get_option( 'v2_invisible_site_key' ) ) ) ?>',
+						var widget_id = greCAPTCHA.render( captcha_div,{
+							'sitekey' : '<?= esc_js( trim( $this->config->get_option( $this->recaptcha_version . '_site_key' ) ) ) ?>',
 							'size'  : 'invisible',
 							'theme' : theme,
 							'badge' : badge,
@@ -687,7 +872,14 @@ class Frontend {
 
 						form.onsubmit = function( e ){
 							e.preventDefault();
-							grecaptcha.execute( widget_id );
+							<?php if ($this->recaptcha_version == 'v2_invisible') : ?> 
+							greCAPTCHA.execute( widget_id );
+							<?php else : 
+							// Get value from the hidden field so we know what action we're doing for this particular form.?> 
+							var recaptcha_action = form.querySelector("input[name='recaptcha_action']").value;
+
+							greCAPTCHA.execute( widget_id, { action: recaptcha_action } );
+							<?php endif; ?> 
 						};
 					})(form);
 				}
@@ -698,24 +890,22 @@ class Frontend {
 	}
 
 	/**
-	 * "v3" footer script for form pages.
+	 * Footer script for checkbox challenges.
 	 *
-	 * @since 1.0.0
+	 * @since x.y.z
 	 *
 	 * @return void
 	 */
-	function v3_script_form_pages() {
+	function checkbox_footer_script() {
 		?>
 		<script>
-			var <?= $this->onload_callback_name ?> = function() {<?php
-				echo $this->javascript_set_theme();
+			var <?= $this->onload_callback_name ?> = function() {<?=
+				$this->javascript_set_theme() ?> 
+				var greCAPTCHA = grecaptcha;
 
-				$badge = $this->config->get_option( 'badge' );
-				if ($badge == 'auto') : ?> 
-				var badge = document.dir == 'rtl' ? 'bottomleft' : 'bottomright';
-				<?php else : ?> 
-				var badge = '<?= esc_js( $badge ) ?>';
-				<?php endif; ?>
+				if ( grecaptcha.enterprise) { 
+					greCAPTCHA = grecaptcha.enterprise;
+				}
 
 				for ( var i = 0; i < document.forms.length; i++ ) {
 					var form = document.forms[i];
@@ -724,33 +914,20 @@ class Frontend {
 					if ( captcha_div === null )
 						continue;
 
-					captcha_div.innerHTML = '';
+					captcha_div.innerHTML = '';<?php
+					$size = $this->config->get_option( $this->recaptcha_version . '_size' );
+					if ($size == 'auto' ) : ?> 
+					var size = ( captcha_div.parentNode.offsetWidth < 302 && captcha_div.parentNode.offsetWidth != 0 || document.body.scrollWidth < 302 ) ? 'compact' : 'normal';
+					<?php else : ?> 
+					var size = '<?= esc_js( $size ) ?>';
+					<?php endif; ?>
 
 					( function( form ) {
-						var widget_id = grecaptcha.render( captcha_div,{
-							'sitekey' : '<?= esc_js( trim( $this->config->get_option( 'v3_site_key' ) ) ) ?>',
-							'size'  : 'invisible',
+						var widget_id = greCAPTCHA.render( captcha_div,{
+							'sitekey' : '<?= esc_js( trim( $this->config->get_option( $this->recaptcha_version . '_site_key' ) ) ) ?>',
+							'size'  : size,
 							'theme' : theme,
-							'badge' : badge,
-							'callback' : function ( token ) {
-								HTMLFormElement.prototype.submit.call( form );
-							},
 						});
-						<?php
-						// When an error happens, forms from wp-login.php will have a class named "shake" added to it.
-						// This class has an animation that shakes the form, but also moves the badge into the form.
-						// Going to let it do the shake animation, but then the class gets removed.
-						?> 
-						if (form.classList.contains('shake')) {
-							setTimeout(function(form){ form.classList.remove('shake');}, 600, form);
-						}
-
-						form.onsubmit = function( e ){<?php
-							// Get value from the hidden field so we know what action we're doing for this particular form.?> 
-							var recaptcha_action = form.querySelector("input[name='recaptcha_action']").value;
-							e.preventDefault();
-							grecaptcha.execute( widget_id, { action: recaptcha_action } );
-						};
 					})(form);
 				}
 			};
@@ -758,15 +935,15 @@ class Frontend {
 		<script src="<?= $this->get_api_script_url() ?>" async defer></script>
 		<?php
 	}
-
+	
 	/**
-	 * "v3" footer script for all pages.
+	 * Footer script for analytics.
 	 *
-	 * @since 1.0.0
+	 * @since x.y.z
 	 *
 	 * @return void
 	 */
-	function v3_script_all_pages() {
+	function analytics_footer_script() {
 		?>
 		<div id="<?= $this->captcha_div_class ?>"></div>
 		<script>
@@ -778,11 +955,16 @@ class Frontend {
 				var badge = document.dir == 'rtl' ? 'bottomleft' : 'bottomright';
 				<?php else : ?> 
 				var badge = '<?= esc_js( $badge ) ?>';
-				<?php endif; ?>
+				<?php endif; ?> 
+				var greCAPTCHA = grecaptcha;
+
+				if ( grecaptcha.enterprise) { 
+					greCAPTCHA = grecaptcha.enterprise;
+				}
 
 				var captcha_div = document.getElementById("<?= $this->captcha_div_class ?>");
-				grecaptcha.render(captcha_div, {
-					'sitekey' : '<?= esc_js( trim( $this->config->get_option( 'v3_site_key' ) ) ) ?>',
+				greCAPTCHA.render(captcha_div, {
+					'sitekey' : '<?= esc_js( trim( $this->config->get_option( $this->recaptcha_version . '_site_key' ) ) ) ?>',
 					'size'  : 'invisible',
 					'theme' : theme,
 					'badge' : badge,
@@ -1024,8 +1206,19 @@ SCRIPT;
 	 */
 	function login_verify( $user, $username = '', $password = '' ) {
 		// Hmm, this filter gets applied just by loading wp-login.php, no submission needed.	
-		if ( count($_POST) ) {	
+		if ( count($_POST) ) {
+
 			$this->current_form = 'login';
+			$this->user_info['user_login'] = $username;
+
+			// In case e-mail address was used as username.
+			if ($user instanceof WP_User) {
+				$this->user_info['user_id'] = $user->ID;
+				$this->user_info['user_login'] = $user->user_login;
+				$this->user_info['user_email'] = $user->user_email;
+				$this->user_info['user_registered'] = $user->user_registered;
+			}
+
 			if ( ! $this->verify()) {
 				if ($user instanceof WP_Error) {
 					// There were errors before us, so let's just add to the pile.
@@ -1054,6 +1247,10 @@ SCRIPT;
 	 */
 	function registration_verify( $errors, $sanitized_user_login, $user_email ) {
 		$this->current_form = 'registration';
+
+		$this->user_info['user_login'] = $sanitized_user_login;
+		$this->user_info['user_email'] = $user_email;
+
 		if ( ! $this->verify() ) {
 			$errors->add( $this->error_code, $this->get_error_msg() );
 		}
@@ -1075,6 +1272,8 @@ SCRIPT;
 		// Only verify guests during the "validate user signup" stage because we don't load a CAPTCHA during the "validate blog signup" stage.
 		if ( isset( $_POST['stage'] ) && $_POST['stage'] === 'validate-user-signup' ) {
 			$this->current_form = 'ms_user_signup';
+			$this->user_info['user_login'] = $result['user_name'] ?? '';
+			$this->user_info['user_email'] = $result['user_email'] ?? '';
 			if ( ! $this->verify() ) {
 				$result['errors']->add( $this->error_code, $this->get_error_msg(false) );
 			}
@@ -1095,6 +1294,16 @@ SCRIPT;
 	 */
 	function ms_blog_verify( $result ) {
 		$this->current_form = 'ms_user_signup';
+
+		$user = $result['user'];
+
+		if ($user instanceof WP_User) {
+			$this->user_info['user_id'] = $user->ID;
+			$this->user_info['user_login'] = $user->user_login;
+			$this->user_info['user_email'] = $user->user_email;
+			$this->user_info['user_registered'] = $user->user_registered;
+		}
+
 		if ( ! $this->verify() ) {
 			$result['errors']->add( $this->error_code, $this->get_error_msg(false) );
 		}
@@ -1109,11 +1318,20 @@ SCRIPT;
 	 *
 	 * @since 1.0.0
 	 * @param WP_Error $errors 
+	 * @param WP_User|false
 	 *
 	 * @return void
 	 */
-	function lostpassword_verify( $errors ) {
+	function lostpassword_verify( $errors, $user_data ) {
 		$this->current_form = 'lost_password';
+
+		if ($user_data instanceof WP_User) {
+			$this->user_info['user_id'] = $user_data->ID;
+			$this->user_info['user_login'] = $user_data->user_login;
+			$this->user_info['user_email'] = $user_data->user_email;
+			$this->user_info['user_registered'] = $user_data->user_registered;
+		}
+
 		if ( ! $this->verify() ) {
 			$errors->add( $this->error_code, $this->get_error_msg() );
 		}
@@ -1133,6 +1351,14 @@ SCRIPT;
 	function reset_password_verify( $errors, $user ) {	
 		if ( count($_POST) ) {
 			$this->current_form = 'reset_password';
+
+			if ($user instanceof WP_User) {
+				$this->user_info['user_id'] = $user->ID;
+				$this->user_info['user_login'] = $user->user_login;
+				$this->user_info['user_email'] = $user->user_email;
+				$this->user_info['user_registered'] = $user->user_registered;
+			}
+
 			if ( ! $this->verify() ) {
 				$errors->add( $this->error_code, $this->get_error_msg() );
 			}
@@ -1146,10 +1372,11 @@ SCRIPT;
 	 *
 	 * @since 1.0.0
 	 * @param int|string|WP_Error $approved 
+	 * @param array $comment_data
 	 *
 	 * @return int|string|WP_Error
 	 */
-	function comment_verify( $approved ) {
+	function comment_verify( $approved, $comment_data ) {
 		$this->current_form = 'comment';
 
 		// Hacky way to avoid running twice due to changes introduced in WordPress 6.7.
@@ -1159,6 +1386,16 @@ SCRIPT;
 			$this->debug_log(5, sprintf('%s: static variable is null. Function called for the first time', __FUNCTION__));
 
 			$var = 0; // Any non-null value.
+
+			$this->user_info['user_id'] = $comment_data['user_id'] ?? 0;
+			$this->user_info['user_email'] = $comment_data['comment_author_email'] ?? '';
+
+			if ( $this->user_info['user_id'] > 0 ) {
+				$user = get_userdata($this->user_info['user_id']);
+				$this->user_info['user_login'] = $user->user_login;
+				$this->user_info['user_registered'] = $user->user_registered;
+			}
+
 
 			if ( ! $this->verify() ) {
 				$this->debug_log(5, sprintf('%s: rejected comment', __FUNCTION__));
