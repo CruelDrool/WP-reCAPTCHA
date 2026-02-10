@@ -381,9 +381,9 @@ class Settings {
 				'type'          => 'select',
 				'std'           => $this->config->get_default('recaptcha_version'),
 				'options'       => [
-					'ent_score'      => __( 'Enterprise - score challenge', 'cd-recaptcha' ),
-					'ent_checkbox'     => __( 'Enterprise - checkbox challenge', 'cd-recaptcha' ),
-					'ent_policy_based' => __( 'Enterprise - policy-based challenge', 'cd-recaptcha' ),
+					'ent_score'        => __( 'Score challenge (enterprise)', 'cd-recaptcha' ),
+					'ent_checkbox'     => __( 'Checkbox challenge (enterprise)', 'cd-recaptcha' ),
+					'ent_policy_based' => __( 'Policy-based challenge (enterprise)', 'cd-recaptcha' ),
 					'v2_checkbox'      => sprintf('%s (%s)', __( 'v2 "I\'m not a robot"', 'cd-recaptcha' ), __( 'legacy', 'cd-recaptcha' ) ),
 					'v2_invisible'     => sprintf('%s (%s)', __( 'v2 Invisible', 'cd-recaptcha' ), __( 'legacy', 'cd-recaptcha' ) ),
 					'v3'               => sprintf('%s (%s)', __( 'v3', 'cd-recaptcha' ), __( 'legacy', 'cd-recaptcha' ) ),
