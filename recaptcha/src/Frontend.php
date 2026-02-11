@@ -418,7 +418,7 @@ class Frontend {
 			],
 		];
 
-		if ( $this->config->get_option('submit_user_id') || $this->config->get_option('submit_user_login') || $this->config->get_option('submit_user_email') ) {
+		if ( $this->config->get_option('submit_user_id') || $this->config->get_option('submit_user_login') || $this->config->get_option('submit_user_email') || $this->config->get_option('submit_user_registered') ) {
 
 			// Optional. "userInfo" (assoc. array). Cannot be empty. Allowed keys: createAccountTime (string), accountId (string), userIds (array)
 
