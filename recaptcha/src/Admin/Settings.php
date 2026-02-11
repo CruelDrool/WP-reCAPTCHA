@@ -396,7 +396,7 @@ class Settings {
 					)
 				),
 			],
-			'gcp_project_id' => [
+			'gc_project_id' => [
 				'label'         => __( 'Google Cloud Project ID', 'cd-recaptcha' ),
 				'section_id'    => 'general',
 				'class'         => 'hidden show-field-for-ent_checkbox show-field-for-ent_policy_based show-field-for-ent_score',
@@ -409,7 +409,7 @@ class Settings {
 					)
 				),
 			],
-			'gcp_api_key' => [
+			'gc_api_key' => [
 				'label'         => __( 'Google Cloud API key', 'cd-recaptcha' ),
 				'section_id'    => 'general',
 				'type'          => 'password',

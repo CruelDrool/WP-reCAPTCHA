@@ -194,7 +194,7 @@ class Frontend {
 			return ( !empty($this->config->get_option($this->recaptcha_version.'_site_key')) && !empty($this->config->get_option($this->recaptcha_version.'_secret_key')) );
 		}
 
-		return ( !empty($this->config->get_option('gcp_project_id')) && !empty($this->config->get_option('gcp_api_key')) && !empty($this->config->get_option($this->recaptcha_version.'_site_key')) );
+		return ( !empty($this->config->get_option('gc_project_id')) && !empty($this->config->get_option('gc_api_key')) && !empty($this->config->get_option($this->recaptcha_version.'_site_key')) );
 	}
 
 	/**
@@ -450,7 +450,7 @@ class Frontend {
 			$payload['event']['userInfo'] = $user_info;
 		}
 
-		$verify_url = sprintf('https://recaptchaenterprise.googleapis.com/v1/projects/%s/assessments?key=%s', $this->config->get_option('gcp_project_id'), $this->config->get_option('gcp_api_key'));
+		$verify_url = sprintf('https://recaptchaenterprise.googleapis.com/v1/projects/%s/assessments?key=%s', $this->config->get_option('gc_project_id'), $this->config->get_option('gc_api_key'));
 
 		// Make a POST request to the Google reCAPTCHA Enterprise server
 		$response = wp_remote_post($verify_url,	[
