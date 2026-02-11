@@ -3,34 +3,37 @@
 ## [x.y.z] - xxxx-xx-xx
 
 ### Added
-- New versions:
-	- Score challenge (enterprise)
-	- Checkbox challenge (enterprise)
-	- Policy-based challenge (enterprise)
+- New versions that use the Enterprise/CreateAssessment API endpoint (Google Cloud):
+	- Score challenge
+	- Checkbox challenge
+	- Policy-based challenge
 - New settings category: Data submissions
-- New options:
-	- Google Cloud Project ID (General).
-	- Google Cloud API key (General).
-	- Load on non-form pages (General).
-	- Client's IP address (Data submissions).
-	- Client's user agent (Data submissions).
-	- Client's HTTP headers (Data submissions).
-	- Request URI (Data submissions).
-	- User ID (Data submissions).
-	- Username (Data submissions).
-	- User e-mail (Data submissions).
-	- User registered date (Data submissions).
+- New settings:
+	- [General] Google Cloud Project ID.*
+	- [General] Google Cloud API key.*
+	- [General] Load on non-form pages.
+	- [Data submissions] Client's IP address.
+	- [Data submissions] Client's user agent.*
+	- [Data submissions] Client's HTTP headers.*
+	- [Data submissions] Request URI.*
+	- [Data submissions] User ID.*
+	- [Data submissions] Username.*
+	- [Data submissions] User e-mail.*
+	- [Data submissions] User registered date.*
+	- [Logging] Remove the reCAPTCHA token from the JSON response data.*
+
+\* Enterprise/CreateAssessment API only.
 
 ### Changed
 
-- The v2 and v3 versions marked as legacy.
-- The footer scripts have been updated.
+- Added margin to paragraphs on the Settings page.
+- The v2 and v3 versions are now marked as using the legacy SiteVerify API endpoint.
 
 ### Removed
 
-- Removed options:
-	- Require the client's IP address.
-	- Load on all pages.
+- Removed settings:
+	- [General] Require the client's IP address.
+	- [General] Load on all pages.
 
 ## [1.1.6] - 2025-12-20
 
