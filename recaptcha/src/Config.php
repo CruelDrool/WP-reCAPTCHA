@@ -137,7 +137,7 @@ class Config {
 	 * @since 1.0.0
 	 * @param string $file
 	 */
-	function __construct(string $file) {
+	public function __construct(string $file) {
 		$this->file = $file;
 		if ( ! function_exists( 'get_plugin_data' ) || ! function_exists( 'is_plugin_active_for_network' ) ) {
 			require_once ABSPATH . '/wp-admin/includes/plugin.php';
@@ -158,7 +158,7 @@ class Config {
 	 *
 	 * @return string
 	 */
-	function get_current_version() {
+	public function get_current_version() {
 		return $this->plugin_data['Version'];
 	}
 
@@ -169,7 +169,7 @@ class Config {
 	 *
 	 * @return string
 	 */
-	function get_plugin_name() {
+	public function get_plugin_name() {
 		return $this->plugin_data['Name'];
 	}
 
@@ -180,7 +180,7 @@ class Config {
 	 *
 	 * @return string
 	 */
-	function get_text_domain() {
+	public function get_text_domain() {
 		return $this->plugin_data['TextDomain'];
 	}
 
@@ -193,7 +193,7 @@ class Config {
 	 *
 	 * @return mixed
 	 */
-	function get_option($option, $default = '') {
+	public function get_option($option, $default = '') {
 		$default = self::DEFAULTS[$option] ?? $default;
 		$value = $this->options[$option] ?? $default;
 
@@ -209,7 +209,7 @@ class Config {
 	 *
 	 * @return bool
 	 */
-	function get_option_multicheck($multicheck = '', $option = '') {
+	public function get_option_multicheck($multicheck = '', $option = '') {
 		$array = $this->get_option($multicheck, []);
 
 		return is_array($array) && in_array( $option, $array, true );
@@ -223,7 +223,7 @@ class Config {
 	 *
 	 * @return string
 	 */
-	function get_default_error_msg($version) {
+	public function get_default_error_msg($version) {
 		switch($version) {
 			case 'ent_checkbox':
 			case 'v2_checkbox':
@@ -251,7 +251,7 @@ class Config {
 	 * 
 	 * @return mixed
 	 */
-	function get_default($option) {
+	public function get_default($option) {
 		return self::DEFAULTS[$option] ?? '';
 	}
 	
@@ -262,7 +262,7 @@ class Config {
 	 * 
 	 * @return string
 	 */
-	function get_domain() {
+	public function get_domain() {
 		$domain = $this->get_option('recaptcha_domain');
 		$domain = in_array($domain, self::DOMAINS) ? $domain : self::DEFAULTS['recaptcha_domain'];
 		
@@ -276,7 +276,7 @@ class Config {
 	 *
 	 * @return array
 	 */
-	function get_domains() {
+	public function get_domains() {
 		return self::DOMAINS;
 	}
 
@@ -293,7 +293,7 @@ class Config {
 	 *
 	 * @return bool True if a successful update, false otherwise.
 	 */
-	function update_option($option, $value = '', $save = true) {
+	public function update_option($option, $value = '', $save = true) {
 		if ( !isset($option) ) { return false; }
 		if ( empty($option) ) { return false; }
 
@@ -314,7 +314,7 @@ class Config {
 	 *
 	 * @return bool True if a successful update, false otherwise.
 	 */
-	function delete_option($option, $save = true) {
+	public function delete_option($option, $save = true) {
 		if ( !isset($option) ) { return false; }
 		if ( empty($option) ) { return false; }
 
@@ -337,7 +337,7 @@ class Config {
 	 *
 	 * @return bool True if a successful update, false otherwise.
 	 */
-	function save_options() {
+	public function save_options() {
 		$exceptions = [
 			'ent_score_error_message', 'ent_policy_based_error_message','ent_checkbox_error_message',
 			'v2_checkbox_error_message', 'v2_invisible_error_message', 'v3_error_message',
@@ -361,7 +361,7 @@ class Config {
 	 *
 	 * @return string
 	 */
-	function get_file() {
+	public function get_file() {
 		return $this->file;
 	}
 
@@ -372,7 +372,7 @@ class Config {
 	 *
 	 * @return string
 	 */
-	function get_option_name() {
+	public function get_option_name() {
 		return $this->option_name;
 	}
 
@@ -383,7 +383,7 @@ class Config {
 	 *
 	 * @return string
 	 */
-	function get_prefix() {
+	public function get_prefix() {
 		return self::PREFIX;
 	}
 	
@@ -394,7 +394,7 @@ class Config {
 	 *
 	 * @return bool True if active for the network, otherwise false.
 	 */
-	function get_is_active_for_network() {
+	public function get_is_active_for_network() {
 		return $this->is_active_for_network;
 	}
 
@@ -406,7 +406,7 @@ class Config {
 	 *
 	 * @return string ISO 8601 date format.
 	 */
-	function get_date_format($type = 'monthly') {
+	public function get_date_format($type = 'monthly') {
 		return self::DATE_FORMATS[$type] ?? self::DATE_FORMATS['monthly'];
 	}
 
@@ -418,7 +418,7 @@ class Config {
 	 *
 	 * @return string Date stamp in the ISO 8601 date format.
 	 */
-	function get_log_rotate_interval($log) {
+	public function get_log_rotate_interval($log) {
 		$type = $this->get_option($log.'_log_rotate_interval');
 
 		$date = $type !== 'never' ? gmdate($this->get_date_format($type)) : '';

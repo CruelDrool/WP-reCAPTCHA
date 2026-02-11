@@ -67,7 +67,7 @@ class Settings {
 	 * @param object $config
 	 * @param \CD\recaptcha\Config $plugin_data
 	 */
-	function __construct(\CD\recaptcha\Config $config) {
+	public function __construct(\CD\recaptcha\Config $config) {
 		$this->config = $config;
 		
 		// All of these can have unique values. However, I'm a bit lazy.
@@ -89,7 +89,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	function actions_filters() {
+	private function actions_filters() {
 		add_action( $this->config->get_is_active_for_network() ? 'network_admin_menu' : 'admin_menu', [ $this, 'add_submenu_page' ] );
 		add_action( 'admin_init', [ $this, 'admin_init' ] );
 		add_action( 'admin_init', [ $this, 'settings_save' ], 99 );
@@ -104,7 +104,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	function admin_init() {
+	public function admin_init() {
 
 		register_setting( $this->option_group, $this->option_name, ['sanitize_callback' => [$this, 'options_sanitize']] );
 		foreach ( $this->get_sections() as $section_id => $section ) {
@@ -123,7 +123,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	function admin_enqueue_scripts($hook_suffix) {
+	public function admin_enqueue_scripts($hook_suffix) {
 		// Ensure it only outputs on our own settings page.
 		if ( $hook_suffix == "settings_page_{$this->page_slug}" ) {
 			wp_enqueue_style( $this->page_slug, plugins_url( '/assets/css/settings.css', $this->config->get_file() ), [], $this->config->get_current_version() );
@@ -137,7 +137,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	function add_submenu_page() {
+	public function add_submenu_page() {
 		$parent_slug = $this->config->get_is_active_for_network() ? 'settings.php' : 'options-general.php';
 		$capability = $this->config->get_is_active_for_network() ? 'manage_network_options' : 'manage_options';
 		add_submenu_page( $parent_slug, sprintf(__('%s Settings', 'cd-recaptcha'), $this->config->get_plugin_name()), $this->config->get_plugin_name(), $capability, $this->page_slug, [$this, 'admin_settings' ] );
@@ -153,7 +153,7 @@ class Settings {
 	 *
 	 * @return array
 	 */
-	function add_meta_links($plugin_meta, $plugin_file, $plugin_data) {
+	public function add_meta_links($plugin_meta, $plugin_file, $plugin_data) {
 
 		if ( $plugin_file == plugin_basename($this->config->get_file()) ) {
 			/* 
@@ -202,7 +202,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	 function settings_save() {
+	 public function settings_save() {
 		if (!empty($_POST) &&
 			current_user_can( $this->config->get_is_active_for_network() ? 'manage_network_options' : 'manage_options' ) &&
 			isset( $_POST[$this->form_field] ) &&
@@ -237,7 +237,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	function admin_settings() {
+	public function admin_settings() {
 		?>
 		
 		<script>
@@ -306,7 +306,7 @@ class Settings {
 	 *
 	 * @return array
 	 */
-	function get_sections() {
+	private function get_sections() {
 		$sections = [
 			'general' => [
 				'section_title' => __( 'General', 'cd-recaptcha' ),
@@ -360,7 +360,7 @@ class Settings {
 	 *
 	 * @return array
 	 */
-	function get_fields() {
+	private function get_fields() {
 /* 
 		$score_values = [];
 		for ( $i = 0.0; $i <= 1; $i += 0.1 ) {
@@ -1151,7 +1151,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	function callback( $field ) {
+	public function callback( $field ) {
 		$attrib = '';
 		if ( ($field['required'] ?? false) === true ) {
 			$attrib .= ' required="required"';
@@ -1296,7 +1296,7 @@ class Settings {
 	 *
 	 * @return array
 	 */
-	function options_sanitize( $value ) {
+	public function options_sanitize( $value ) {
 
 		if ( ! $value || ! is_array( $value ) ) {
 			return $value;
@@ -1321,7 +1321,7 @@ class Settings {
 	 *
 	 * @return mixed
 	 */
-	function posted_value_sanitize( $value, $field ) {
+	private function posted_value_sanitize( $value, $field ) {
 		// $sanitized = $value;
 		switch ( $field['type'] ) {
 			case 'password':
@@ -1376,7 +1376,7 @@ class Settings {
 	 *
 	 * @return string
 	 */
-	function sanitize_action_name($name, $default) {
+	private function sanitize_action_name($name, $default) {
 		$input_name = $name;
 		// This regex matches any characters that aren't in the list.
 		$name = preg_replace('/[^a-zA-Z0-9_\/]+/', '', $name);
@@ -1408,7 +1408,7 @@ class Settings {
 	 *
 	 * @return double
 	 */
-	function sanitize_threshold_value($value) {
+	private function sanitize_threshold_value($value) {
 		$value = floatval($value);
 		if ( $value < 0 ) {
 			$value = 0.0;
@@ -1427,7 +1427,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	function sanitize_directory_path($value, $default) {
+	private function sanitize_directory_path($value, $default) {
 		if ( empty($value) ) {
 			return $default;
 		}

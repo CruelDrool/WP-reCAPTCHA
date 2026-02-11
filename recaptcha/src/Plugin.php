@@ -29,7 +29,7 @@ class Plugin {
 	 * @since 1.0.0
 	 * @param string $file
 	 */
-	function __construct(string $file) {
+	public function __construct(string $file) {
 		$this->file = $file;
 		$this->config = new Config($file);
 		if ( $this->update() ) {
@@ -60,7 +60,7 @@ class Plugin {
 	 *
 	 * @return void
 	 */
-	function load_translations() {
+	public function load_translations() {
 		load_plugin_textdomain( $this->config->get_text_domain(), false, dirname( plugin_basename( $this->file) ) . '/languages' );
 	}
 
@@ -69,9 +69,9 @@ class Plugin {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return object
+	 * @return Frontend
 	 */
-	function load_frontend() {
+	public function load_frontend() {
 		static $instance;
 		if ( is_null( $instance )) {
 			$instance = new Frontend($this->config);
@@ -84,9 +84,9 @@ class Plugin {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return object
+	 * @return Admin\Settings
 	 */
-	function load_admin() {
+	public function load_admin() {
 		static $instance;
 		if ( is_null( $instance )) {
 			$instance = new Admin\Settings($this->config);

@@ -67,7 +67,7 @@ class Frontend {
 	 * @var array
 	 */
 	private $user_info = ['user_id' => 0, 'user_login' => '', 'user_email' => '', 'user_registered' => ''];
-			
+
 	/**
 	 * Constructor
 	 * 
@@ -182,7 +182,6 @@ class Frontend {
 		return 	( in_array($this->recaptcha_version, ['v2_checkbox', 'v2_invisible', 'v3']) );
 	}
 
-	
 	/**
 	 * Checks if both Site Key and Secret Key are non-empty. Does not check if they are actually valid keys.
 	 *
@@ -207,9 +206,9 @@ class Frontend {
 	 */
 	private function get_api_script_url() {
 		$query_data = [
-			'hl'		=> trim( $this->config->get_option( 'language' ) ),
-			'onload'	=> $this->onload_callback_name,
-			'render'	=> 'explicit'
+			'hl'     => trim( $this->config->get_option( 'language' ) ),
+			'onload' => $this->onload_callback_name,
+			'render' => 'explicit'
 		];
 
 		$url_format = "https://www.%s/recaptcha/enterprise%s";
@@ -245,7 +244,7 @@ class Frontend {
 	 *
 	 * @return void
 	 */
-	function actions_filters() {
+	private function actions_filters() {
 
 		if (! $this->is_available() ) { return; }
 
@@ -308,7 +307,7 @@ class Frontend {
 	 *
 	 * @return void
 	 */
-	function enqueue_scripts() {
+	public function enqueue_scripts() {
 		// Disable the AJAX JavaScript from the plugin Sidebar Login.
 		if ( $this->is_form_enabled( 'login' ) && $this->config->get_option( 'disable_sidebar_login_js' ) && is_plugin_active( 'sidebar-login/sidebar-login.php' ) ) {
 			wp_deregister_script('sidebar-login');
@@ -323,7 +322,7 @@ class Frontend {
 	 *
 	 * @return void
 	 */
-	function login_enqueue_scripts() {
+	public function login_enqueue_scripts() {
 		if ( in_array($this->recaptcha_version, ['v2_checkbox', 'ent_checkbox']) && $this->config->get_option( $this->recaptcha_version . '_add_css' ) && $this->config->get_option( $this->recaptcha_version . '_size' ) != 'compact' ) {
 			wp_enqueue_style( $this->config->get_prefix().'-login', plugins_url( '/assets/css/loginform.css', $this->config->get_file() ), [], $this->config->get_current_version() );
 		}
@@ -374,7 +373,7 @@ class Frontend {
 	 *
 	 * @return bool
 	 */
-	function verify() {
+	private function verify() {
 		if ( $this->is_legacy_version() ) {
 			return $this->verify_legacy();
 		}
@@ -743,7 +742,7 @@ class Frontend {
 	 *
 	 * @return string
 	 */
-	function get_error_msg($prepend = true) {
+	private function get_error_msg($prepend = true) {
 		$default_msg = $this->config->get_default_error_msg($this->recaptcha_version);
 		$m = $this->config->get_option( $this->recaptcha_version.'_error_message', $default_msg);
 		
@@ -761,7 +760,7 @@ class Frontend {
 	 *
 	 * @return string
 	 */
-	function captcha_form_field() {
+	private function captcha_form_field() {
 		self::$captcha_count++;
 
 		$field = sprintf('<div id="%s_recaptcha_field_%s">%s<div class="%s"></div></div>',
@@ -782,7 +781,7 @@ class Frontend {
 	 *
 	 * @return void
 	 */
-	function footer_script() {
+	public function footer_script() {
 
 		if ( self::$captcha_count > 0 ) {
 			switch( $this->recaptcha_version ) {
@@ -811,7 +810,7 @@ class Frontend {
 	 *
 	 * @return void
 	 */
-	function score_based_footer_script() {
+	private function score_based_footer_script() {
 		?>
 		<script>
 			var <?= $this->onload_callback_name ?> = function() {<?php
@@ -884,7 +883,7 @@ class Frontend {
 	 *
 	 * @return void
 	 */
-	function checkbox_footer_script() {
+	private function checkbox_footer_script() {
 		?>
 		<script>
 			var <?= $this->onload_callback_name ?> = function() {<?=
@@ -931,7 +930,7 @@ class Frontend {
 	 *
 	 * @return void
 	 */
-	function analytics_footer_script() {
+	private function analytics_footer_script() {
 		?>
 		<div id="<?= $this->captcha_div_class ?>"></div>
 		<script>
@@ -1011,7 +1010,7 @@ SCRIPT;
 	 *
 	 * @return void
 	 */
-	function form_field() {
+	private function form_field() {
 		echo $this->captcha_form_field();
 	}
 
@@ -1023,7 +1022,7 @@ SCRIPT;
 	 *
 	 * @return string
 	 */
-	function form_field_return( $return = '' ) {		
+	private function form_field_return( $return = '' ) {		
 		return $return . $this->captcha_form_field();
 	}
 
@@ -1037,7 +1036,7 @@ SCRIPT;
 	 *
 	 * @return array
 	 */
-	function shake_error_codes($shake_error_codes) {
+	public function shake_error_codes($shake_error_codes) {
 		$shake_error_codes[] = $this->error_code;
 
 		return $shake_error_codes;
@@ -1052,7 +1051,7 @@ SCRIPT;
 	 *
 	 * @return void
 	 */
-	function login_form_field() {
+	public function login_form_field() {
 		$this->current_form = 'login';
 		$this->form_field();
 	}
@@ -1067,7 +1066,7 @@ SCRIPT;
 	 *
 	 * @return string
 	 */
-	function login_form_return( $field = '' ) {
+	public function login_form_return( $field = '' ) {
 		$this->current_form = 'login';
 		return $this->form_field_return($field);
 	}
@@ -1081,7 +1080,7 @@ SCRIPT;
 	 *
 	 * @return void
 	 */
-	function register_form_field() {
+	public function register_form_field() {
 		$this->current_form = 'registration';
 		$this->form_field();
 	}
@@ -1098,7 +1097,7 @@ SCRIPT;
 	 *
 	 * @return void
 	 */
-	function ms_form_field( $errors ) {
+	public function ms_form_field( $errors ) {
 		$errmsg = $errors->get_error_message( $this->error_code );
 		if ( !empty($errmsg) ) {
 			printf('<p class="error">%s</p>', $errmsg);
@@ -1116,7 +1115,7 @@ SCRIPT;
 	 *
 	 * @return void
 	 */
-	function lostpassword_form_field() {
+	public function lostpassword_form_field() {
 		$this->current_form = 'lost_password';
 		$this->form_field();
 	}
@@ -1130,7 +1129,7 @@ SCRIPT;
 	 *
 	 * @return void
 	 */
-	function resetpass_form_field() {
+	public function resetpass_form_field() {
 		$this->current_form = 'reset_password';
 		$this->form_field();
 	}
@@ -1144,7 +1143,7 @@ SCRIPT;
 	 *
 	 * @return void
 	 */
-	function comment_form_field() {
+	public function comment_form_field() {
 		$this->current_form = 'comment';
 		$this->form_field();
 	}
@@ -1159,7 +1158,7 @@ SCRIPT;
 	 *
 	 * @return string
 	 */
-	function comment_form_field_return($field = '') {
+	public function comment_form_field_return($field = '') {
 		$this->current_form = 'comment';
 		return $this->form_field_return($field);
 	}
@@ -1192,7 +1191,7 @@ SCRIPT;
 	 *
 	 * @return null|WP_User|WP_Error
 	 */
-	function login_verify( $user, $username = '', $password = '' ) {
+	public function login_verify( $user, $username = '', $password = '' ) {
 		// Hmm, this filter gets applied just by loading wp-login.php, no submission needed.	
 		if ( count($_POST) ) {
 
@@ -1233,7 +1232,7 @@ SCRIPT;
 	 *
 	 * @return WP_Error
 	 */
-	function registration_verify( $errors, $sanitized_user_login, $user_email ) {
+	public function registration_verify( $errors, $sanitized_user_login, $user_email ) {
 		$this->current_form = 'registration';
 
 		$this->user_info['user_login'] = $sanitized_user_login;
@@ -1256,7 +1255,7 @@ SCRIPT;
 	 *
 	 * @return array
 	 */
-	function ms_form_field_verify( $result ) {
+	public function ms_form_field_verify( $result ) {
 		// Only verify guests during the "validate user signup" stage because we don't load a CAPTCHA during the "validate blog signup" stage.
 		if ( isset( $_POST['stage'] ) && $_POST['stage'] === 'validate-user-signup' ) {
 			$this->current_form = 'ms_user_signup';
@@ -1280,7 +1279,7 @@ SCRIPT;
 	 *
 	 * @return array
 	 */
-	function ms_blog_verify( $result ) {
+	public function ms_blog_verify( $result ) {
 		$this->current_form = 'ms_user_signup';
 
 		$user = $result['user'];
@@ -1310,7 +1309,7 @@ SCRIPT;
 	 *
 	 * @return void
 	 */
-	function lostpassword_verify( $errors, $user_data ) {
+	public function lostpassword_verify( $errors, $user_data ) {
 		$this->current_form = 'lost_password';
 
 		if ($user_data instanceof WP_User) {
@@ -1336,7 +1335,7 @@ SCRIPT;
 	 *
 	 * @return void
 	 */
-	function reset_password_verify( $errors, $user ) {	
+	public function reset_password_verify( $errors, $user ) {	
 		if ( count($_POST) ) {
 			$this->current_form = 'reset_password';
 
@@ -1364,7 +1363,7 @@ SCRIPT;
 	 *
 	 * @return int|string|WP_Error
 	 */
-	function comment_verify( $approved, $comment_data ) {
+	public function comment_verify( $approved, $comment_data ) {
 		$this->current_form = 'comment';
 
 		// Hacky way to avoid running twice due to changes introduced in WordPress 6.7.
