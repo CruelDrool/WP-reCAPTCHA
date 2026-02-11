@@ -25,12 +25,6 @@ class Frontend {
 	 * @var string
 	 */
 	private $recaptcha_version;
-
-	/**
-	 * @since 1.0.0
-	 * @var array The forms where reCAPTCHA should be loaded.
-	 */
-	private $enabled_forms = [];
 	
 	/**
 	 * @since 1.0.0
@@ -84,7 +78,6 @@ class Frontend {
 	public function __construct(Config $config) {
 		$this->config = $config;
 		$this->recaptcha_version = $this->config->get_option('recaptcha_version');
-		$this->enabled_forms = $this->config->get_option('enabled_forms');
 		$this->onload_callback_name = "{$this->config->get_prefix()}_onloadCallback";
 		$this->captcha_div_class = "{$this->config->get_prefix()}_recaptcha_container";
 		$this->error_code = "{$this->config->get_prefix()}_error";
@@ -242,12 +235,7 @@ class Frontend {
 	 * @return bool
 	 */
 	private function is_form_enabled($form = '') {
-		
-		if ( ! is_array( $this->enabled_forms ) ) {
-			return false;
-		}
-		
-		return in_array( $form, $this->enabled_forms, true );
+		return $this->config->get_option_multicheck('enabled_forms', $form);
 	}
 
 	/**

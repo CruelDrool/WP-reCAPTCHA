@@ -199,6 +199,21 @@ class Config {
 
 		return $value;
 	}
+
+	/**
+	 * Check if an option inside a multicheck option is set.
+	 *
+	 * @since x.y.z
+	 * @param string $multicheck Name of multicheck option.
+	 * @param string $option Name of option in the multicheck.
+	 *
+	 * @return bool
+	 */
+	function get_option_multicheck($multicheck = '', $option = '') {
+		$array = $this->get_option($multicheck, []);
+
+		return is_array($array) && in_array( $option, $array, true );
+	}
 	
 	/**
 	 * Get the default error message given the reCAPTCHA version.
