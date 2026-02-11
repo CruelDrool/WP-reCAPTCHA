@@ -476,6 +476,10 @@ class Frontend {
 			return false;
 		}
 
+		if ( $this->config->get_option('recaptcha_log_remove_token') && isset( $result['event']['token']) ) {
+			unset($result['event']['token']);
+		}
+
 		$this->recaptcha_log($result);
 
 		if ( !empty($result['error']) ) {

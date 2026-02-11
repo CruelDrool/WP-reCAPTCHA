@@ -995,6 +995,12 @@ class Settings {
 					'type'         => 'checkbox',
 					'class'        => 'hidden show-field-for-v2_checkbox show-field-for-v2_invisible show-field-for-v3',
 				],
+				'recaptcha_log_remove_token' => [ 
+					'label'        => __( 'Remove the reCAPTCHA token from the JSON response data', 'cd-recaptcha' ),
+					'section_id'   => 'logging',
+					'type'         => 'checkbox',
+					'class'        => 'hidden show-field-for-ent_checkbox show-field-for-ent_policy_based show-field-for-ent_score',
+				],
 				'recaptcha_log_rotate_interval' => [ 
 					'label'         => __( 'reCAPTCHA log\'s rotate interval', 'cd-recaptcha' ),
 					'section_id'    => 'logging',

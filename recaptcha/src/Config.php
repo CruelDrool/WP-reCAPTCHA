@@ -75,6 +75,7 @@ class Config {
 		'recaptcha_log'                 => false,
 		'recaptcha_log_rotate_interval' => 'monthly',
 		'recaptcha_log_ip'              => true,
+		'recaptcha_log_remove_token'    => false,
 		'debug_log'                     => false,
 		'debug_log_rotate_interval'     => 'monthly',
 		'debug_log_separate'            => false,
