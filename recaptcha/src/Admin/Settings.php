@@ -13,7 +13,7 @@ class Settings {
 
 	/**
 	 * @since 1.0.0
-	 * @var object
+	 * @var \CD\recaptcha\Config
 	 */
 	private $config;
 

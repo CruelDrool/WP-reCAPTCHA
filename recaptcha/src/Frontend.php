@@ -16,7 +16,7 @@ class Frontend {
 
 	/**
 	 * @since 1.0.0
-	 * @var object Plugin options.
+	 * @var Config Plugin options.
 	 */
 	private $config;
 
