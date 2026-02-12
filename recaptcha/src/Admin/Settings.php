@@ -314,12 +314,6 @@ class Settings {
 					// printf( __( 'Get reCAPTCHA keys from <a href="%s" target="_blank" rel="noopener noreferrer">Google</a>. Make sure to get keys for your selected version.', 'cd-recaptcha' ), 'https://www.google.com/recaptcha/admin' );
 				// },
 			],
-			'data_submisisons' => [
-				'section_title' => __( 'Data submissions', 'cd-recaptcha' ),
-				'section_callback' => function() {
-					printf('<p>%s</p>', __( 'Additional data to submit to the reCAPTCHA verification server.', 'cd-recaptcha' ));
-				},
-			],
 			'forms' => [
 				'section_title' => __( 'Forms', 'cd-recaptcha' ),
 			],
@@ -339,6 +333,12 @@ class Settings {
 							sprintf( '<samp>%s</samp>', number_format_i18n(0.0, 1) )
 						)
 					);
+				},
+			],
+			'data_submisisons' => [
+				'section_title' => __( 'Data submissions', 'cd-recaptcha' ),
+				'section_callback' => function() {
+					printf('<p>%s</p>', __( 'Additional data to submit to the reCAPTCHA verification server.', 'cd-recaptcha' ));
 				},
 			],
 			// 'other'       => [
@@ -384,7 +384,7 @@ class Settings {
 					'ent_score'        => sprintf('[%s] %s', __( 'Enterprise API', 'cd-recaptcha' ), __( 'Score challenge', 'cd-recaptcha' )),
 					'ent_checkbox'     => sprintf('[%s] %s', __( 'Enterprise API', 'cd-recaptcha' ),__( 'Checkbox challenge', 'cd-recaptcha' )),
 					'ent_policy_based' => sprintf('[%s] %s', __( 'Enterprise API', 'cd-recaptcha' ),__( 'Policy-based challenge', 'cd-recaptcha' )),
-					'v2_checkbox'      => sprintf('[%s] %s', __( 'Legacy API', 'cd-recaptcha' ), __( 'v2 "I\'m not a robot"', 'cd-recaptcha' ) ),
+					'v2_checkbox'      => sprintf('[%s] %s', __( 'Legacy API', 'cd-recaptcha' ), __( 'v2 Checkbox', 'cd-recaptcha' ) ),
 					'v2_invisible'     => sprintf('[%s] %s', __( 'Legacy API', 'cd-recaptcha' ), __( 'v2 Invisible', 'cd-recaptcha' ) ),
 					'v3'               => sprintf('[%s] %s', __( 'Legacy API', 'cd-recaptcha' ), __( 'v3', 'cd-recaptcha' ) ),
 				],
@@ -703,54 +703,6 @@ class Settings {
 				'class'         => 'hidden show-field-for-v2_invisible show-field-for-v3 show-field-for-ent_score show-field-for-ent_policy_based',
 				'desc'          => __( 'For analytics purposes, it\'s recommended to load the widget on non-form pages.', 'cd-recaptcha' ),
 			],
-			// Data submissions
-			'submit_remote_ip' => [
-				'label'         => __( 'Client\'s IP address', 'cd-recaptcha' ),
-				'section_id'    => 'data_submisisons',
-				'type'          => 'checkbox',
-			],
-			'submit_user_agent' => [
-				'label'         => __( 'Client\'s user agent', 'cd-recaptcha' ),
-				'section_id'    => 'data_submisisons',
-				'type'          => 'checkbox',
-				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
-			],
-			'submit_headers' => [
-				'label'         => __( 'Client\'s HTTP headers', 'cd-recaptcha' ),
-				'section_id'    => 'data_submisisons',
-				'type'          => 'checkbox',
-				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
-			],
-			'submit_request_uri' => [
-				'label'         => __( 'Request URI', 'cd-recaptcha' ),
-				'section_id'    => 'data_submisisons',
-				'type'          => 'checkbox',
-				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
-			],
-			'submit_user_id'    => [
-				'label'         => __( 'User ID', 'cd-recaptcha' ),
-				'section_id'    => 'data_submisisons',
-				'type'          => 'checkbox',
-				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
-			],
-			'submit_user_login' => [
-				'label'         => __( 'Username', 'cd-recaptcha' ),
-				'section_id'    => 'data_submisisons',
-				'type'          => 'checkbox',
-				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
-			],
-			'submit_user_email' => [
-				'label'         => __( 'User e-mail', 'cd-recaptcha' ),
-				'section_id'    => 'data_submisisons',
-				'type'          => 'checkbox',
-				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
-			],
-			'submit_user_registered' => [
-				'label'         => __( 'User registered date', 'cd-recaptcha' ),
-				'section_id'    => 'data_submisisons',
-				'type'          => 'checkbox',
-				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
-			],
 			// Forms
 			'enabled_forms'     => [
 				'label'         => __( 'Enabled forms', 'cd-recaptcha' ),
@@ -886,6 +838,54 @@ class Settings {
 				'max'               => 1.0,
 				'step'              => 0.1,
 				'sanitize_callback' => [$this, 'sanitize_threshold_value'],
+			],
+			// Data submissions
+			'submit_remote_ip' => [
+				'label'         => __( 'Client\'s IP address', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+			],
+			'submit_user_agent' => [
+				'label'         => __( 'Client\'s user agent', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+			],
+			'submit_headers' => [
+				'label'         => __( 'Client\'s HTTP headers', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+			],
+			'submit_request_uri' => [
+				'label'         => __( 'Request URI', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+			],
+			'submit_user_id'    => [
+				'label'         => __( 'User ID', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+			],
+			'submit_user_login' => [
+				'label'         => __( 'Username', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+			],
+			'submit_user_email' => [
+				'label'         => __( 'User e-mail', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
+			],
+			'submit_user_registered' => [
+				'label'         => __( 'User registered date', 'cd-recaptcha' ),
+				'section_id'    => 'data_submisisons',
+				'type'          => 'checkbox',
+				'class'         => 'hidden show-field-for-ent_score show-field-for-ent_policy_based show-field-for-ent_checkbox',
 			],
 		];
 
