@@ -1,70 +1,92 @@
-<a href="#readme"><img src="https://github.com/CruelDrool/WP-reCAPTCHA/raw/main/.assets/icon.svg" alt="" align="right" /></a>
+<a href="#readme"><img src="https://github.com/CruelDrool/WP-reCAPTCHA/raw/main/.assets/icon.svg" alt="" align="right" width="75" /></a>
 
 # reCAPTCHA plugin for WordPress
-This is a fork of [Shamim Hasan](https://www.shamimsplugins.com)'s [Advanced noCaptcha & invisible Captcha](https://wordpress.org/plugins/advanced-nocaptcha-recaptcha) version 6.1.5. However, it has been almost completly rewritten with these goals in mind:
-* [PSR-4](https://www.php-fig.org/psr/psr-4/) compliant.
-* Full support for all versions of [Google's reCAPTCHA](https://www.google.com/recaptcha/).
-* No premium version.
+
+This started as a fork of [Shamim Hasan](https://www.shamimsplugins.com)'s [Advanced noCaptcha & invisible Captcha](https://wordpress.org/plugins/advanced-nocaptcha-recaptcha) version 6.1.5. However, it has been almost completly rewritten with these goals in mind:
+- [PSR-4](https://www.php-fig.org/psr/psr-4/) compliant.
+- Full support for all versions of [Google's reCAPTCHA](https://www.google.com/recaptcha/).
+- No premium version.
 
 Currently, this plugin is only available here on GitHub. Once installed, however, WordPress will still be able to update it from this repository. This is because in WordPress 5.8 a new plugin header called [Update URI](https://make.wordpress.org/core/2021/06/29/introducing-update-uri-plugin-header-in-wordpress-5-8/) was introduced.
 
 ## Requirements
+
 WordPress >= 5.8 (lower may work just fine, but no support for updating from the repository)
 
 PHP >= 7.1
 
+## Supported reCAPTCHA versions
+
+### Enterprise/CreateAssessment API
+
+- Score challenge
+- Checkbox challenge
+- Policy-based challenge
+
+### Legacy SiteVerify API
+
+- v2 Checkbox
+- v2 Invisible
+- v3
+
 ## Features
-* Switch between reCAPTCHA versions easily.
-	* Each set of keys are tied to the selected version.
-	* Custom error message for each version.
-* Select the widget's colour theme: *Light*, *Dark* or *Automatic*
-	* *Automatic* will set theme based on the background colour's brightness.
-* Choose which request domain to use.
-	* google.com
-	* recaptcha.net
-* Verify origin of solutions, if you've opted not to have Google do it.
-* Hide for logged in users.
-* Set which [language](https://developers.google.com/recaptcha/docs/language) to display the widget in.
-* Require that the client's IP address has been determined before submitting data to the reCAPTCHA server.
-* Logging.
-	* Log reCAPTCHA's JSON response data.
-		* Add client's IP address to the data.
-	* Debug logging.
-		* Have a separate file from WordPress' `/wp-content/debug.log`.
-		* Set a minimum required severity level that messages must have for them to be written to the log.
-	* Rotate interval: never, daily, monthly, yearly. Uses UTC/GMT time with a [ISO 8601](https://www.iso.org/standard/40874.html) date format.
-	* Specify a directory where to store the log files.
 
-### reCAPTCHA versions 
-#### v2 "I'm not a robot" Checkbox
-* Select size: *Normal* or *Compact* or *Automatic*.
-	* *Automatic* will set size to *Compact* if screen/area is too narrow for *Normal*.
+- Switch between reCAPTCHA versions easily. Each set of keys are tied to the selected version.
+- Custom error message for each version.
+- Hide for logged in users.
+- Choose which request domain to use: *google.com* or *recaptcha.net*
+- Verify origin of solutions, if you've opted not to have Google do it.
+- Set which [language](https://developers.google.com/recaptcha/docs/language) to display the widget in.
+- Select the widget's colour theme: *Light*, *Dark* or *Automatic*. *Automatic* will set theme based on the background colour's brightness.
+- Select the widget's size: *Normal* or *Compact* or *Automatic*. *Automatic* will set size to *Compact* if screen/area is too narrow for *Normal*. (Only for Checkbox challenge and v2 Checkbox.)
+- Select placement of the widget: *Bottom Right*, *Bottom Left*, *Inline* or *Automatic*. *Automatic* will set placement based on a page's text direction. (Only for Score challenge, policy-based challenge, and v2 Invisible, and v3.)
+- Add CSS stylesheet to the login page to increase the width of the container element that holds the login form. (Only for Checkbox challenge and v2 Checkbox.)
+- Load on non-form pages for analytics purposes. (Only for Score challenge, policy-based challenge, and v2 Invisible, and v3.)
+- Set action names. (Only for Score challenge, policy-based challenge, and v3.)
+- Set score thresholds. (Only for Score challenge and v3.)
 
-#### v2 Invisible
-* Select placement of the widget: *Bottom Right*, *Bottom Left*, *Inline* or *Automatic*.
-	* *Automatic* will set placement based on a page's text direction. (Left-to-Right: *Bottom Right*, Right-to-Left: *Bottom Left*).
+### Supported forms
 
-#### v3
-* Select placement of the widget: *Bottom Right*, *Bottom Left*, *Inline* or *Automatic*.
-	* *Automatic* will set placement based on a page's text direction. (Left-to-Right: *Bottom Right*, Right-to-Left: *Bottom Left*).
-* Load on all pages or just form pages.
-* [Actions](https://developers.google.com/recaptcha/docs/v3#actions) and thresholds for all supported forms.
-	* Custom action names.
+- Login.
+- Registration. (Only available in a single site installation.)
+- Multisite User Signup. (Only available on the main site in a multisite installation.)
+- Lost Password.
+- Reset Password.
+- Comment.
 
-### Forms
-* Login.
-* Registration. (Only available in a single site installation.)
-* Multisite User Signup. (Only available on the main site in a multisite installation.)
-* Lost Password.
-* Reset Password.
-* Comment.
+### Data submissions
+
+Additional data to submit to the reCAPTCHA verification server.
+
+- Client's IP address.
+- Client's user agent.*
+- Client's HTTP headers.*
+- Request URI.*
+- User ID.*
+- Username.*
+- User e-mail.*
+- User registered date.*
+
+\* Enterprise/CreateAssessment API only.
+
+### Logging
+- Log reCAPTCHA's JSON response data.
+	- Add the client's IP address to the JSON response data (SiteVerify API)
+	- Remove the reCAPTCHA token from the JSON response data (Enterprise API)
+- Debug logging.
+	- Have a separate file from WordPress' `/wp-content/debug.log`.
+	- Set a minimum required severity level that messages must have for them to be written to the log.
+- Rotate interval: never, daily, monthly, yearly. Uses UTC/GMT time with a [ISO 8601](https://www.iso.org/standard/40874.html) date format.
+- Specify a directory where to store the log files.
 
 ### Languages
-* English (US, GB).
-* Norwegian (bokmål).
+- English (US, GB).
+- Norwegian (bokmål).
 
 ### Multisite
-When network activated in a multisite installation the following happens: 
-* The plugin's settings will only be available to the [Super Admin](https://wordpress.org/support/article/roles-and-capabilities/#super-admin) in the [Network Admin](https://wordpress.org/support/article/network-admin/).
-* In the database the settings will be stored the `wp_sitemeta` table. This is separate from any sub-sites' settings, which are stored in `wp_<siteID>_options`.
-* Settings set by the Super Admin will apply across all sites.
+
+When network activated in a multisite installation the following happens:
+
+- The plugin's settings will only be available to the [Super Admin](https://wordpress.org/support/article/roles-and-capabilities/#super-admin) in the [Network Admin](https://wordpress.org/support/article/network-admin/).
+- In the database the settings will be stored the `wp_sitemeta` table. This is separate from any sub-sites' settings, which are stored in `wp_<siteID>_options`.
+- Settings set by the Super Admin will apply across all sites.
