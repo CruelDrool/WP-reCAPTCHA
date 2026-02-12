@@ -28,6 +28,7 @@
 
 - Added margin to paragraphs on the Settings page.
 - The v2 and v3 versions are now marked as using the legacy SiteVerify API endpoint.
+- Display name of v2 "I'm not a robot" change to v2 Checkbox.
 
 ### Removed
 
