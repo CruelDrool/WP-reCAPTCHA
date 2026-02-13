@@ -89,6 +89,7 @@ class Config {
 		'gc_api_key'                    => '',
 		'ent_score_site_key'            => '',
 		'ent_checkbox_site_key'         => '',
+		'ent_invisible_site_key'        => '',
 		'ent_policy_based_site_key'     => '',
 		'ent_checkbox_size'             => 'normal',
 		'ent_checkbox_add_css'          => true,
@@ -227,6 +228,7 @@ class Config {
 	public function get_default_error_msg($version) {
 		switch($version) {
 			case 'ent_checkbox':
+			case 'ent_invisible':
 			case 'v2_checkbox':
 			case 'v2_invisible':
 				$string = __( 'The CAPTCHA solution you provided was incorrect.', 'cd-recaptcha');
@@ -340,7 +342,7 @@ class Config {
 	 */
 	public function save_options() {
 		$exceptions = [
-			'ent_score_error_message', 'ent_policy_based_error_message','ent_checkbox_error_message',
+			'ent_score_error_message', 'ent_policy_based_error_message','ent_checkbox_error_message, ent_invisible_error_message',
 			'v2_checkbox_error_message', 'v2_invisible_error_message', 'v3_error_message',
 		];
 

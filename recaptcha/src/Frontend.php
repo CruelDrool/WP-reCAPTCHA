@@ -512,31 +512,51 @@ class Frontend {
 
 					$score = $risk_analysis['score'] ?? 0.0;
 					$action = $token_properties['action'] ?? '';
-					
+
 					$is_success = $score >= $threshold && $action === $expected_action;
 
-					$errors = [];
+					$failure_reasons = [];
+
 					if ( $score < $threshold ) {
-						$errors[] = 'score was below the threshold';
+						$failure_reasons[] = 'score was below the threshold';
 					}
+
 					if ( $action !== $expected_action ) {
-						$errors[] = 'action was not the expected action';
+						$failure_reasons[] = 'action was not the expected action';
 					}
-					$errors = ucfirst(implode(', ', $errors));
-					$debug_message =
-						sprintf('%sAction: "%s"; expected action: "%s". Score: %s; threshold: %.1f',
-							!empty($errors) ? "{$errors}. " : '',
-							$action,
-							$expected_action,
-							$score,
-							$threshold
-						);
+
+					$debug_message = sprintf('%sAction: "%s"; expected action: "%s". Score: %s; threshold: %.1f',
+						!empty($failure_reasons) ? sprintf("%s. ", ucfirst(implode(', ', $failure_reasons))) : '',
+						$action,
+						$expected_action,
+						$score,
+						$threshold
+					);
 				} else {
-					// When the value of $risk_analysis['challenge'] is "FAILED", then the value of $token_properties['valid'] is false at the same time.
 					$is_success = true;
+
+					$debug_message = sprintf('Challenge: %s', $risk_analysis['challenge']);
+					
+					if ($this->recaptcha_version == 'ent_policy_based' ) {
+						$debug_message .= sprintf('. Action: "%s"; expected action: "%s". Score: %s',
+							$token_properties['action'] ?? '',
+							$this->config->get_option('action_'.$this->current_form),
+							$risk_analysis['score'] ?? 0.0
+						);
+					}
 				}
 			} else {
-				$debug_message = sprintf('Token not valid. invalidReason: %s. challenge: %s', $token_properties['invalidReason'], $risk_analysis['challenge']);
+				// This is most likely due to a Policy-based challenge failing.
+				// When the value of $risk_analysis['challenge'] is "FAILED", then the value of $token_properties['valid'] is false at the same time.
+				$debug_message = sprintf('Token not valid. InvalidReason: %s. Challenge: %s', $token_properties['invalidReason'], $risk_analysis['challenge']);
+
+				if ($this->recaptcha_version == 'ent_policy_based' ) {
+					$debug_message .= sprintf('. Action: "%s"; expected action: "%s". Score: %s',
+						$token_properties['action'] ?? '',
+						$this->config->get_option('action_'.$this->current_form),
+						$risk_analysis['score'] ?? 0.0
+					);
+				}
 			}
 		} else {
 			// This message can only occur if option 'verify_origin' is enabled.
@@ -545,13 +565,17 @@ class Frontend {
 		}
 
 		$this->debug_log($debug_level,
-			sprintf('%s verification result: %s%s. IP address: %s',
+			sprintf('%s verification result: %s%s%s. IP address: %s',
 				$this->recaptcha_version,
 				$is_success ? 'success' : 'no success',
-				!empty($debug_message) ? ". {$debug_message}" : '',
+				!empty($debug_message) ? sprintf(". %s", $debug_message) : '',
+				!empty($risk_analysis['reasons']) ? sprintf(". %s", implode(', ', $risk_analysis['reasons'])) : '',
 				$remote_ip !== false ? $remote_ip : '0.0.0.0'
 			)
 		);
+
+		$this->debug_log(5, 'Token properties: ' . print_r($token_properties, true));
+		$this->debug_log(5, 'Risk analysis: ' . print_r($risk_analysis, true));
 
 		return $is_success;
 	}
@@ -647,22 +671,21 @@ class Frontend {
 					
 					$is_success = $score >= $threshold && $action === $expected_action;
 
-					$errors = [];
+					$failure_reasons = [];
 					if ( $score < $threshold ) {
-						$errors[] = 'score was below the threshold';
+						$failure_reasons[] = 'score was below the threshold';
 					}
 					if ( $action !== $expected_action ) {
-						$errors[] = 'action was not the expected action';
+						$failure_reasons[] = 'action was not the expected action';
 					}
-					$errors = ucfirst(implode(', ', $errors));
-					$debug_message =
-						sprintf('%sAction: "%s"; expected action: "%s". Score: %s; threshold: %.1f',
-							!empty($errors) ? "{$errors}. " : '',
-							$action,
-							$expected_action,
-							$score,
-							$threshold
-						);
+
+					$debug_message = sprintf('%sAction: "%s"; expected action: "%s". Score: %s; threshold: %.1f',
+						!empty($failure_reasons) ? sprintf("%s. ", ucfirst(implode(', ', $failure_reasons))) : '',
+						$action,
+						$expected_action,
+						$score,
+						$threshold
+					);
 				} else { // v2
 					$is_success = true;
 				}
@@ -680,7 +703,7 @@ class Frontend {
 			sprintf('%s verification result: %s%s. IP address: %s',
 				$this->recaptcha_version,
 				$is_success ? 'success' : 'no success',
-				!empty($debug_message) ? ". {$debug_message}" : '',
+				!empty($debug_message) ? sprintf(". %s", $debug_message) : '',
 				$remote_ip !== false ? $remote_ip : '0.0.0.0'
 			)
 		);
@@ -793,6 +816,7 @@ class Frontend {
 				case 'v2_invisible':
 				case 'ent_score':
 				case 'ent_policy_based':
+				case 'ent_invisible':
 					$this->score_based_footer_script();
 					break;
 				case 'v2_checkbox':
@@ -800,7 +824,7 @@ class Frontend {
 					$this->checkbox_footer_script();
 					break;
 			}
-		} elseif ( in_array($this->recaptcha_version, ['v3', 'v2_invisible', 'ent_score', 'ent_policy_based']) && $this->config->get_option( 'load_analytics_footer_script' ) ) {
+		} elseif ( in_array($this->recaptcha_version, ['v3', 'v2_invisible', 'ent_score', 'ent_policy_based', 'ent_invisible']) && $this->config->get_option( 'load_analytics_footer_script' ) ) {
 			$this->analytics_footer_script();
 		}
 	}
@@ -808,7 +832,7 @@ class Frontend {
 	/**
 	 * Footer script for score based challenges.
 	 * 
-	 * Also supports v2 Invisible, since the scripts are so similar.
+	 * Also supports the invisible variations, since the scripts are so similar.
 	 *
 	 * @since x.y.z
 	 *
@@ -863,7 +887,7 @@ class Frontend {
 
 						form.onsubmit = function( e ){
 							e.preventDefault();
-							<?php if ($this->recaptcha_version == 'v2_invisible') : ?> 
+							<?php if ( in_array($this->recaptcha_version, ['v2_invisible' , 'ent_invisible']) ) : ?> 
 							greCAPTCHA.execute( widget_id );
 							<?php else : 
 							// Get value from the hidden field so we know what action we're doing for this particular form.?> 
