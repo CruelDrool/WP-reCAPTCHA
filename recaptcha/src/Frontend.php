@@ -323,7 +323,7 @@ class Frontend {
 	 * @return void
 	 */
 	public function login_enqueue_scripts() {
-		if ( in_array($this->recaptcha_version, ['v2_checkbox', 'ent_checkbox']) && $this->config->get_option( $this->recaptcha_version . '_add_css' ) && $this->config->get_option( $this->recaptcha_version . '_size' ) != 'compact' ) {
+		if ( in_array($this->recaptcha_version, ['v2_checkbox', 'ent_checkbox']) && $this->config->get_option( 'checkbox_add_css' ) && $this->config->get_option( 'checkbox_size' ) != 'compact' ) {
 			wp_enqueue_style( $this->config->get_prefix().'-login', plugins_url( '/assets/css/loginform.css', $this->config->get_file() ), [], $this->config->get_current_version() );
 		}
 	}
@@ -930,7 +930,7 @@ class Frontend {
 						continue;
 
 					captcha_div.innerHTML = '';<?php
-					$size = $this->config->get_option( $this->recaptcha_version . '_size' );
+					$size = $this->config->get_option( 'checkbox_size' );
 					if ($size == 'auto' ) : ?> 
 					var size = ( captcha_div.parentNode.offsetWidth < 302 && captcha_div.parentNode.offsetWidth != 0 || document.body.scrollWidth < 302 ) ? 'compact' : 'normal';
 					<?php else : ?> 

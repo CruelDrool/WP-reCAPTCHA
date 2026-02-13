@@ -630,12 +630,12 @@ class Settings {
 					sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
 				),
 			],
-			'ent_checkbox_size' => [
+			'checkbox_size' => [
 				'label'         => __( 'Size', 'cd-recaptcha' ),
 				'section_id'    => 'general',
 				'type'          => 'select',
-				'class'         => 'hidden show-field-for-ent_checkbox',
-				'std'           => $this->config->get_default('ent_checkbox_size'),
+				'class'         => 'hidden show-field-for-v2_checkbox show-field-for-ent_checkbox',
+				'std'           => $this->config->get_default('checkbox_size'),
 				'options'       => [
 					'normal'        => __( 'Normal', 'cd-recaptcha' ),
 					'compact'       => __( 'Compact', 'cd-recaptcha' ),
@@ -649,43 +649,11 @@ class Settings {
 					sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) )
 				),
 			],
-			'ent_checkbox_add_css' => [
+			'checkbox_add_css' => [
 				'label'         => __( 'Add stylesheet (CSS)', 'cd-recaptcha' ),
 				'section_id'    => 'general',
 				'type'          => 'checkbox',
-				'class'         => 'hidden show-field-for-ent_checkbox',
-				'cb_label'      => __( "Add this plugin's stylesheet to the login page.", 'cd-recaptcha' ),
-				'desc'          => sprintf(
-					/* translators: 1: Normal, 2: Automatic */
-					__( 'This stylesheet increases the width of the container element that holds the login form. This is to fit in the widget better. Only applicable if you have selected %1$s or %2$s as size.', 'cd-recaptcha' ),
-					sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) ),
-					sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) )
-				),
-			],
-			'v2_checkbox_size' => [
-				'label'         => __( 'Size', 'cd-recaptcha' ),
-				'section_id'    => 'general',
-				'type'          => 'select',
-				'class'         => 'hidden show-field-for-v2_checkbox',
-				'std'           => $this->config->get_default('v2_checkbox_size'),
-				'options'       => [
-					'normal'        => __( 'Normal', 'cd-recaptcha' ),
-					'compact'       => __( 'Compact', 'cd-recaptcha' ),
-					'auto'          => __( 'Automatic', 'cd-recaptcha' ),
-				],
-				'desc'       => sprintf(
-					/* translators: 1: Automatic, 2: Compact, 3: Normal */
-					__( 'Size of the widget. Select %1$s to automatically set the size to %2$s if the area is too narrow for %3$s.', 'cd-recaptcha' ),
-					sprintf( '<i>%s</i>', __( 'Automatic', 'cd-recaptcha' ) ),
-					sprintf( '<i>%s</i>', __( 'Compact', 'cd-recaptcha' ) ),
-					sprintf( '<i>%s</i>', __( 'Normal', 'cd-recaptcha' ) )
-				),
-			],
-			'v2_checkbox_add_css' => [
-				'label'         => __( 'Add stylesheet (CSS)', 'cd-recaptcha' ),
-				'section_id'    => 'general',
-				'type'          => 'checkbox',
-				'class'         => 'hidden show-field-for-v2_checkbox',
+				'class'         => 'hidden show-field-for-v2_checkbox show-field-for-ent_checkbox',
 				'cb_label'      => __( "Add this plugin's stylesheet to the login page.", 'cd-recaptcha' ),
 				'desc'          => sprintf(
 					/* translators: 1: Normal, 2: Automatic */
