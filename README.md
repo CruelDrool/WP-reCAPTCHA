@@ -17,13 +17,14 @@ PHP >= 7.1
 
 ## Supported reCAPTCHA versions
 
-### Enterprise/CreateAssessment API
+### Enterprise (CreateAssessment API)
 
-- Score challenge
-- Checkbox challenge
-- Policy-based challenge
+- Score
+- Checkbox
+- Invisible
+- Policy-based
 
-### Legacy SiteVerify API
+### Legacy (SiteVerify API)
 
 - v2 Checkbox
 - v2 Invisible
@@ -38,12 +39,12 @@ PHP >= 7.1
 - Verify origin of solutions, if you've opted not to have Google do it.
 - Set which [language](https://developers.google.com/recaptcha/docs/language) to display the widget in.
 - Select the widget's colour theme: *Light*, *Dark* or *Automatic*. *Automatic* will set theme based on the background colour's brightness.
-- Select the widget's size: *Normal* or *Compact* or *Automatic*. *Automatic* will set size to *Compact* if screen/area is too narrow for *Normal*. (Only for Checkbox challenge and v2 Checkbox.)
-- Select placement of the widget: *Bottom Right*, *Bottom Left*, *Inline* or *Automatic*. *Automatic* will set placement based on a page's text direction. (Only for Score challenge, policy-based challenge, and v2 Invisible, and v3.)
-- Add CSS stylesheet to the login page to increase the width of the container element that holds the login form. (Only for Checkbox challenge and v2 Checkbox.)
-- Load on non-form pages for analytics purposes. (Only for Score challenge, policy-based challenge, and v2 Invisible, and v3.)
-- Set action names. (Only for Score challenge, policy-based challenge, and v3.)
-- Set score thresholds. (Only for Score challenge and v3.)
+- Select the widget's size: *Normal* or *Compact* or *Automatic*. *Automatic* will set size to *Compact* if screen/area is too narrow for *Normal*. (Only for Checkbox and v2 Checkbox.)
+- Select placement of the widget: *Bottom Right*, *Bottom Left*, *Inline* or *Automatic*. *Automatic* will set placement based on a page's text direction. (Only for Score, Policy-based, Invisible, and v2 Invisible, and v3.)
+- Add CSS stylesheet to the login page to increase the width of the container element that holds the login form. (Only for Checkbox and v2 Checkbox.)
+- Load on non-form pages for analytics purposes. (Only for Score, Policy-based, Invisible, v2 Invisible, and v3.)
+- Set action names. (Only for Score, Policy-based, and v3.)
+- Set score thresholds. (Only for Score and v3.)
 
 ### Supported forms
 
@@ -67,12 +68,12 @@ Additional data to submit to the reCAPTCHA verification server.
 - User e-mail.*
 - User registered date.*
 
-\* Enterprise/CreateAssessment API only.
+\* Enterprise versions only.
 
 ### Logging
 - Log reCAPTCHA's JSON response data.
-	- Add the client's IP address to the JSON response data (SiteVerify API)
-	- Remove the reCAPTCHA token from the JSON response data (Enterprise API)
+	- Add the client's IP address to the JSON response data. (Legacy versions only.)
+	- Remove the reCAPTCHA token from the JSON response data. (Enterprise versions only.)
 - Debug logging.
 	- Have a separate file from WordPress' `/wp-content/debug.log`.
 	- Set a minimum required severity level that messages must have for them to be written to the log.
