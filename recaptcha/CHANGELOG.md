@@ -1,6 +1,6 @@
 # Changelog
 
-## [x.y.z] - xxxx-xx-xx
+## [1.2.0] - 2026-06-12
 
 ### Added
 - New versions that use the Enterprise (CreateAssessment API) endpoint (Google Cloud):

@@ -39,7 +39,7 @@ class Frontend {
 	private $current_form;
 	
 	/**
-	 * @since x.y.z
+	 * @since 1.2.0
 	 * @var string 
 	 */
 	private const API_URL_FORMAT_LEGACY = 'https://www.%s/recaptcha/api%s';
@@ -63,7 +63,7 @@ class Frontend {
 	private $error_code;
 
 	/**
-	 * @since x.y.z
+	 * @since 1.2.0
 	 * @var array
 	 */
 	private $user_info = ['user_id' => 0, 'user_login' => '', 'user_email' => '', 'user_registered' => ''];
@@ -173,7 +173,7 @@ class Frontend {
 	/**
 	 * Outputs or returns a parsable string representation of a variable
 	 *
-	 * @since x.y.z
+	 * @since 1.2.0
 	 * @param mixed $value 
 	 * @param bool $return 
 	 *
@@ -197,7 +197,7 @@ class Frontend {
 	/**
 	 * Simple check for if the version is a legacy version.
 	 *
-	 * @since x.y.z
+	 * @since 1.2.0
 	 *
 	 * @return bool
 	 */
@@ -606,7 +606,7 @@ class Frontend {
 	/**
 	 * Verifies a reCAPTCHA response token using the legacy SiteVerify API.
 	 *
-	 * @since x.y.z
+	 * @since 1.2.0
 	 *
 	 * @return bool
 	 */
@@ -740,7 +740,7 @@ class Frontend {
 	 * @since 1.0.6
 	 * @since 1.0.7 Removed parameter $version.
 	 * @since 1.1.0 $remoteip renamed to $remote_ip and can now be false.
-	 * @since x.y.z Removed parameter $remote_ip.
+	 * @since 1.2.0 Removed parameter $remote_ip.
 	 * @param array $result 
 	 *
 	 * @return void
@@ -857,7 +857,7 @@ class Frontend {
 	 * 
 	 * Also supports the invisible variations, since the scripts are so similar.
 	 *
-	 * @since x.y.z
+	 * @since 1.2.0
 	 *
 	 * @return void
 	 */
@@ -930,7 +930,7 @@ class Frontend {
 	/**
 	 * Footer script for checkbox challenges.
 	 *
-	 * @since x.y.z
+	 * @since 1.2.0
 	 *
 	 * @return void
 	 */
@@ -977,7 +977,7 @@ class Frontend {
 	/**
 	 * Footer script for analytics.
 	 *
-	 * @since x.y.z
+	 * @since 1.2.0
 	 *
 	 * @return void
 	 */

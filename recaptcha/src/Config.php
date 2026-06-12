@@ -203,7 +203,7 @@ class Config {
 	/**
 	 * Check if an option inside a multicheck option is set.
 	 *
-	 * @since x.y.z
+	 * @since 1.2.0
 	 * @param string $multicheck Name of multicheck option.
 	 * @param string $option Name of option in the multicheck.
 	 *
