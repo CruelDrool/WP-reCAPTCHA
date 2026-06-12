@@ -65,8 +65,8 @@ Additional data to submit to the reCAPTCHA verification server.
 - Request URI.*
 - User ID.*
 - Username.*
-- User e-mail.*
-- User registered date.*
+- User's e-mail address.*
+- User's registration date.*
 
 \* Enterprise versions only.
 
