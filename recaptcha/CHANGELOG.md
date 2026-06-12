@@ -10,7 +10,7 @@
 	- Policy-based
 - New settings category: **Data submissions**
 - New settings:
-	- [General] Google Cloud Project ID.*
+	- [General] Google Cloud project ID.*
 	- [General] Google Cloud API key.*
 	- [General] Load on non-form pages.
 	- [Data submissions] Client's IP address.
@@ -19,8 +19,8 @@
 	- [Data submissions] Request URI.*
 	- [Data submissions] User ID.*
 	- [Data submissions] Username.*
-	- [Data submissions] User e-mail.*
-	- [Data submissions] User registered date.*
+	- [Data submissions] User's e-mail address.*
+	- [Data submissions] User's registration date.*
 	- [Logging] Remove the reCAPTCHA token from the JSON response data.*
 
 \* Enterprise versions only.
@@ -29,7 +29,8 @@
 
 - Added margin to paragraphs on the Settings page.
 - The v2 and v3 versions (SiteVerify API) are now marked as legacy.
-- Display name of v2 "I'm not a robot" changed to v2 Checkbox.
+- Display name of "v2 'I'm not a robot'" changed to "v2 Checkbox".
+- Translations updated.
 
 ### Removed
 
