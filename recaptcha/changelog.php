@@ -123,10 +123,10 @@ if ( !empty($cached_html) ) {
 			} else {
 				$data = json_decode($data, true);
 				if (is_array($data)) {
-					if ( isset($data['payload']['blob']['richText']) ) {
-						$html = $data['payload']['blob']['richText'];
+					if ( isset($data['payload']['codeViewBlobRoute']['richText']) ) {
+						$html = $data['payload']['codeViewBlobRoute']['richText'];
 					} else {
-						$error = sprintf('<p>Couldn\'t find <code>%s</code> in JSON data from %s.</p>', "\$data['payload']['blob']['richText']", $url_link );
+						$error = sprintf('<p>Couldn\'t find <code>%s</code> in JSON data from %s.</p>', "\$data['payload']['codeViewBlobRoute']['richText']", $url_link );
 					}
 				} else {
 					$error = sprintf('<p>Invalid JSON data from from %s.</p>', $url_link);
