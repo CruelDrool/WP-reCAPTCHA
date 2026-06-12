@@ -3,11 +3,12 @@
 ## [x.y.z] - xxxx-xx-xx
 
 ### Added
-- New versions that use the Enterprise/CreateAssessment API endpoint (Google Cloud):
-	- Score challenge
-	- Checkbox challenge
-	- Policy-based challenge
-- New settings category: Data submissions
+- New versions that use the Enterprise (CreateAssessment API) endpoint (Google Cloud):
+	- Score
+	- Checkbox
+	- Invisible
+	- Policy-based
+- New settings category: **Data submissions**
 - New settings:
 	- [General] Google Cloud Project ID.*
 	- [General] Google Cloud API key.*
@@ -22,13 +23,13 @@
 	- [Data submissions] User registered date.*
 	- [Logging] Remove the reCAPTCHA token from the JSON response data.*
 
-\* Enterprise/CreateAssessment API only.
+\* Enterprise versions only.
 
 ### Changed
 
 - Added margin to paragraphs on the Settings page.
-- The v2 and v3 versions are now marked as using the legacy SiteVerify API endpoint.
-- Display name of v2 "I'm not a robot" change to v2 Checkbox.
+- The v2 and v3 versions (SiteVerify API) are now marked as legacy.
+- Display name of v2 "I'm not a robot" changed to v2 Checkbox.
 
 ### Removed
 
