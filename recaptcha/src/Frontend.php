@@ -72,8 +72,7 @@ class Frontend {
 	 * Constructor
 	 * 
 	 * @since 1.0.0 
-	 * @param object $config
-	 * @param Config $plugin_data
+	 * @param Config $config
 	 */
 	public function __construct(Config $config) {
 		$this->config = $config;
@@ -114,7 +113,7 @@ class Frontend {
 
 		if (!isset($levels[$level])) {
 			$level = 1;
-			$this->debug_log(2, "Attempted to use an unknown debug level. Defaulted to level {$level} ({$levels[$level]})");
+			$this->debug_log(2, "Attempted to use an unknown debug level. Defaulted to level {$level} ({$levels[$level]}).");
 		}
 		if ( $level > $this->config->get_option('debug_log_min_level') ) {
 			return;
@@ -123,7 +122,7 @@ class Frontend {
 		if ($wp_error instanceof WP_Error && $wp_error->has_errors()) {
 			$error_code = !empty($wp_error->get_error_code()) ? sprintf(' Error code: "%s".', $wp_error->get_error_code()) : '';
 			$error_message = !empty($wp_error->get_error_message()) ? sprintf(' Error message: "%s"', $wp_error->get_error_message()) : '';
-			$message = sprintf('%s.%s%s',
+			$message = sprintf('%s%s%s',
 				$message,
 				$error_code,
 				$error_message
@@ -131,7 +130,7 @@ class Frontend {
 		}
 
 
-		$output = sprintf('[%s] %s.', $levels[$level], $message);
+		$output = sprintf('[%s] %s', $levels[$level], $message);
 
 		if ( $this->config->get_option('debug_log_separate') && !$force ) {
 
@@ -172,6 +171,30 @@ class Frontend {
 	}
 
 	/**
+	 * Outputs or returns a parsable string representation of a variable
+	 *
+	 * @since x.y.z
+	 * @param mixed $value 
+	 * @param bool $return 
+	 *
+	 * @return string|null
+	 */
+	private function var_export($value, $return = false) {
+		$export = var_export($value, true);
+		$patterns = [
+			"/array \(/" => '[',
+			"/^([ ]*)\)(,?)$/m" => '$1]$2',
+			"/=>[ ]?\n[ ]+\[/" => '=> [',
+			"/([ ]*)(\'[^\']+\') => ([\[\'])/" => '$1$2 => $3',
+			"/(\G|^) {2}/m" => "\t",
+		];
+
+		$export = preg_replace(array_keys($patterns), array_values($patterns), $export);
+
+		if ( (bool) $return ) return $export; else echo $export;
+	}
+
+	/**
 	 * Simple check for if the version is a legacy version.
 	 *
 	 * @since x.y.z
@@ -179,7 +202,7 @@ class Frontend {
 	 * @return bool
 	 */
 	private function is_legacy_version() {
-		return 	( in_array($this->recaptcha_version, ['v2_checkbox', 'v2_invisible', 'v3']) );
+		return ( in_array($this->recaptcha_version, ['v2_checkbox', 'v2_invisible', 'v3']) );
 	}
 
 	/**
@@ -381,7 +404,7 @@ class Frontend {
 		$remote_ip = $this->get_remote_ip();
 
 		if ( $remote_ip === false ) {
-			$this->debug_log(3, 'Was unable to determine remote IP');
+			$this->debug_log(3, 'Was unable to determine remote IP.');
 		}
 
 		$response_token = $_POST['g-recaptcha-response'] ?? '';
@@ -389,7 +412,7 @@ class Frontend {
 		// No user response token. Bots usually submit no token.
 		if ( empty($response_token) ) {
 			$this->debug_log(3,
-				sprintf('No response token submitted. Form: %s. Server name: %s. IP address: %s',
+				sprintf('No response token submitted. Form: %s. Server name: %s. IP address: %s.',
 					$this->current_form,
 					$_SERVER['SERVER_NAME'],
 					$remote_ip !== false ? $remote_ip : '0.0.0.0'
@@ -460,19 +483,19 @@ class Frontend {
 		]);
 
 		if ( $response instanceof WP_Error ) {
-			$this->debug_log(1, 'Connecting to the verification server failed', $response);
+			$this->debug_log(1, 'Connecting to the verification server failed.', $response);
 			return false;
 		}
 
 		if ( !isset($response['body']) ) {
-			$this->debug_log(1, 'Expected array key "body" missing in the response data');
+			$this->debug_log(1, 'Expected array key "body" missing in the response data.');
 			return false;
 		}
 
 		$result = json_decode( $response['body'], true );
 
 		if ( !is_array($result) ) {
-			$this->debug_log(1, 'The verification server returned invalid/empty JSON data');
+			$this->debug_log(1, 'The verification server returned invalid/empty JSON data.');
 			return false;
 		}
 
@@ -483,17 +506,17 @@ class Frontend {
 		$this->recaptcha_log($result);
 
 		if ( !empty($result['error']) ) {
-			$this->debug_log(1, sprintf("The returned JSON data contains array key \"error\":\n%s", print_r($result['error'], true)));
+			$this->debug_log(1, "The returned JSON data contains array key \"error\":\n" . $this->var_export($result['error'], true));
 			return false;
 		}
 
 		if ( !isset( $result['riskAnalysis'] ) ) {
-			$this->debug_log(1, 'Expected array key "riskAnalysis" missing in the JSON data');
+			$this->debug_log(1, 'Expected array key "riskAnalysis" missing in the JSON data.');
 			return false;
 		}
 
 		if ( !isset( $result['tokenProperties'] ) ) {
-			$this->debug_log(1, 'Expected array key "tokenProperties" missing in the JSON data');
+			$this->debug_log(1, 'Expected array key "tokenProperties" missing in the JSON data.');
 			return false;
 		}
 
@@ -565,7 +588,7 @@ class Frontend {
 		}
 
 		$this->debug_log($debug_level,
-			sprintf('%s verification result: %s%s%s. IP address: %s',
+			sprintf('%s verification result: %s%s%s. IP address: %s.',
 				$this->recaptcha_version,
 				$is_success ? 'success' : 'no success',
 				!empty($debug_message) ? sprintf(". %s", $debug_message) : '',
@@ -574,8 +597,8 @@ class Frontend {
 			)
 		);
 
-		$this->debug_log(5, 'Token properties: ' . print_r($token_properties, true));
-		$this->debug_log(5, 'Risk analysis: ' . print_r($risk_analysis, true));
+		$this->debug_log(5, "Token properties:\n" . $this->var_export($token_properties, true));
+		$this->debug_log(5, "Risk analysis:\n" . $this->var_export($risk_analysis, true));
 
 		return $is_success;
 	}
@@ -591,7 +614,7 @@ class Frontend {
 		$remote_ip = $this->get_remote_ip();
 
 		if ( $remote_ip === false ) {
-			$this->debug_log(3, 'Was unable to determine remote IP');
+			$this->debug_log(3, 'Was unable to determine remote IP.');
 		}
 
 		$response_token = $_POST['g-recaptcha-response'] ?? '';
@@ -599,7 +622,7 @@ class Frontend {
 		// No user response token. Bots usually submit no token.
 		if ( empty($response_token) ) {
 			$this->debug_log(3,
-				sprintf('No response token submitted. Form: %s. Server name: %s. IP address: %s',
+				sprintf('No response token submitted. Form: %s. Server name: %s. IP address: %s.',
 					$this->current_form,
 					$_SERVER['SERVER_NAME'],
 					$remote_ip !== false ? $remote_ip : '0.0.0.0'
@@ -623,19 +646,19 @@ class Frontend {
 		$response = wp_remote_post($verify_url,	[ 'timeout' => 10, 'body' => $post_params ]);
 
 		if ( $response instanceof WP_Error ) {
-			$this->debug_log(1, 'Connecting to the verification server failed', $response);
+			$this->debug_log(1, 'Connecting to the verification server failed.', $response);
 			return false;
 		}
 
 		if ( !isset($response['body']) ) {
-			$this->debug_log(1, 'Expected array key "body" missing in the response data');
+			$this->debug_log(1, 'Expected array key "body" missing in the response data.');
 			return false;
 		}
 
 		$result = json_decode( $response['body'], true );
 
 		if ( !is_array($result) ) {
-			$this->debug_log(1, 'The verification server returned invalid/empty JSON data');
+			$this->debug_log(1, 'The verification server returned invalid/empty JSON data.');
 			return false;
 		}
 
@@ -646,12 +669,12 @@ class Frontend {
 		$this->recaptcha_log($result);
 
 		if ( !empty($result['error-codes']) ) {
-			$this->debug_log(1, sprintf('The returned JSON data contained error codes: %s', implode(', ', $result['error-codes'])));
+			$this->debug_log(1, sprintf('The returned JSON data contained error codes: %s.', implode(', ', $result['error-codes'])));
 			return false;
 		}
 
 		if ( !isset( $result['success'] ) ) {
-			$this->debug_log(1, 'Expected array key "success" missing in the JSON data');
+			$this->debug_log(1, 'Expected array key "success" missing in the JSON data.');
 			return false;
 		}
 
@@ -700,7 +723,7 @@ class Frontend {
 		}
 
 		$this->debug_log($debug_level,
-			sprintf('%s verification result: %s%s. IP address: %s',
+			sprintf('%s verification result: %s%s. IP address: %s.',
 				$this->recaptcha_version,
 				$is_success ? 'success' : 'no success',
 				!empty($debug_message) ? sprintf(". %s", $debug_message) : '',
@@ -1398,7 +1421,7 @@ SCRIPT;
 		static $var; 
 
 		if ( is_null($var) ) {
-			$this->debug_log(5, sprintf('%s: static variable is null. Function called for the first time', __FUNCTION__));
+			$this->debug_log(5, sprintf('%s(): static variable is null. Function called for the first time.', __FUNCTION__));
 
 			$var = 0; // Any non-null value.
 
@@ -1411,15 +1434,11 @@ SCRIPT;
 				$this->user_info['user_registered'] = $user->user_registered;
 			}
 
-
 			if ( ! $this->verify() ) {
-				$this->debug_log(5, sprintf('%s: rejected comment', __FUNCTION__));
 				$approved = new WP_Error( $this->error_code, $this->get_error_msg(), 403 );
-			} else {
-				$this->debug_log(5, sprintf('%s: approved comment', __FUNCTION__));
 			}
 		} else {
-			$this->debug_log(5, sprintf('%s: static variable is not null. Function called more than once.', __FUNCTION__));
+			$this->debug_log(5, sprintf('%s(): static variable is not null. Function called more than once.', __FUNCTION__));
 		}
 
 		return $approved;
