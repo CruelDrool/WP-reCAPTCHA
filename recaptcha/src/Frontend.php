@@ -1356,7 +1356,7 @@ SCRIPT;
 	 *
 	 * @since 1.0.0
 	 * @param WP_Error $errors 
-	 * @param WP_User|false
+	 * @param WP_User|false $user_data
 	 *
 	 * @return void
 	 */
