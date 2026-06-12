@@ -82,7 +82,7 @@ if ( !empty($cached_html) ) {
 			CURLOPT_ENCODING       => 'gzip, deflate',
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_MAXREDIRS      => 5,
-			CURLOPT_USERAGENT      => sprintf("WordPress/%s; %s", $wp_version, home_url( '/' )),
+			CURLOPT_USERAGENT      => sprintf("WordPress/%s; %s", $GLOBALS['wp_version'], home_url( '/' )),
 			CURLOPT_CONNECTTIMEOUT => $timeout,
 			CURLOPT_TIMEOUT        => $timeout,
 			CURLOPT_HTTPHEADER     => ["Accept: application/json"],
